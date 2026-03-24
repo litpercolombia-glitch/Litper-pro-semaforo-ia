@@ -69,6 +69,31 @@ async function signOut() {
 
 // ── Supabase Data Helpers ────────────────────────────────────
 
+// ── Upload Validation ────────────────────────────────────────
+
+const MAX_FILE_SIZE_MB = 10;
+const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
+
+function validateFileSize(file) {
+  if (file && file.size > MAX_FILE_SIZE_BYTES) {
+    return { valid: false, error: `El archivo excede el límite de ${MAX_FILE_SIZE_MB}MB (${(file.size / 1024 / 1024).toFixed(1)}MB)` };
+  }
+  return { valid: true };
+}
+
+function validateCityData(city) {
+  if (typeof city.rate !== 'number' || city.rate < 0 || city.rate > 100) return false;
+  if (typeof city.total !== 'number' || city.total <= 0) return false;
+  if (typeof city.delivered !== 'number' || city.delivered < 0) return false;
+  return true;
+}
+
+function validateCarrierData(carrier) {
+  if (typeof carrier.total !== 'number' || carrier.total <= 0) return false;
+  if (typeof carrier.rate !== 'number' || carrier.rate < 0 || carrier.rate > 100) return false;
+  return true;
+}
+
 async function saveUpload(uploadData) {
   const orgId = await getOrgId();
   const user = await getUser();
@@ -95,7 +120,8 @@ async function saveCityStats(uploadId, cities) {
     rate: c[4],
     best_carrier: c[5] ? c[5][0] : null,
     carrier_breakdown: Object.fromEntries((c[6] || []).map(x => [x[0], { count: x[1], delivered: x[2], rate: x[3] }]))
-  }));
+  })).filter(row => validateCityData(row));
+  if (!rows.length) { console.warn('saveCityStats: no valid rows after validation'); return; }
   const { error } = await supabase.from('city_stats').insert(rows);
   if (error) console.error('saveCityStats error:', error);
 }
@@ -111,7 +137,8 @@ async function saveCarrierStats(uploadId, carriers) {
     delivered: t.entregados,
     returned: t.devoluciones,
     rate: t.tasa_entrega
-  }));
+  })).filter(row => validateCarrierData(row));
+  if (!rows.length) { console.warn('saveCarrierStats: no valid rows after validation'); return; }
   const { error } = await supabase.from('carrier_stats').insert(rows);
   if (error) console.error('saveCarrierStats error:', error);
 }

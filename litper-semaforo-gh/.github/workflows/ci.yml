@@ -1,0 +1,42 @@
+name: CI
+
+on:
+  push:
+    branches: [main, claude/*]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check JavaScript syntax
+        run: |
+          echo "Checking API files for syntax errors..."
+          node --check api/ai.js
+          node --check api/chat.js
+          node --check api/health.js
+          echo "All API files pass syntax check"
+
+      - name: Check for hardcoded secrets
+        run: |
+          echo "Scanning for potential hardcoded API keys..."
+          # Check for common API key patterns in public files (exclude .env.example)
+          if grep -r --include="*.html" --include="*.js" -E "(AIza[0-9A-Za-z_-]{35}|sk-[a-zA-Z0-9]{48}|sk-ant-)" public/; then
+            echo "WARNING: Possible hardcoded API key found in public files!"
+            exit 1
+          fi
+          echo "No hardcoded secrets found in public files"
+
+      - name: Verify env.example completeness
+        run: |
+          echo "Checking .env.example has required variables..."
+          for var in SUPABASE_URL SUPABASE_SERVICE_ROLE_KEY GEMINI_API_KEY CLAUDE_API_KEY OPENAI_API_KEY; do
+            if ! grep -q "$var" .env.example; then
+              echo "ERROR: $var missing from .env.example"
+              exit 1
+            fi
+          done
+          echo "All required env vars documented"
