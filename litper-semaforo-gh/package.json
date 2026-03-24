@@ -1,0 +1,12 @@
+{
+  "name": "litper-semaforo",
+  "version": "1.0.0",
+  "description": "Semaforo de ciudades Litper - Dashboard logistico COD",
+  "scripts": {
+    "dev": "npx serve public -p 3000",
+    "build": "echo 'Static site - no build needed'",
+    "start": "npx serve public -p 3000"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}
