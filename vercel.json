@@ -1,0 +1,19 @@
+{
+  "version": 2,
+  "buildCommand": null,
+  "outputDirectory": "public",
+  "framework": null,
+  "functions": {
+    "api/*.js": {
+      "maxDuration": 30
+    }
+  },
+  "rewrites": [
+    { "source": "/dashboard", "destination": "/index.html" },
+    { "source": "/landing", "destination": "/landing.html" },
+    { "source": "/checkout", "destination": "/checkout.html" },
+    { "source": "/login", "destination": "/login.html" },
+    { "source": "/pricing", "destination": "/pricing.html" },
+    { "source": "/profile", "destination": "/profile.html" }
+  ]
+}
