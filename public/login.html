@@ -215,10 +215,10 @@ async function doF(){const email=document.getElementById('fe').value;if(!email||
 async function soc(p){sA('Conectando con '+p+'...','ok');try{const provider=p.toLowerCase()==='google'?'google':p.toLowerCase()==='microsoft'?'azure':p.toLowerCase();const{error}=await supabase.auth.signInWithOAuth({provider,options:{redirectTo:location.origin+'/dashboard'}});if(error)throw error;}catch(e){sA('Error al conectar con '+p+': '+(e.message||'Intenta de nuevo'),'err');}}
 document.querySelectorAll('.inp').forEach(inp=>{inp.addEventListener('focus',()=>{inp.closest('.fg')?.classList.remove('has-err');inp.classList.remove('err');});});
 // Check if already authenticated → redirect to dashboard
-redirectIfAuth();
+redirectIfAuth().catch(function(e){ console.error('Auth check failed:', e); });
 // Listen for auth state changes (e.g., OAuth callback)
 supabase.auth.onAuthStateChange((event, session) => {
-  if (event === 'SIGNED_IN' && session) { location.href = '/'; }
+  if (event === 'SIGNED_IN' && session) { location.href = '/dashboard'; }
 });
 </script>
 <style>@keyframes ripple{to{transform:scale(1);opacity:0;}}</style>
