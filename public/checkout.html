@@ -690,7 +690,7 @@ async function pagarExpress(method){
   btn.classList.add('loading');
   btn.textContent = 'Procesando...';
   await activarPlanEnSupabase();
-  setTimeout(()=>window.location.href='/?plan_activated=1', 1800);
+  setTimeout(()=>window.location.href='/dashboard?plan_activated=1', 1800);
 }
 
 async function procesarPago(){
@@ -702,7 +702,7 @@ async function procesarPago(){
   await activarPlanEnSupabase();
   setTimeout(()=>{
     btn.innerHTML = '✅ ¡Activado! Redirigiendo...';
-    setTimeout(()=>window.location.href='/?plan_activated=1', 1000);
+    setTimeout(()=>window.location.href='/dashboard?plan_activated=1', 1000);
   }, 2000);
 }
 
