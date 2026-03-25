@@ -52,11 +52,11 @@ async function requireAuth() {
   return session;
 }
 
-// Redirect to / if already authenticated (for login page)
+// Redirect to /dashboard if already authenticated (for login page)
 async function redirectIfAuth() {
   const session = await getSession();
   if (session) {
-    window.location.href = '/';
+    window.location.href = '/dashboard';
     return true;
   }
   return false;

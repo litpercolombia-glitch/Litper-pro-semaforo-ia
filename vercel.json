@@ -9,8 +9,8 @@
     }
   },
   "rewrites": [
+    { "source": "/", "destination": "/landing.html" },
     { "source": "/dashboard", "destination": "/index.html" },
-    { "source": "/landing", "destination": "/landing.html" },
     { "source": "/checkout", "destination": "/checkout.html" },
     { "source": "/login", "destination": "/login.html" },
     { "source": "/pricing", "destination": "/pricing.html" },
