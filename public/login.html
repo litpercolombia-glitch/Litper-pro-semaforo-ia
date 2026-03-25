@@ -5,7 +5,7 @@
 <title>LitperPro — Acceder</title>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Outfit:wght@300;400;500;600;700;800;900&family=Syne:wght@700;800;900&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-<script src="/js/supabase-client.js" defer></script>
+<script src="/js/supabase-client.js"></script>
 <style>
 :root{--ink:#05060a;--s1:rgba(255,255,255,.028);--s2:rgba(255,255,255,.055);--e1:rgba(255,255,255,.12);--e2:rgba(255,255,255,.2);--tx:rgba(255,255,255,.93);--t2:rgba(255,255,255,.68);--t3:rgba(255,255,255,.42);--teal:#00d4f5;--cyan:#06efff;--violet:#9d4eff;--rose:#ff2d55;--green:#00e676;--tglow:0 0 30px rgba(6,182,212,.3);--font:'Outfit',system-ui,sans-serif;--display:'Syne',sans-serif;--mono:'IBM Plex Mono',monospace;--spring:cubic-bezier(.34,1.56,.64,1);--out:cubic-bezier(.16,1,.3,1);}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
@@ -159,7 +159,7 @@ body.hv #cr{width:44px;height:44px;transform:translate(-22px,-22px);border-color
           <div class="dor"><span>o con email</span></div>
           <div class="fg" id="g-le"><label class="flbl">Correo electrónico</label><input type="email" class="inp" id="le" placeholder="tu@empresa.com" oninput="vE('le','g-le')"><div class="fe">Email inválido</div></div>
           <div class="fg" id="g-lp"><label class="flbl">Contraseña</label><div class="pw-w"><input type="password" class="inp" id="lp" placeholder="••••••••" onkeydown="if(event.key==='Enter')doL()"><span class="pwe" onclick="tPw('lp')">👁</span></div><div class="fe">Contraseña incorrecta</div></div>
-          <div class="rrow"><div class="cw" onclick="tC(this)"><div class="cb"></div><span class="cl">Recordarme</span></div><a href="#" class="fgt" onclick="showF();return false">¿Olvidaste tu contraseña?</a></div>
+          <div class="rrow"><div class="cw" onclick="tC(event,this)"><div class="cb"></div><span class="cl">Recordarme</span></div><a href="#" class="fgt" onclick="showF();return false">¿Olvidaste tu contraseña?</a></div>
           <button class="btn btn-glow btn-full" onclick="doL()">🔓 INGRESAR A MI CUENTA →</button>
           <p class="auth-ft">¿Sin cuenta? <a href="#" onclick="swTab('reg');return false">Crear cuenta gratis</a></p>
         </div>
@@ -179,7 +179,7 @@ body.hv #cr{width:44px;height:44px;transform:translate(-22px,-22px);border-color
           <div class="fg" id="g-em"><label class="flbl">Empresa</label><input type="text" class="inp" id="em" placeholder="Litper Group"><div class="fe">Requerido</div></div>
           <div class="fg" id="g-rp"><label class="flbl">Contraseña</label><div class="pw-w"><input type="password" class="inp" id="rp" placeholder="Mínimo 8 caracteres" oninput="str(this.value)"><span class="pwe" onclick="tPw('rp')">👁</span></div><div class="sb2" id="sbar"><div class="sbf" id="sfill"></div></div><div class="sbt" id="stxt"></div><div class="fe">Mínimo 8 caracteres</div></div>
           <div class="fg" id="g-rp2"><label class="flbl">Confirmar contraseña</label><div class="pw-w"><input type="password" class="inp" id="rp2" placeholder="Repetir contraseña" oninput="mPw()"><span class="pwe" onclick="tPw('rp2')">👁</span></div><div class="fe">Las contraseñas no coinciden</div></div>
-          <div style="margin-bottom:20px"><div class="cw" id="tc" onclick="tC(this)" style="align-items:flex-start"><div class="cb" style="flex-shrink:0;margin-top:1px"></div><span class="cl" style="line-height:1.6">Acepto los <a href="#" style="color:var(--teal)">Términos</a> y la <a href="#" style="color:var(--teal)">Política de privacidad</a></span></div></div>
+          <div style="margin-bottom:20px"><div class="cw" id="tc" onclick="tC(event,this)" style="align-items:flex-start"><div class="cb" style="flex-shrink:0;margin-top:1px"></div><span class="cl" style="line-height:1.6">Acepto los <a href="#" style="color:var(--teal)">Términos</a> y la <a href="#" style="color:var(--teal)">Política de privacidad</a></span></div></div>
           <button class="btn btn-glow btn-full" onclick="doR()">✅ CREAR CUENTA GRATIS — SIN TARJETA →</button>
           <p class="auth-ft">¿Ya tienes cuenta? <a href="#" onclick="swTab('login');return false">Iniciar sesión</a></p>
         </div>
@@ -203,7 +203,7 @@ const qp=new URLSearchParams(location.search);if(qp.get('mode')==='register')swT
 function swTab(t){document.getElementById('tl').classList.toggle('on',t==='login');document.getElementById('tr').classList.toggle('on',t==='reg');document.getElementById('f-login').style.display=t==='login'?'':'none';document.getElementById('f-reg').style.display=t==='reg'?'':'none';document.getElementById('al').className='alert';}
 function vE(id,gid){const v=document.getElementById(id).value,ok=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);document.getElementById(id).classList.toggle('err',v&&!ok);document.getElementById(id).classList.toggle('ok',ok);document.getElementById(gid).classList.toggle('has-err',v&&!ok);}
 function tPw(id){const el=document.getElementById(id);el.type=el.type==='password'?'text':'password';}
-function tC(w){w.querySelector('.cb').classList.toggle('on');}
+function tC(e,w){if(e&&e.target&&e.target.tagName==='A')return;w.querySelector('.cb').classList.toggle('on');}
 function sA(msg,type,id='al'){const el=document.getElementById(id);el.textContent=(type==='ok'?'✓ ':'✗ ')+msg;el.className='alert '+type+' show';}
 function str(pw){const bar=document.getElementById('sbar'),fill=document.getElementById('sfill'),txt=document.getElementById('stxt');bar.style.display='block';txt.style.display='block';let s=0;if(pw.length>=8)s++;if(pw.length>=12)s++;if(/[A-Z]/.test(pw))s++;if(/[0-9]/.test(pw))s++;if(/[^A-Za-z0-9]/.test(pw))s++;const lvl=[{p:20,c:'#f43f5e',t:'Muy débil'},{p:40,c:'#f59e0b',t:'Débil'},{p:60,c:'#f59e0b',t:'Regular'},{p:80,c:'#06b6d4',t:'Buena'},{p:100,c:'#22c55e',t:'Excelente'}];const l=lvl[Math.min(s,4)];fill.style.width=l.p+'%';fill.style.background=l.c;txt.textContent=l.t;txt.style.color=l.c;}
 function mPw(){const p1=document.getElementById('rp').value,p2=document.getElementById('rp2').value;if(!p2)return;document.getElementById('rp2').classList.toggle('err',p1!==p2);document.getElementById('rp2').classList.toggle('ok',p1===p2&&p2.length>0);document.getElementById('g-rp2').classList.toggle('has-err',p1!==p2&&p2.length>0);}
