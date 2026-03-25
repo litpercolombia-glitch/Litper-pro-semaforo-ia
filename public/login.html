@@ -27,7 +27,7 @@ body.hv #cr{width:44px;height:44px;transform:translate(-22px,-22px);border-color
 .grad{background:linear-gradient(135deg,var(--teal) 0%,#06efff 20%,var(--green) 50%,var(--violet) 80%,#e040fb 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;background-size:250%;animation:gs 5s ease-in-out infinite alternate;filter:drop-shadow(0 0 30px rgba(0,212,245,.3));}
 @keyframes gs{0%{background-position:0%}100%{background-position:100%}}
 /* BTN */
-.btn{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 28px;border-radius:11px;font-family:var(--font);font-size:14px;font-weight:700;cursor:none;border:none;text-decoration:none;overflow:hidden;transition:transform .25s var(--spring),box-shadow .25s var(--out);}
+.btn{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 28px;border-radius:11px;font-family:var(--font);font-size:14px;font-weight:700;cursor:pointer;border:none;text-decoration:none;overflow:hidden;transition:transform .25s var(--spring),box-shadow .25s var(--out);}
 .btn::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgba(255,255,255,.2) 0%,transparent 55%);opacity:0;transition:opacity .3s;}
 .btn:hover::before{opacity:1;}
 .btn:active{transform:scale(.97) !important;}
@@ -59,12 +59,12 @@ body.hv #cr{width:44px;height:44px;transform:translate(-22px,-22px);border-color
 .ab{width:100%;max-width:440px;}
 /* TABS */
 .tabs{display:grid;grid-template-columns:1fr 1fr;background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.11);border-radius:12px;padding:4px;margin-bottom:28px;gap:4px;}
-.tab{padding:10px;text-align:center;font-size:13px;font-weight:600;color:var(--t3);border-radius:9px;cursor:none;transition:all .22s var(--spring);}
+.tab{padding:10px;text-align:center;font-size:13px;font-weight:600;color:var(--t3);border-radius:9px;cursor:pointer;transition:all .22s var(--spring);}
 .tab.on{background:rgba(255,255,255,.06);color:var(--tx);box-shadow:0 2px 8px rgba(0,0,0,.3);}
 .tab:hover:not(.on){color:var(--t2);background:rgba(255,255,255,.03);}
 /* SOCIAL */
 .srow{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;}
-.sb{display:flex;align-items:center;justify-content:center;gap:9px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.11);border-radius:10px;padding:11px;font-size:13px;font-weight:600;color:var(--tx);cursor:none;transition:all .22s var(--spring);font-family:var(--font);}
+.sb{display:flex;align-items:center;justify-content:center;gap:9px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.11);border-radius:10px;padding:11px;font-size:13px;font-weight:600;color:var(--tx);cursor:pointer;transition:all .22s var(--spring);font-family:var(--font);}
 .sb:hover{border-color:rgba(255,255,255,.14);background:rgba(255,255,255,.07);transform:translateY(-2px);}
 .sb svg{width:17px;height:17px;flex-shrink:0;}
 /* DIVIDER */
@@ -82,14 +82,14 @@ body.hv #cr{width:44px;height:44px;transform:translate(-22px,-22px);border-color
 .fe{font-size:11px;color:var(--rose);margin-top:4px;display:none;}
 .fg.has-err .fe{display:block;}
 .pw-w{position:relative;}
-.pwe{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:14px;color:var(--t3);cursor:none;transition:color .2s;}
+.pwe{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:14px;color:var(--t3);cursor:pointer;transition:color .2s;}
 .pwe:hover{color:var(--t2);}
 .nr{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
 .sb2{height:3px;background:rgba(255,255,255,.05);border-radius:99px;margin-top:5px;overflow:hidden;display:none;}
 .sbf{height:100%;border-radius:99px;transition:all .3s;}
 .sbt{font-size:10px;margin-top:3px;display:none;font-family:var(--mono);}
 .rrow{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
-.cw{display:flex;align-items:center;gap:8px;cursor:none;}
+.cw{display:flex;align-items:center;gap:8px;cursor:pointer;}
 .cb{width:17px;height:17px;border-radius:5px;border:1px solid var(--e2);background:var(--s1);display:flex;align-items:center;justify-content:center;transition:all .2s var(--spring);font-size:10px;}
 .cb.on{background:rgba(6,182,212,.12);border-color:rgba(6,182,212,.4);color:var(--teal);}
 .cl{font-size:12px;color:var(--t2);}
@@ -105,7 +105,7 @@ body.hv #cr{width:44px;height:44px;transform:translate(-22px,-22px);border-color
 .asb{font-size:13px;color:var(--t2);margin-bottom:26px;line-height:1.6;}
 .pn{background:rgba(139,92,246,.08);border:1px solid rgba(139,92,246,.25);border-radius:10px;padding:11px 14px;margin-bottom:20px;font-size:12px;color:var(--violet);display:none;align-items:center;gap:8px;font-weight:500;}
 .pn.show{display:flex;}
-.bkbtn{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--t2);cursor:none;margin-bottom:22px;background:none;border:none;font-family:var(--font);font-weight:500;transition:color .2s;padding:0;}
+.bkbtn{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--t2);cursor:pointer;margin-bottom:22px;background:none;border:none;font-family:var(--font);font-weight:500;transition:color .2s;padding:0;}
 .bkbtn:hover{color:var(--teal);}
 @keyframes ripple{to{transform:scale(1);opacity:0;}}
 </style>
@@ -212,7 +212,7 @@ async function doR(){const fn=document.getElementById('fn').value,ln=document.ge
 function showF(){document.getElementById('main-auth').style.display='none';document.getElementById('f-forgot').style.display='block';}
 function hF(){document.getElementById('main-auth').style.display='block';document.getElementById('f-forgot').style.display='none';}
 async function doF(){const email=document.getElementById('fe').value;if(!email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){document.getElementById('g-fe').classList.add('has-err');return;}const btn=document.querySelector('#f-forgot .btn');btn.disabled=true;btn.textContent='Enviando...';try{const{error}=await supabase.auth.resetPasswordForEmail(email,{redirectTo:location.origin+'/login?mode=reset'});if(error)throw error;sA('¡Enlace enviado! Revisa tu bandeja.','ok','al2');btn.textContent='Enviado ✓';}catch(e){sA(e.message||'Error al enviar el enlace','err','al2');btn.disabled=false;btn.textContent='📧 ENVIAR ENLACE DE RECUPERACIÓN →';}}
-async function soc(p){sA('Conectando con '+p+'...','ok');try{const provider=p.toLowerCase()==='google'?'google':p.toLowerCase()==='microsoft'?'azure':p.toLowerCase();const{error}=await supabase.auth.signInWithOAuth({provider,options:{redirectTo:location.origin+'/dashboard'}});if(error)throw error;}catch(e){sA('Error al conectar con '+p+': '+(e.message||'Intenta de nuevo'),'err');}}
+async function soc(p){sA('Conectando con '+p+'...','ok');try{const provider=p.toLowerCase()==='google'?'google':p.toLowerCase()==='microsoft'?'azure':p.toLowerCase();const{error}=await supabase.auth.signInWithOAuth({provider,options:{redirectTo:location.origin+'/login'}});if(error)throw error;}catch(e){sA('Error al conectar con '+p+': '+(e.message||'Intenta de nuevo'),'err');}}
 document.querySelectorAll('.inp').forEach(inp=>{inp.addEventListener('focus',()=>{inp.closest('.fg')?.classList.remove('has-err');inp.classList.remove('err');});});
 // Check if already authenticated → redirect to dashboard
 redirectIfAuth().catch(function(e){ console.error('Auth check failed:', e); });
