@@ -848,7 +848,7 @@ function toggleBilling(){
   document.getElementById('btog').classList.toggle('on',annual);
   document.getElementById('p-p').textContent=annual?'$63.200':'$79.000';
   document.getElementById('p-e').textContent=annual?'$239.200':'$299.000';
-  const per=annual?'COP / mes · facturado anual':'COP / mes · facturado mensual';
+  const per=annual?'COP / mes · facturado anual · Ahorra 20%':'COP / mes · facturado mensual';
   document.getElementById('pp-s').textContent=per;
   document.getElementById('pe-s').textContent=per;
 }
