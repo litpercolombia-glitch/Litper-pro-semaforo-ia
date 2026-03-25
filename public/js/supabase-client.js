@@ -12,8 +12,11 @@ var supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 // ── Auth Helpers ─────────────────────────────────────────────
 
 async function getSession() {
-  const { data: { session } } = await supabase.auth.getSession();
-  return session;
+  try {
+    const { data: { session }, error } = await supabase.auth.getSession();
+    if (error) { console.error('getSession error:', error.message); return null; }
+    return session;
+  } catch (e) { console.error('getSession exception:', e); return null; }
 }
 
 async function getUser() {
@@ -22,45 +25,49 @@ async function getUser() {
 }
 
 async function getOrgId() {
-  const user = await getUser();
-  if (!user) return null;
-  const { data } = await supabase
-    .from('profiles')
-    .select('org_id')
-    .eq('id', user.id)
-    .single();
-  return data?.org_id || null;
+  try {
+    const user = await getUser();
+    if (!user) return null;
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('org_id')
+      .eq('id', user.id)
+      .single();
+    if (error) { console.error('getOrgId error:', error.message); return null; }
+    return data?.org_id || null;
+  } catch (e) { console.error('getOrgId exception:', e); return null; }
 }
 
 async function getProfile() {
-  const user = await getUser();
-  if (!user) return null;
-  const { data } = await supabase
-    .from('profiles')
-    .select('*, organizations(*)')
-    .eq('id', user.id)
-    .single();
-  return data;
+  try {
+    const user = await getUser();
+    if (!user) return null;
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('*, organizations(*)')
+      .eq('id', user.id)
+      .single();
+    if (error) { console.error('getProfile error:', error.message); return null; }
+    return data;
+  } catch (e) { console.error('getProfile exception:', e); return null; }
 }
 
 // Redirect to /login if not authenticated
 async function requireAuth() {
-  const session = await getSession();
-  if (!session) {
-    window.location.href = '/login';
-    return null;
-  }
-  return session;
+  try {
+    const session = await getSession();
+    if (!session) { window.location.href = '/login'; return null; }
+    return session;
+  } catch (e) { console.error('requireAuth error:', e); window.location.href = '/login'; return null; }
 }
 
 // Redirect to /dashboard if already authenticated (for login page)
 async function redirectIfAuth() {
-  const session = await getSession();
-  if (session) {
-    window.location.href = '/dashboard';
-    return true;
-  }
-  return false;
+  try {
+    const session = await getSession();
+    if (session) { window.location.href = '/dashboard'; return true; }
+    return false;
+  } catch (e) { console.error('redirectIfAuth error:', e); return false; }
 }
 
 async function signOut() {
