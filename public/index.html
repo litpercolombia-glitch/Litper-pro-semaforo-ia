@@ -1226,13 +1226,9 @@ input[type=range]:hover { transform: scaleY(1.1); }
         <span style="font-size:14px">⊕</span> ChatGPT
         <span style="font-size:9px;opacity:.7;margin-left:2px">OpenAI</span>
       </button>
-      <button class="model-btn" id="mbtn-gemini" onclick="selectModel('gemini')" title="Gemini 2.0 Flash — Google">
-        <span style="font-size:14px">◈</span> Gemini
-        <span style="font-size:9px;opacity:.7;margin-left:2px">Google</span>
-      </button>
     </div>
     <!-- API KEY — Claude -->
-    <div id="key-claude" class="api-key-panel" style="background:rgba(192,132,252,.07);border:1px solid rgba(192,132,252,.25);border-radius:var(--r);padding:13px 16px;margin-bottom:13px;">
+    <div id="key-claude" class="api-key-panel" style="background:rgba(192,132,252,.07);border:1px solid rgba(192,132,252,.25);border-radius:var(--r);padding:13px 16px;margin-bottom:13px;display:none;">
       <div style="font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:var(--pu);margin-bottom:5px;font-weight:500">API Key — Anthropic (Claude Sonnet 4)</div>
       <div style="font-size:11px;color:var(--t3);margin-bottom:8px">Obtén la tuya en <a href="https://console.anthropic.com" target="_blank" style="color:var(--cn)">console.anthropic.com</a> → API Keys → Create Key · empieza con <code style="color:var(--cn)">sk-ant-</code></div>
       <div style="display:flex;gap:8px;align-items:center;">
@@ -1252,7 +1248,7 @@ input[type=range]:hover { transform: scaleY(1.1); }
       </div>
     </div>
     <!-- API KEY — Gemini -->
-    <div id="key-gemini" class="api-key-panel" style="background:rgba(59,130,246,.07);border:1px solid rgba(59,130,246,.25);border-radius:var(--r);padding:13px 16px;margin-bottom:13px;display:none;">
+    <div id="key-gemini" class="api-key-panel" style="background:rgba(59,130,246,.07);border:1px solid rgba(59,130,246,.25);border-radius:var(--r);padding:13px 16px;margin-bottom:13px;">
       <div style="font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:#3b82f6;margin-bottom:5px;font-weight:500">API Key — Google (Gemini 2.0 Flash)</div>
       <div style="font-size:11px;color:var(--t3);margin-bottom:8px">Obtén la tuya en <a href="https://aistudio.google.com/app/apikey" target="_blank" style="color:#3b82f6">aistudio.google.com</a> → Get API Key · empieza con <code style="color:#3b82f6">AIza</code></div>
       <div style="display:flex;gap:8px;align-items:center;">
@@ -2873,7 +2869,7 @@ function showToast(msg, type){
   document.body.appendChild(t);
   setTimeout(()=>{t.style.opacity='0';t.style.transform='translateY(8px)';setTimeout(()=>t.remove(),350);}, 2500);
 }
-let currentModel='claude';
+let currentModel='gemini';
 
 // ═══════════════════════════════════════════════════════════════
 // PREDICTOR DE TASA IA
