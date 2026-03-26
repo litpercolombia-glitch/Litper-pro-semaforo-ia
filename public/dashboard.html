@@ -85,7 +85,7 @@ input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-
 .sidebar-link:hover{background:var(--ov-hover);color:var(--tx);}
 .sidebar-link.active{color:var(--cn);background:rgba(0,212,245,.06);border-right:2px solid var(--cn);}
 .sidebar-link .sl-icon{font-size:15px;width:20px;text-align:center;}
-.sidebar-divider{height:1px;background:rgba(255,255,255,.06);margin:8px 14px;}
+.sidebar-divider{height:1px;background:var(--b-subtle);margin:8px 14px;}
 .sidebar-label{font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--t3);padding:12px 18px 4px;font-weight:600;}
 .sidebar-toggle{position:fixed;top:74px;left:8px;z-index:160;background:var(--bg);border:1px solid var(--b1);border-radius:8px;color:var(--t2);font-size:16px;cursor:pointer;padding:4px 8px;transition:all .2s;}
 .sidebar-toggle:hover{color:var(--cn);border-color:var(--cn);}
@@ -106,11 +106,11 @@ input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-
 .pb{padding:0 28px 44px;}
 /* CONTROLS */
 .ctrls{display:flex;gap:6px;margin-bottom:9px;flex-wrap:wrap;}
-.ci{font-family:var(--font);font-size:11px;background:rgba(255,255,255,.04);border:1px solid var(--b1);color:var(--tx);padding:5px 9px;border-radius:var(--r);outline:none;transition:border-color .15s;}
+.ci{font-family:var(--font);font-size:11px;background:var(--s1);border:1px solid var(--b1);color:var(--tx);padding:5px 9px;border-radius:var(--r);outline:none;transition:border-color .15s;}
 .ci:focus{border-color:var(--cn);box-shadow:0 0 0 2px rgba(0,245,255,.07);}
 .ci.search{flex:1;min-width:150px;}
 .ci::placeholder{color:var(--t3);}
-.ci option{background:#0e0f11;}
+.ci option{background:var(--bg);color:var(--tx);}
 /* TABLE */
 .tw{overflow-x:auto;border:1px solid var(--b1);border-radius:var(--r);}
 table{width:100%;border-collapse:collapse;font-size:12px;}
@@ -1054,19 +1054,19 @@ input[type=range]:hover { transform: scaleY(1.1); }
 
   <!-- Costos compactos -->
   <div style="display:flex;gap:8px;align-items:center">
-    <div style="display:flex;align-items:center;gap:4px;background:rgba(255,45,85,.06);border:1px solid rgba(255,45,85,.15);border-radius:8px;padding:5px 10px">
-      <span style="font-size:10px;color:rgba(255,45,85,.7);font-family:var(--mono);font-weight:600">DEV $</span>
+    <div style="display:flex;align-items:center;gap:4px;background:var(--rddim);border:1px solid var(--rdb);border-radius:8px;padding:5px 10px">
+      <span style="font-size:10px;color:var(--rd);font-family:var(--mono);font-weight:600">DEV $</span>
       <input type="number" id="costo-dev" value="18000" min="0" step="1000"
-        style="width:65px;background:transparent;border:none;outline:none;font-family:var(--mono);font-size:12px;color:rgba(255,45,85,.9);font-weight:700;-moz-appearance:textfield"
+        style="width:65px;background:transparent;border:none;outline:none;font-family:var(--mono);font-size:12px;color:var(--rd);font-weight:700;-moz-appearance:textfield"
         onchange="savePaisConfig()">
-      <span id="moneda-label" style="font-size:9px;color:rgba(255,255,255,.3);font-family:var(--mono)">COP</span>
+      <span id="moneda-label" style="font-size:9px;color:var(--t3);font-family:var(--mono)">COP</span>
     </div>
-    <div style="display:flex;align-items:center;gap:4px;background:rgba(0,212,245,.04);border:1px solid rgba(0,212,245,.12);border-radius:8px;padding:5px 10px">
-      <span style="font-size:10px;color:rgba(0,212,245,.7);font-family:var(--mono);font-weight:600">FLETE $</span>
+    <div style="display:flex;align-items:center;gap:4px;background:var(--cndim);border:1px solid rgba(0,212,245,.15);border-radius:8px;padding:5px 10px">
+      <span style="font-size:10px;color:var(--cn);font-family:var(--mono);font-weight:600">FLETE $</span>
       <input type="number" id="costo-flete" value="9000" min="0" step="500"
-        style="width:65px;background:transparent;border:none;outline:none;font-family:var(--mono);font-size:12px;color:rgba(0,212,245,.9);font-weight:700;-moz-appearance:textfield"
+        style="width:65px;background:transparent;border:none;outline:none;font-family:var(--mono);font-size:12px;color:var(--cn);font-weight:700;-moz-appearance:textfield"
         onchange="savePaisConfig()">
-      <span id="moneda-flete" style="font-size:9px;color:rgba(255,255,255,.3);font-family:var(--mono)">COP</span>
+      <span id="moneda-flete" style="font-size:9px;color:var(--t3);font-family:var(--mono)">COP</span>
     </div>
   </div>
 
@@ -1091,8 +1091,8 @@ input[type=range]:hover { transform: scaleY(1.1); }
   <div class="metric"><div class="mlbl">Costo devoluciones</div><div class="mnum am" id="m-costo">—</div><div class="msub" id="m-cs">@ $18K COP / devolución</div></div>
 </div>
 
-<!-- TABS -->
-<div class="tabs">
+<!-- TABS (hidden - navigation via sidebar) -->
+<div class="tabs" style="display:none">
   <button class="tab active" onclick="switchTab('semaforo')">🚦 Semáforo</button>
   <button class="tab" onclick="switchTab('ciudades')">📍 Ciudades × Trans.</button>
   <button class="tab" onclick="switchTab('transportadoras')">🚚 Scorecard</button>
@@ -1404,7 +1404,7 @@ input[type=range]:hover { transform: scaleY(1.1); }
     </div>
   </div>
   <!-- INFO SOBRE LOS DATOS -->
-  <div style="margin-top:20px;background:rgba(0,212,245,.04);border:1px solid rgba(0,212,245,.12);border-radius:12px;padding:14px 16px">
+  <div style="margin-top:20px;background:var(--cndim);border:1px solid rgba(0,212,245,.15);border-radius:12px;padding:14px 16px">
     <div style="font-size:11px;font-family:var(--mono);color:rgba(0,212,245,.7);font-weight:600;margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em">¿Cómo funciona el benchmark?</div>
     <div style="font-size:12px;color:rgba(255,255,255,.55);line-height:1.7">
       Los datos del sector son promedios <strong style="color:rgba(255,255,255,.8)">completamente anonimizados</strong> de sellers COD activos en Colombia, Chile, Guatemala y México.
@@ -2153,9 +2153,12 @@ function switchTab(name){
   window._activeTab = name;
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
-  document.querySelector(`.tab[onclick*="'${name}'"]`).classList.add('active');
-  document.getElementById('panel-'+name).classList.add('active');
-  if(name==='transportadoras')rTrans();
+  const tabEl=document.querySelector(`.tab[onclick*="'${name}'"]`);
+  if(tabEl)tabEl.classList.add('active');
+  const panelEl=document.getElementById('panel-'+name);
+  if(panelEl)panelEl.classList.add('active');
+  if(name==='semaforo')rSem();
+  else if(name==='transportadoras')rTrans();
   else if(name==='alertas')rAlertas();
   else if(name==='ciudades')rCiu();
   else if(name==='bloqueo')rBloq();
@@ -2891,7 +2894,7 @@ function renderBenchmark(){
         <td style="padding:6px 8px;font-size:12px;font-family:var(--mono);color:rgba(255,255,255,.45)">${b.avg}%</td>
         <td style="padding:6px 8px;font-size:12px;font-family:var(--mono);color:rgba(255,255,255,.35)">${b.top}%</td>
         <td style="padding:6px 8px;font-size:12px;font-family:var(--mono);font-weight:700;color:${color}">${diff > 0 ? '+' : ''}${diff}% ${indicator}</td>
-        <td style="padding:6px 8px;font-size:10px;color:rgba(255,255,255,.3);font-family:var(--mono)">${b.sellers} sellers</td>
+        <td style="padding:6px 8px;font-size:10px;color:var(--t3);font-family:var(--mono)">${b.sellers} sellers</td>
       </tr>`;
   }).join('');
 
