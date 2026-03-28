@@ -766,6 +766,24 @@ body.has-urgencia nav{top:40px}
 
 <script>
 
+// ── OAUTH ERROR DETECTION ────────────────────────────────────
+(function(){
+  var params = new URLSearchParams(window.location.search);
+  var hash = new URLSearchParams(window.location.hash.replace('#','?'));
+  var error = params.get('error') || hash.get('error');
+  var desc = params.get('error_description') || hash.get('error_description') || '';
+  if(error){
+    var msg = 'Error al iniciar sesion';
+    if(desc.indexOf('exchange')>=0) msg = 'Error de Google OAuth: Las credenciales de Google no estan configuradas correctamente en Supabase. Contacta al administrador.';
+    else if(desc) msg = desc.replace(/\+/g,' ');
+    var banner = document.createElement('div');
+    banner.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:9999;background:linear-gradient(135deg,#dc2626,#b91c1c);color:white;padding:16px 24px;font-family:system-ui;font-size:14px;display:flex;align-items:center;justify-content:space-between;gap:12px;box-shadow:0 4px 20px rgba(0,0,0,.3)';
+    banner.innerHTML = '<div><strong>Error de autenticacion:</strong> '+msg+'</div><a href="/login" style="color:white;background:rgba(255,255,255,.2);padding:8px 16px;border-radius:8px;text-decoration:none;font-weight:600;white-space:nowrap">Ir al Login</a>';
+    document.body.prepend(banner);
+    history.replaceState(null,'','/');
+  }
+})();
+
 // ── NAV ───────────────────────────────────────────────────────
 window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('scrolled',scrollY>50));
 
