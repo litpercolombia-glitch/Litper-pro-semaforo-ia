@@ -1049,6 +1049,61 @@ body.light .metric::after{background:radial-gradient(circle at var(--mx,50%) var
 body.light .sidebar-link.active::before{box-shadow:none;}
 body.light .metric:hover .mnum{text-shadow:none;}
 body.light .ubar{animation:none;}
+/* ── Light Mode: Force dark text on all inline-styled elements ── */
+body.light [style*="color:rgba(255,255,255"]{color:var(--tx)!important;}
+body.light [style*="color:#fff"]{color:var(--tx)!important;}
+body.light [style*="color:white"]{color:var(--tx)!important;}
+body.light [style*="background:rgba(255,255,255,.0"]{background:rgba(0,0,0,.03)!important;}
+body.light [style*="background:rgba(10,12,20"]{background:rgba(0,0,0,.02)!important;}
+body.light [style*="border:1px solid rgba(255,255,255"]{border-color:rgba(0,0,0,.1)!important;}
+body.light [style*="border:1.5px solid rgba(255,255,255"]{border-color:rgba(0,0,0,.12)!important;}
+body.light [style*="border:2px solid rgba(255,255,255"]{border-color:rgba(0,0,0,.1)!important;}
+body.light [style*="border-bottom:1px solid rgba(255,255,255"]{border-color:rgba(0,0,0,.08)!important;}
+body.light [style*="border:1px dashed rgba(255,255,255"]{border-color:rgba(0,0,0,.15)!important;}
+body.light .btn-inst{color:var(--t2);border-color:var(--b1);}
+body.light .phdr-l h2{color:var(--tx);}
+body.light .phdr-l p{color:var(--t2);}
+body.light .aiout{background:var(--card-bg);border-color:var(--b1);color:var(--tx);}
+body.light .aiout.loading{color:var(--t2);}
+body.light .chips .chip{background:rgba(0,0,0,.03);border-color:var(--b1);color:var(--t2);}
+body.light .mnum{color:var(--tx);}
+body.light .mlbl{color:var(--t3);}
+body.light .msub{color:var(--t3);}
+body.light .scard{background:var(--card-bg);}
+body.light .scc{background:var(--card-bg);}
+body.light .bs{background:var(--card-bg);}
+body.light .aitem{background:var(--card-bg);}
+body.light .chbox{background:var(--card-bg);}
+body.light .pi{background:var(--card-bg);}
+body.light .cuad{background:var(--card-bg);}
+body.light table{color:var(--tx);}
+body.light thead th{background:rgba(0,0,0,.02);color:var(--t2);}
+body.light tbody td{color:var(--tx);border-color:rgba(0,0,0,.06);}
+body.light td.nc{color:var(--t2);}
+body.light .bar .btr{background:rgba(0,0,0,.08);}
+body.light .bar .bpc{color:var(--t2);}
+body.light .model-btn{color:var(--tx);border-color:var(--b1);}
+body.light .model-btn.active{border-color:var(--cn);color:var(--cn);}
+body.light #key-server-status{background:rgba(5,150,105,.06);border-color:rgba(5,150,105,.2);}
+body.light #key-server-status span{color:var(--gn)!important;}
+body.light .lp-model-name{color:var(--tx)!important;}
+body.light .lp-model-sub{color:var(--t2)!important;}
+body.light .lp-prompt-text{color:var(--tx)!important;}
+body.light .lp-sidebar-label{color:var(--t3)!important;}
+body.light .sidebar-link{color:var(--t2);}
+body.light .sidebar-link:hover{color:var(--tx);background:rgba(0,0,0,.04);}
+body.light .sidebar-link.active{color:var(--cn);background:rgba(8,145,178,.06);}
+body.light .logo{color:var(--tx);}
+body.light .bdg{color:var(--t3);border-color:var(--b1);}
+body.light .app-header{border-color:var(--b1);box-shadow:0 1px 3px rgba(0,0,0,.04);}
+body.light .app-sidebar{border-color:var(--b1);box-shadow:1px 0 3px rgba(0,0,0,.03);}
+body.light .ubar{background:rgba(0,0,0,.02);border-color:rgba(0,0,0,.12);}
+body.light .ubar:hover{background:rgba(8,145,178,.04);border-color:rgba(8,145,178,.3);}
+body.light .btn-up{color:#000;}
+body.light .ci{background:rgba(0,0,0,.03);border-color:var(--b1);color:var(--tx);}
+body.light .slval{color:var(--cn);}
+body.light .etbl td{color:var(--t2);}
+body.light .etbl th{color:var(--t3);}
 
 
 </style>
@@ -1425,6 +1480,7 @@ body.light .ubar{animation:none;}
       <p>Tu tasa de entrega comparada con otros sellers COD — datos anonimizados</p>
     </div>
     <div class="phdr-r">
+      <button class="btn-inst" onclick="showInst('benchmark')">❓ Cómo usar</button>
       <select class="ci" id="bench-pais" onchange="PAIS_ACTIVO=this.value;renderBenchmark()" style="font-family:var(--mono)">
         <option value="CO">🇨🇴 Colombia</option>
         <option value="CL">🇨🇱 Chile</option>
@@ -1469,6 +1525,7 @@ body.light .ubar{animation:none;}
     </div>
     <div class="phdr-r">
       <button class="btn-sm" onclick="calcularPredictor()" style="background:rgba(157,78,255,.15);border:1px solid rgba(157,78,255,.3);color:rgba(157,78,255,.9);border-radius:8px;padding:6px 14px;font-size:11px;font-weight:600;cursor:pointer;font-family:var(--mono)">🔮 Calcular predicción</button>
+      <button class="btn-inst" onclick="showInst('predictor')">❓ Cómo usar</button>
     </div>
   </div>
   <div id="pred-global" style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px"></div>
@@ -1484,6 +1541,7 @@ body.light .ubar{animation:none;}
       <h2>⭐ Score de ciudades</h2>
       <p>Puntaje 0–100 por ciudad · Ventaja competitiva acumulada que nadie puede copiar</p>
     </div>
+    <div class="phdr-r"><button class="btn-inst" onclick="showInst('score')">❓ Cómo usar</button></div>
   </div>
   <div id="score-global" style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px"></div>
   <div id="score-tabla"></div>
@@ -1498,6 +1556,7 @@ body.light .ubar{animation:none;}
       <h2>📤 Exportar · 📥 Importar</h2>
       <p>Descarga tus datos en múltiples formatos · Importa desde otras fuentes</p>
     </div>
+    <div class="phdr-r"><button class="btn-inst" onclick="showInst('expImp')">❓ Cómo usar</button></div>
   </div>
   <div class="pb">
 
@@ -1878,7 +1937,11 @@ const INST={
   recuperacion:{t:'Calculadora de recuperación',p:[['🔢 Tarifa','El costo que pagas por envío en pesos COP.'],['🎯 Ciudad','Selecciona una ciudad problemática (las más críticas aparecen primero).'],['📈 Meta','Define a qué tasa quieres llegar. El sistema calcula cuánta plata recuperas.'],['💡 Uso','Justifica por qué vale la pena trabajar una ciudad específica esta semana.']]},
   asignacion:{t:'Asignación dinámica',p:[['⚙️ Inputs','Ciudad, pedidos a repartir, y método de distribución.'],['📊 Métodos','Proporcional = según tasa histórica. Winner 70/30 = premia al mejor. Igualitario = partes iguales.'],['🎯 Output','Cuántos pedidos dar a cada carrier y cuántas entregas exitosas esperar.'],['💡 Uso','Usalo los lunes para distribuir el volumen semanal por ciudad y carrier.']]},
   alertas:{t:'Centro de alertas',p:[['🔴 Críticas','+100 pedidos y <65% entrega. Actuar esta semana.'],['🟡 Warnings','+50 pedidos y <70%. Monitorear.'],['🔵 Oportunidades','Gap >15% entre carriers en la misma ciudad. Mueve el volumen al mejor carrier.'],['💡 Uso','Comparte las alertas rojas con el equipo en el standup del lunes.']]},
-  ia:{t:'Análisis con IA',p:[['🎯 5 modos','General, ciudades rojas, carrier swap, escalar, plan semanal.'],['▶ Generar','Clic en el botón morado. La IA analiza tus datos reales (~15 segundos).'],['📋 Plan semanal','Genera acciones para el equipo listas para copiar a Notion.'],['🔄 Todos los modos','Cada modo tiene foco diferente. Úsalos todos para visión completa.']]}
+  ia:{t:'Análisis con IA',p:[['🎯 5 modos','General, ciudades rojas, carrier swap, escalar, plan semanal.'],['▶ Generar','Clic en el botón morado. La IA analiza tus datos reales (~15 segundos).'],['📋 Plan semanal','Genera acciones para el equipo listas para copiar a Notion.'],['🔄 Todos los modos','Cada modo tiene foco diferente. Úsalos todos para visión completa.']]},
+  benchmark:{t:'Benchmark vs. sector',p:[['📊 Comparación','Tu tasa de entrega vs. el promedio y top del sector COD en tu país.'],['🔒 Anonimizado','Los datos de otros sellers son promedios agregados — nunca individuales.'],['🌎 Multi-país','Selecciona Colombia, Chile, Guatemala o México para ver el benchmark local.'],['💡 Uso','Si estás por debajo del promedio, enfócate en las ciudades rojas. Si estás arriba, escala pauta.']]},
+  predictor:{t:'Predictor de tasa',p:[['📈 Tendencia','Proyecta tu tasa de entrega futura basándose en datos históricos de cargas anteriores.'],['📂 Requisito','Carga al menos 2-3 archivos Excel de semanas diferentes para activar la predicción.'],['🔮 Calcular','Clic en el botón morado para generar la proyección con los datos que has cargado.'],['💡 Uso','Revisa cada lunes si la tendencia sube o baja. Actúa antes de que la tasa caiga.']]},
+  score:{t:'Score de ciudades',p:[['⭐ Puntaje 0-100','Combina tasa de entrega, volumen, consistencia y tendencia de cada ciudad.'],['🏆 Ranking','Las ciudades con mayor score son tu ventaja competitiva — nadie puede copiar estos datos.'],['📊 Métricas','Score global, ciudades estrella (>80), ciudades en riesgo (<50), tendencia.'],['💡 Uso','Escala pauta en ciudades con score >80. Reduce o bloquea ciudades con score <30.']]},
+  expImp:{t:'Exportar · Importar',p:[['📤 Excel','Descarga todos tus datos (ciudades, carriers, alertas) en formato Excel.'],['📄 Bloqueo','Exporta la lista de bloqueo para cargar directamente en Dropi.'],['📋 Copiar','Copia tablas al portapapeles para pegar en Notion, Slack o WhatsApp.'],['💡 Uso','Exporta cada lunes el resumen para compartir con el equipo.']]}
 };
 function showInst(k){
   const i=INST[k];if(!i)return;
