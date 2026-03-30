@@ -2280,6 +2280,8 @@ function switchTab(name){
   else if(name==='predictor'){calcularPredictor();}
   else if(name==='score'){renderScore();}
   else if(name==='pareto')rPareto();
+  else if(name==='recuperacion'){if(typeof calcRec==='function')calcRec();}
+  else if(name==='asignacion'){if(typeof calcAsig==='function')calcAsig();}
 }
 
 // ─── SIDEBAR ─────────────────────────────────────────────────────────────────
@@ -2678,40 +2680,7 @@ function parseDropiPivot(rows){
   _finalizarCarga(fname);
 }
 
-// ── FUNCIÓN COMPARTIDA: finalizar carga y actualizar UI ──────────
-function _finalizarCarga(fname){
-  const totE=C.reduce((s,c)=>s+c[2],0), totA=C.reduce((s,c)=>s+c[1],0);
-  const nT=new Set(C.flatMap(c=>c[6].map(x=>x[0]))).size;
-  G={total:totA,entregados:totE,devoluciones:totA-totE,
-     tasa_entrega:Math.round(totE/totA*1000)/10,
-     ciudades:C.length,transportadoras:T.length||nT};
-  // Alertas
-  A.length=0;
-  C.forEach(c=>{
-    const[n,tot,ent,dev,te,,cs]=c;
-    if(tot>=100&&te<65)A.push([0,n,tot,te,'Alto volumen + tasa crítica de entrega']);
-    else if(tot>=50&&te<70)A.push([1,n,tot,te,'Tasa de entrega por debajo del umbral']);
-    const tr2=cs.filter(x=>x[1]>=20);
-    if(tr2.length>=2){
-      const rates=tr2.map(x=>x[3]||0).filter(r=>r>0);
-      if(rates.length>=2){
-        const diff=Math.max(...rates)-Math.min(...rates);
-        if(diff>=15){
-          const mj=tr2.reduce((a,b)=>(b[3]||0)>(a[3]||0)?b:a);
-          const pr=tr2.reduce((a,b)=>(b[3]||0)<(a[3]||0)?b:a);
-          A.push([2,n,tot,te,`Gap ${diff.toFixed(0)}% — ${pr[0]}(${(pr[3]||0)}%) → ${mj[0]}(${(mj[3]||0)}%)`]);
-        }
-      }
-    }
-  });
-  A.sort((a,b)=>(a[0]-b[0])||b[2]-a[2]);
-  // Pareto
-  P.length=0;let acum=0;
-  C.slice(0,60).forEach(c=>{acum+=c[1];P.push([c[0],c[1],c[4],Math.round(acum/totA*1000)/10]);});
-  popSelects();rMetrics();rSem();rCiu();rAlertas();rBloq();
-  const plat=fname&&fname.toLowerCase().includes('orden')?'Dropi RAW':fname&&fname.toLowerCase().includes('shopify')?'Shopify':'Excel';
-  showToast(`${plat} cargado: ${C.length} ciudades · ${G.total.toLocaleString('es-CO')} pedidos · ${G.tasa_entrega}% entrega`, 'ok');
-}
+// ── FUNCIÓN COMPARTIDA: ver definición completa más abajo ──────────
 function _finalizarCarga(fname){
   const totE=C.reduce((s,c)=>s+c[2],0), totA=C.reduce((s,c)=>s+c[1],0);
   const nT=new Set(C.flatMap(c=>c[6].map(x=>x[0]))).size;
@@ -3337,21 +3306,6 @@ function renderScore(){
 }
 
 // ═══════════════════════════════════════════════════════════════
-// MODO JIMMY — Vista operativa simplificada
-// ═══════════════════════════════════════════════════════════════
-
-// Registrar cada carga en el historial del predictor
-const _origFinalizarCarga = _finalizarCarga.toString();
-const _origFinFn = typeof _finalizarCarga === 'function' ? _finalizarCarga : null;
-if(_origFinFn){
-  const _wrapped = function(fname){
-    _origFinFn(fname);
-    if(G && G.total) registrarCargaEnHistorial(G, fname);
-  };
-  // No sobreescribir _finalizarCarga directamente; el hook se activa en _finalizarCarga original
-}
-// Hook manual: al final de _finalizarCarga se llama automáticamente registrarCargaEnHistorial
-// se llama desde _finalizarCarga que ya fue definido arriba — agregar aquí
 
 
 function selectModel(m){
@@ -3423,12 +3377,20 @@ function animateCounters(){
     requestAnimationFrame(step);
   });
 }
-// Run counter on first data load
-const _origRenderMetrics = window.renderMetrics;
-if(_origRenderMetrics){
-  window.renderMetrics = function(){
-    _origRenderMetrics.apply(this, arguments);
+// Run counter on data load — hook into rMetrics
+const _origRMetrics = window.rMetrics;
+if(typeof _origRMetrics === 'function'){
+  window.rMetrics = function(){
+    _origRMetrics.apply(this, arguments);
     setTimeout(animateCounters, 50);
+  };
+}
+// Also run on _finalizarCarga for initial load
+const _origFinalizar = window._finalizarCarga;
+if(typeof _origFinalizar === 'function'){
+  window._finalizarCarga = function(){
+    _origFinalizar.apply(this, arguments);
+    setTimeout(animateCounters, 200);
   };
 }
 
