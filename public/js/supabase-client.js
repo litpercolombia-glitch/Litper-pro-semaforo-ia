@@ -1,12 +1,12 @@
 // ══════════════════════════════════════════════════════════════
-// LITPERPRO — Supabase Client Module
+// LITPERPRO — Supabase Client Module v2.0
 // Shared across all pages. Load after supabase-js CDN.
+// Updated: uses auth_profiles (not profiles from Mission Control)
 // ══════════════════════════════════════════════════════════════
 
 var SUPABASE_URL = 'https://gtsivwbnhcawvmsfujby.supabase.co';
 var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd0c2l2d2JuaGNhd3Ztc2Z1amJ5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY0NzE1OTksImV4cCI6MjA4MjA0NzU5OX0.aCLguM3d7vsX5z7PhOQs__TSORmiSmLOI7SINfzBKzg';
 
-// Store the SDK factory, then override window.supabase with the client instance
 var supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // ── Auth Helpers ─────────────────────────────────────────────
@@ -29,7 +29,7 @@ async function getOrgId() {
     const user = await getUser();
     if (!user) return null;
     const { data, error } = await supabase
-      .from('profiles')
+      .from('auth_profiles')
       .select('org_id')
       .eq('id', user.id)
       .single();
@@ -43,7 +43,7 @@ async function getProfile() {
     const user = await getUser();
     if (!user) return null;
     const { data, error } = await supabase
-      .from('profiles')
+      .from('auth_profiles')
       .select('*, organizations(*)')
       .eq('id', user.id)
       .single();
@@ -52,7 +52,20 @@ async function getProfile() {
   } catch (e) { console.error('getProfile exception:', e); return null; }
 }
 
-// Redirect to /login if not authenticated
+async function getOrganization() {
+  try {
+    const orgId = await getOrgId();
+    if (!orgId) return null;
+    const { data, error } = await supabase
+      .from('organizations')
+      .select('*')
+      .eq('id', orgId)
+      .single();
+    if (error) { console.error('getOrganization error:', error.message); return null; }
+    return data;
+  } catch (e) { console.error('getOrganization exception:', e); return null; }
+}
+
 async function requireAuth() {
   try {
     const session = await getSession();
@@ -61,7 +74,6 @@ async function requireAuth() {
   } catch (e) { console.error('requireAuth error:', e); window.location.href = '/login'; return null; }
 }
 
-// Redirect to /dashboard if already authenticated (for login page)
 async function redirectIfAuth() {
   try {
     const session = await getSession();
@@ -147,7 +159,7 @@ async function loadAIHistory(limit = 20) {
     .order('created_at', { ascending: false })
     .limit(limit);
   return data || [];
-}
+    }
 
 async function saveChatSession(sessionData) {
   const orgId = await getOrgId();
@@ -232,7 +244,7 @@ async function updateProfile(updates) {
   const user = await getUser();
   if (!user) return null;
   const { data, error } = await supabase
-    .from('profiles')
+    .from('auth_profiles')
     .update(updates)
     .eq('id', user.id)
     .select()
@@ -245,7 +257,6 @@ async function incrementAIUsage() {
   const orgId = await getOrgId();
   if (!orgId) return;
   await supabase.rpc('increment_ai_used', { org: orgId }).catch(() => {
-    // Fallback: manual increment
     supabase.from('organizations').select('ai_used').eq('id', orgId).single().then(({ data }) => {
       if (data) supabase.from('organizations').update({ ai_used: (data.ai_used || 0) + 1 }).eq('id', orgId);
     });
