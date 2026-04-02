@@ -68,20 +68,20 @@ body.light .bg-noise{opacity:.012;}
 .bdg.crit{border-color:var(--rdb);color:var(--rd);background:var(--rddim);cursor:pointer;animation:pulse 2s infinite;}
 @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(255,77,77,.3);}50%{box-shadow:0 0 0 4px rgba(255,77,77,.0);}}
 /* UPLOAD */
-.pais-btn{background:linear-gradient(135deg,rgba(0,255,136,.06),rgba(0,212,245,.04));border:2px solid rgba(0,255,136,.2);border-radius:12px;padding:10px 18px;font-size:22px;cursor:pointer;transition:all .3s cubic-bezier(.34,1.56,.64,1);line-height:1;position:relative;display:flex;align-items:center;gap:8px;overflow:hidden;}
-.pais-btn::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 120%,rgba(0,255,136,.08),transparent 60%);opacity:0;transition:opacity .3s;}
+.pais-btn{background:linear-gradient(135deg,rgba(0,255,136,.1),rgba(0,212,245,.06));border:2px solid rgba(0,255,136,.35);border-radius:12px;padding:12px 22px;font-size:22px;cursor:pointer;transition:all .3s cubic-bezier(.34,1.56,.64,1);line-height:1;position:relative;display:flex;align-items:center;gap:8px;overflow:hidden;}
+.pais-btn::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 120%,rgba(0,255,136,.1),transparent 60%);opacity:0;transition:opacity .3s;}
 .pais-btn:hover::before{opacity:1;}
-.pais-btn:hover{background:linear-gradient(135deg,rgba(0,255,136,.12),rgba(0,212,245,.08));border-color:rgba(0,255,136,.4);transform:scale(1.08);box-shadow:0 0 25px rgba(0,255,136,.15),0 4px 20px rgba(0,0,0,.3);}
-.pais-btn.active{border-color:rgba(0,255,136,.5);background:linear-gradient(135deg,rgba(0,255,136,.15),rgba(0,212,245,.1),rgba(157,78,255,.06));box-shadow:0 0 30px rgba(0,255,136,.2),0 0 60px rgba(0,255,136,.08),0 4px 20px rgba(0,0,0,.3);transform:scale(1.05);}
+.pais-btn:hover{background:linear-gradient(135deg,rgba(0,255,136,.16),rgba(0,212,245,.1));border-color:rgba(0,255,136,.5);transform:scale(1.08);box-shadow:0 0 30px rgba(0,255,136,.2),0 4px 20px rgba(0,0,0,.3);}
+.pais-btn.active{border-color:rgba(0,255,136,.6);background:linear-gradient(135deg,rgba(0,255,136,.18),rgba(0,212,245,.12),rgba(157,78,255,.06));box-shadow:0 0 35px rgba(0,255,136,.25),0 0 70px rgba(0,255,136,.1),0 4px 20px rgba(0,0,0,.3);transform:scale(1.05);}
 .pais-btn.active::after{content:'';position:absolute;inset:-2px;border-radius:13px;background:conic-gradient(from var(--angle,0deg),transparent 60%,rgba(0,255,136,.35),rgba(0,212,245,.25),rgba(157,78,255,.15),transparent 100%);z-index:-1;animation:rotateGrad 3s linear infinite;opacity:.7;}
 body.light .pais-btn{background:rgba(5,150,105,.05);border-color:rgba(5,150,105,.2);}
 body.light .pais-btn:hover{background:rgba(5,150,105,.1);border-color:rgba(5,150,105,.35);box-shadow:0 4px 16px rgba(0,0,0,.08);}
 body.light .pais-btn.active{border-color:rgba(5,150,105,.5);background:linear-gradient(135deg,rgba(5,150,105,.1),rgba(8,145,178,.06));box-shadow:0 0 16px rgba(5,150,105,.15);}
 body.light .pais-btn.active::after{display:none;}
 body.light .pais-btn::before{display:none;}
-.pais-btn-label{font-family:var(--mono);font-size:14px;font-weight:800;letter-spacing:.1em;color:rgba(0,255,136,.55);}
-.pais-btn:hover .pais-btn-label{color:rgba(0,255,136,.85);}
-.pais-btn.active .pais-btn-label{color:#00ff88;text-shadow:0 0 12px rgba(0,255,136,.5),0 0 30px rgba(0,255,136,.2);}
+.pais-btn-label{font-family:var(--mono);font-size:15px;font-weight:800;letter-spacing:.1em;color:rgba(0,255,136,.75);}
+.pais-btn:hover .pais-btn-label{color:rgba(0,255,136,.95);}
+.pais-btn.active .pais-btn-label{color:#00ff88;text-shadow:0 0 15px rgba(0,255,136,.6),0 0 35px rgba(0,255,136,.25);}
 body.light .pais-btn-label{color:rgba(5,150,105,.5);}
 body.light .pais-btn:hover .pais-btn-label{color:rgba(5,150,105,.8);}
 body.light .pais-btn.active .pais-btn-label{color:#059669;text-shadow:none;}
@@ -160,7 +160,9 @@ td.nc{font-family:var(--mono);font-size:11px;text-align:right;color:var(--t2);}
 .pp{background:var(--pudim);color:var(--pu);border:1px solid var(--pub);}
 /* SEM */
 .sem3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:11px;}
-.scard{background:var(--s1);border:1px solid var(--b1);border-radius:var(--r);padding:12px 14px;}
+.scard{background:var(--card-bg);border:1px solid var(--b1);border-radius:var(--r);padding:14px 16px;cursor:pointer;transition:transform .2s cubic-bezier(.34,1.56,.64,1),box-shadow .25s,border-color .2s;}
+.scard:hover{transform:translateY(-3px);}
+.scard:active{transform:scale(.97);}
 .scard.sv{border-color:var(--gnb);}.scard.sa{border-color:var(--amb);}.scard.sr{border-color:var(--rdb);}
 .scl{font-size:9px;text-transform:uppercase;letter-spacing:.09em;margin-bottom:3px;}
 .scn{font-family:var(--mono);font-size:22px;font-weight:500;}
@@ -1245,9 +1247,9 @@ body.light .etbl th{color:var(--t3);}
   <div class="phdr"><div class="phdr-l"><h2>Semáforo de ciudades</h2><p>▶ para ver desglose por transportadora en cada ciudad</p></div><button class="btn-inst" onclick="showInst('semaforo')">❓ Cómo usar</button></div>
   <div class="pb">
     <div class="sem3">
-      <div class="scard sv"><div class="scl gn">Verde ≥80%</div><div class="scn gn" id="sc-v">—</div><div class="scs">escalar pauta</div></div>
-      <div class="scard sa"><div class="scl am">Amarillo 70–79%</div><div class="scn am" id="sc-a">—</div><div class="scs">monitorear</div></div>
-      <div class="scard sr"><div class="scl rd">Rojo &lt;70%</div><div class="scn rd" id="sc-r">—</div><div class="scs">restringir</div></div>
+      <div class="scard sv" onclick="filterSem('v')"><div class="scl gn">Verde ≥80%</div><div class="scn gn" id="sc-v">—</div><div class="scs">escalar pauta · clic para filtrar</div></div>
+      <div class="scard sa" onclick="filterSem('a')"><div class="scl am">Amarillo 70–79%</div><div class="scn am" id="sc-a">—</div><div class="scs">monitorear · clic para filtrar</div></div>
+      <div class="scard sr" onclick="filterSem('r')"><div class="scl rd">Rojo &lt;70%</div><div class="scn rd" id="sc-r">—</div><div class="scs">restringir · clic para filtrar</div></div>
     </div>
     <div class="ctrls">
       <input class="ci search" id="ss-q" type="text" placeholder="Buscar ciudad..." oninput="rSem()">
@@ -1971,6 +1973,11 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')closeOv();});
 function thS(k){if(SS.k===k)SS.d*=-1;else{SS.k=k;SS.d=k==='n'?1:-1;}rSem();updateSortIcons();}
 function updateSortIcons(){['n','t','te'].forEach(k=>{const el=document.getElementById('th-'+k);if(!el)return;const base=k==='n'?'Ciudad':k==='t'?'Pedidos':'% Entrega';if(SS.k===k){el.innerHTML=base+' '+(SS.d===1?'<span style="color:var(--cn)">↑</span>':'<span style="color:var(--cn)">↓</span>');el.style.color='var(--cn)';}else{el.textContent=base+' ↕';el.style.color='';}});}
 window.pagSem=n=>{PG.sem=n;rSem();};
+function filterSem(color){
+  const sel=document.getElementById('ss-c');
+  if(sel){ sel.value = sel.value===color ? '' : color; }
+  rSem();
+}
 function rSem(){
   const q=document.getElementById('ss-q').value.toLowerCase(),
         fc=document.getElementById('ss-c').value,
