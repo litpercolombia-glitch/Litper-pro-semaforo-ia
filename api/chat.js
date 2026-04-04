@@ -4,7 +4,14 @@
 // ══════════════════════════════════════════════════════════════
 
 export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  // CORS headers — restrict to same origin (Vercel serves both frontend and API)
+  const allowedOrigins = process.env.ALLOWED_ORIGINS
+    ? process.env.ALLOWED_ORIGINS.split(',')
+    : [];
+  const origin = req.headers.origin;
+  if (origin && allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  }
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
@@ -20,6 +27,21 @@ export default async function handler(req, res) {
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return res.status(401).json({ error: 'No autorizado' });
+  }
+
+  // Verify JWT against Supabase
+  const SUPABASE_URL = process.env.SUPABASE_URL || 'https://gtsivwbnhcawvmsfujby.supabase.co';
+  const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY || '';
+  const token = authHeader.replace('Bearer ', '');
+  try {
+    const userRes = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
+      headers: { 'Authorization': `Bearer ${token}`, 'apikey': SUPABASE_ANON_KEY }
+    });
+    if (!userRes.ok) {
+      return res.status(401).json({ error: 'Token inválido o expirado. Inicia sesión de nuevo.' });
+    }
+  } catch (e) {
+    return res.status(401).json({ error: 'No se pudo verificar el token.' });
   }
 
   try {
