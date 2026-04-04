@@ -1811,12 +1811,12 @@ function rSem(){
         ft=document.getElementById('ss-t').value;
   let data=C.filter(c=>c[1]>=mv&&c[0].toLowerCase().includes(q));
   if(ft)data=data.filter(c=>c[6].some(r=>r[0]===ft));
-  if(fc==='v')data=data.filter(c=>c[4]>=80);
-  else if(fc==='a')data=data.filter(c=>c[4]>=70&&c[4]<80);
+  if(fc==='v')data=data.filter(c=>c[4]>=80.5);
+  else if(fc==='a')data=data.filter(c=>c[4]>=70&&c[4]<80.5);
   else if(fc==='r')data=data.filter(c=>c[4]<70);
   data.sort((a,b)=>SS.k==='n'?a[0].localeCompare(b[0])*SS.d:(b[SS.k==='t'?1:4]-a[SS.k==='t'?1:4])*SS.d);
-  document.getElementById('sc-v').textContent=data.filter(c=>c[4]>=80).length;
-  document.getElementById('sc-a').textContent=data.filter(c=>c[4]>=70&&c[4]<80).length;
+  document.getElementById('sc-v').textContent=data.filter(c=>c[4]>=80.5).length;
+  document.getElementById('sc-a').textContent=data.filter(c=>c[4]>=70&&c[4]<80.5).length;
   document.getElementById('sc-r').textContent=data.filter(c=>c[4]<70).length;
   const pages=Math.ceil(data.length/PER);if(PG.sem>pages)PG.sem=1;
   const sl=data.slice((PG.sem-1)*PER,PG.sem*PER);
@@ -1950,8 +1950,8 @@ function rMatriz(){
       scales:{x:{title:{display:true,text:'Volumen de pedidos',color:'#555',font:{size:10}},grid:{color:'rgba(0,245,255,.04)'},ticks:{color:'#555',font:{size:10},callback:v=>v>=1000?v/1000+'K':v}},
         y:{title:{display:true,text:'% Tasa de entrega',color:'#555',font:{size:10}},min:40,max:100,grid:{color:'rgba(0,245,255,.04)'},ticks:{color:'#555',font:{size:10},callback:v=>v+'%'}}}}
   });
-  const esc=data.filter(c=>c[1]>=medV&&c[4]>=80).sort((a,b)=>b[1]-a[1]).slice(0,5);
-  const opt=data.filter(c=>c[1]>=medV&&c[4]<80).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  const esc=data.filter(c=>c[1]>=medV&&c[4]>=80.5).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  const opt=data.filter(c=>c[1]>=medV&&c[4]<80.5).sort((a,b)=>b[1]-a[1]).slice(0,5);
   document.getElementById('mz-list').innerHTML=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px">
     <div style="background:rgba(0,255,136,.04);border:1px solid var(--gnb);border-radius:var(--r);padding:10px 12px"><div style="font-size:9px;color:var(--gn);text-transform:uppercase;letter-spacing:.08em;font-weight:500;margin-bottom:6px">🚀 Escalar ahora (top 5)</div>${esc.map(c=>`<div style="font-size:11px;display:flex;justify-content:space-between;padding:2px 0"><span style="color:var(--t2)">${c[0]}</span><span style="font-family:var(--mono);font-size:10px;color:var(--gn)">${c[4]}%</span></div>`).join('')}</div>
     <div style="background:rgba(255,184,0,.04);border:1px solid var(--amb);border-radius:var(--r);padding:10px 12px"><div style="font-size:9px;color:var(--am);text-transform:uppercase;letter-spacing:.08em;font-weight:500;margin-bottom:6px">🔧 Optimizar urgente (top 5)</div>${opt.map(c=>`<div style="font-size:11px;display:flex;justify-content:space-between;padding:2px 0"><span style="color:var(--t2)">${c[0]}</span><span style="font-family:var(--mono);font-size:10px;color:var(--rd)">${c[4]}%</span></div>`).join('')}</div>
@@ -2045,7 +2045,7 @@ function buildPrompt(k){
   const rojas=C.filter(c=>c[4]<70&&c[1]>=30).sort((a,b)=>b[1]-a[1]).slice(0,12).map(c=>`${c[0]} ${c[1]}ped ${c[4]}%`).join('\n');
   const ops=A.filter(a=>a[0]===2).slice(0,8).map(a=>`${a[1]}: ${a[4]}`).join('\n');
   const criticas=A.filter(a=>a[0]===0).map(a=>`${a[1]} ${a[3]}%`).join(', ');
-  const escalar=C.filter(c=>c[4]>=80&&c[1]>=30).sort((a,b)=>b[1]-a[1]).slice(0,15).map(c=>`${c[0]} ${c[1]}ped ${c[4]}%`).join('\n');
+  const escalar=C.filter(c=>c[4]>=80.5&&c[1]>=30).sort((a,b)=>b[1]-a[1]).slice(0,15).map(c=>`${c[0]} ${c[1]}ped ${c[4]}%`).join('\n');
   const trans=T.map(t=>`${t.transportadora} ${t.total}ped ${t.tasa_entrega}%`).join(', ');
   if(k==='gen')return`Eres experto en logística e-commerce COD para LATAM (Colombia, Chile, Guatemala, México). Datos Litper Mayo2025-Ene2026:\nGlobal: ${G.total} pedidos, ${G.tasa_entrega}% entrega, ${G.devoluciones} devoluciones (~$91M COP costo estimado).\nCarriers: ${trans}\nTop 10 ciudades: ${top10}\nEntrega:\n1) Diagnóstico ejecutivo (3-4 líneas)\n2) 3 hallazgos clave con números\n3) 3 recomendaciones para ESTA semana\n4) 1 insight no obvio`;
   if(k==='rojo')return`Experto logística COD LATAM (Colombia, Chile, Guatemala, México). Ciudades Litper <70% entrega (mín 30 ped):\n${rojas}\nPara cada ciudad: acción inmediata, carrier alternativo, impacto estimado. Sé concreto y directo.`;
@@ -3659,7 +3659,7 @@ function exportReport(){
   if(!G||!G.total){alert('Primero carga datos.');return;}
   const now = new Date().toLocaleString('es-CO',{dateStyle:'full',timeStyle:'short'});
   const rojas = C.filter(x=>x[4]<70&&x[1]>=30).slice(0,5);
-  const verdes = C.filter(x=>x[4]>=80&&x[1]>=50).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  const verdes = C.filter(x=>x[4]>=80.5&&x[1]>=50).sort((a,b)=>b[1]-a[1]).slice(0,5);
   const topCarrier = T.sort((a,b)=>b.tasa_entrega-a.tasa_entrega)[0];
   
   let txt = `LITPERPRO - REPORTE EJECUTIVO
@@ -3998,7 +3998,7 @@ function lpRemoveTyping(){
 function lpBuildSystemPrompt(){
   if(typeof C === 'undefined' || !C || C.length===0) return 'Eres LitperBot, asistente logístico de LitperPro. No hay datos cargados. Responde en español, sé conciso.';
   var rojas = C.filter(function(x){return x[4]<70&&x[1]>=30;}).slice(0,8).map(function(x){return x[0]+':'+x[4]+'%';}).join(', ');
-  var verdes = C.filter(function(x){return x[4]>=80&&x[1]>=30;}).slice(0,8).map(function(x){return x[0]+':'+x[4]+'%';}).join(', ');
+  var verdes = C.filter(function(x){return x[4]>=80.5&&x[1]>=30;}).slice(0,8).map(function(x){return x[0]+':'+x[4]+'%';}).join(', ');
   var carriers = (typeof T!=='undefined'?T:[]).map(function(t){return t.transportadora+':'+t.total+'ped/'+t.tasa_entrega+'%';}).join(', ');
   return 'Eres LitperBot, asistente de logística para LitperPro (e-commerce COD en Colombia, Chile, Guatemala y México).\n' +
     'DATOS ACTUALES: ' + G.total + ' pedidos · ' + G.tasa_entrega + '% entrega · ' + G.devoluciones + ' devoluciones · ' + G.ciudades + ' ciudades · ' + G.transportadoras + ' carriers.\n' +
@@ -4014,7 +4014,7 @@ function lpBuildAnalysisPrompt(type){
   // Prompts adicionales
   if(typeof C === 'undefined' || !C || !C.length) return 'Dame recomendaciones generales de logistica COD para LATAM. Tipo: ' + type;
   var rojas = C.filter(function(x){return x[4]<70&&x[1]>=20;}).slice(0,10).map(function(x){return x[0]+':'+x[4]+'%/'+x[1]+'ped';}).join(', ');
-  var verdes = C.filter(function(x){return x[4]>=80&&x[1]>=30;}).sort(function(a,b){return b[1]-a[1];}).slice(0,10).map(function(x){return x[0]+':'+x[4]+'%/'+x[1]+'ped';}).join(', ');
+  var verdes = C.filter(function(x){return x[4]>=80.5&&x[1]>=30;}).sort(function(a,b){return b[1]-a[1];}).slice(0,10).map(function(x){return x[0]+':'+x[4]+'%/'+x[1]+'ped';}).join(', ');
   var carriers = (typeof T!=='undefined'?T:[]).map(function(t){return t.transportadora+':'+t.total+'ped/'+t.tasa_entrega+'%';}).join(', ');
   var glob = (typeof G!=='undefined') ? G.total+'ped/'+G.tasa_entrega+'%/'+G.devoluciones+'dev' : 'sin datos globales';
   if(type==='reporte') return 'Genera un REPORTE EJECUTIVO completo de las operaciones Litper. Incluye: 1) Resumen ejecutivo 3 lineas. 2) Metricas clave con numeros exactos: '+glob+'. 3) Top 5 ciudades criticas con accion especifica. 4) Top 5 ciudades para escalar. 5) Ranking de carriers con CPA estimado. 6) Plan de accion 7 dias para el equipo de logistica y marketing. 7) KPI objetivo para el lunes. Carriers: '+carriers;
