@@ -695,7 +695,18 @@ async function pagarExpress(method){
 
 async function procesarPago(){
   const card = document.getElementById('inp-card').value.replace(/\s/g,'');
-  if(card.length<16){alert('Verifica el número de tarjeta.');return;}
+  const exp = document.getElementById('inp-exp').value.replace(/\s/g,'');
+  const cvv = document.getElementById('inp-cvv').value.trim();
+  const cardname = document.getElementById('inp-cardname').value.trim();
+  if(card.length<16){alert('Verifica el número de tarjeta (16 dígitos).');return;}
+  if(!/^\d{2}\/\d{2}$/.test(exp)){alert('Verifica la fecha de expiración (MM/AA).');return;}
+  const [mm,aa] = exp.split('/').map(Number);
+  if(mm<1||mm>12){alert('Mes de expiración inválido.');return;}
+  const now = new Date();
+  const expDate = new Date(2000+aa, mm);
+  if(expDate<=now){alert('La tarjeta está vencida.');return;}
+  if(!/^\d{3,4}$/.test(cvv)){alert('El CVV debe tener 3 o 4 dígitos.');return;}
+  if(cardname.length<3){alert('Ingresa el nombre del titular de la tarjeta.');return;}
   const btn = document.getElementById('btn-pagar');
   btn.classList.add('loading');
   btn.innerHTML = '⏳ Procesando pago de forma segura...';
