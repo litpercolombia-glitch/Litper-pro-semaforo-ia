@@ -18,7 +18,8 @@ create table public.organizations (
 );
 
 -- ── PROFILES (una fila por usuario de Supabase Auth) ──────────
-create table public.profiles (
+-- NOTE: table renamed from "profiles" to "auth_profiles" to match application code
+create table public.auth_profiles (
   id         uuid references auth.users primary key,
   org_id     uuid references public.organizations,
   email      text not null,
@@ -31,7 +32,7 @@ create table public.profiles (
 create table public.uploads (
   id             uuid default uuid_generate_v4() primary key,
   org_id         uuid references public.organizations not null,
-  user_id        uuid references public.profiles,
+  user_id        uuid references public.auth_profiles,
   filename       text not null,
   total_orders   int,
   delivered      int,
@@ -87,7 +88,7 @@ create index on public.carrier_stats(upload_id);
 create table public.ai_analyses (
   id          uuid default uuid_generate_v4() primary key,
   org_id      uuid references public.organizations,
-  user_id     uuid references public.profiles,
+  user_id     uuid references public.auth_profiles,
   upload_id   uuid references public.uploads,
   model       text not null check (model in ('gemini','claude','chatgpt')),
   type        text not null,
@@ -102,7 +103,7 @@ create index on public.ai_analyses(org_id, created_at desc);
 create table public.chat_sessions (
   id          uuid default uuid_generate_v4() primary key,
   org_id      uuid references public.organizations,
-  user_id     uuid references public.profiles,
+  user_id     uuid references public.auth_profiles,
   upload_id   uuid references public.uploads,
   model       text default 'gemini',
   title       text,
@@ -115,7 +116,7 @@ create index on public.chat_sessions(org_id, updated_at desc);
 
 -- ── ROW LEVEL SECURITY ────────────────────────────────────────
 alter table public.organizations  enable row level security;
-alter table public.profiles        enable row level security;
+alter table public.auth_profiles        enable row level security;
 alter table public.uploads         enable row level security;
 alter table public.city_stats      enable row level security;
 alter table public.carrier_stats   enable row level security;
@@ -125,11 +126,11 @@ alter table public.chat_sessions   enable row level security;
 -- Helper: get org_id del usuario actual
 create or replace function public.my_org_id()
 returns uuid language sql security definer stable as
-$$ select org_id from public.profiles where id = auth.uid() $$;
+$$ select org_id from public.auth_profiles where id = auth.uid() $$;
 
 -- Policies: cada usuario ve SOLO datos de su organizacion
 create policy "own org" on public.organizations  for all using (id = my_org_id());
-create policy "own org" on public.profiles        for all using (org_id = my_org_id());
+create policy "own org" on public.auth_profiles        for all using (org_id = my_org_id());
 create policy "own org" on public.uploads         for all using (org_id = my_org_id());
 create policy "own org" on public.city_stats      for all using (org_id = my_org_id());
 create policy "own org" on public.carrier_stats   for all using (org_id = my_org_id());
@@ -152,7 +153,7 @@ begin
   ) returning id into new_org_id;
 
   -- Crear perfil
-  insert into public.profiles (id, org_id, email, full_name, role)
+  insert into public.auth_profiles (id, org_id, email, full_name, role)
   values (
     new.id,
     new_org_id,
