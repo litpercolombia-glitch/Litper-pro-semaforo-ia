@@ -963,6 +963,35 @@ input[type=range]:hover { transform: scaleY(1.1); }
 #lp-toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
 
 
+/* ── ONBOARDING WIZARD ── */
+.onb-overlay{position:fixed;inset:0;z-index:9999;background:rgba(5,6,10,.92);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);animation:onbFadeIn .4s ease;}
+@keyframes onbFadeIn{from{opacity:0}to{opacity:1}}
+.onb-card{background:rgba(12,14,24,.98);border:1px solid rgba(0,212,245,.25);border-radius:24px;padding:40px;max-width:520px;width:92%;position:relative;box-shadow:0 0 80px rgba(0,212,245,.12),0 24px 64px rgba(0,0,0,.6);animation:onbSlide .5s cubic-bezier(.34,1.56,.64,1);}
+@keyframes onbSlide{from{opacity:0;transform:translateY(30px) scale(.95)}to{opacity:1;transform:translateY(0) scale(1)}}
+.onb-step{display:none;}.onb-step.active{display:block;}
+.onb-icon{width:64px;height:64px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:30px;margin:0 auto 20px;background:linear-gradient(135deg,rgba(0,212,245,.15),rgba(157,78,255,.1));border:1px solid rgba(0,212,245,.2);}
+.onb-title{font-family:var(--display);font-size:24px;font-weight:900;text-align:center;margin-bottom:8px;letter-spacing:-.02em;}
+.onb-sub{text-align:center;font-size:14px;color:var(--t2);margin-bottom:28px;line-height:1.6;}
+.onb-input{width:100%;background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.12);border-radius:12px;padding:14px 16px;font-family:var(--font);font-size:15px;color:var(--tx);outline:none;transition:all .2s;margin-bottom:16px;}
+.onb-input::placeholder{color:var(--t3);}
+.onb-input:focus{border-color:rgba(0,212,245,.4);box-shadow:0 0 0 4px rgba(0,212,245,.08);background:rgba(255,255,255,.07);}
+.onb-btn{width:100%;padding:15px 24px;border-radius:12px;font-family:var(--font);font-size:15px;font-weight:800;cursor:pointer;border:none;transition:all .25s cubic-bezier(.34,1.56,.64,1);letter-spacing:.02em;}
+.onb-btn-primary{background:linear-gradient(135deg,var(--cn),#38bdf8 50%,var(--gn));background-size:200%;color:#000;box-shadow:0 4px 24px rgba(0,212,245,.35);animation:bgrad 4s ease-in-out infinite alternate;}
+.onb-btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 36px rgba(0,212,245,.5);}
+.onb-btn-skip{background:none;color:var(--t3);font-size:12px;margin-top:12px;padding:8px;}
+.onb-btn-skip:hover{color:var(--t2);}
+.onb-progress{display:flex;gap:6px;justify-content:center;margin-bottom:24px;}
+.onb-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.12);transition:all .3s;}
+.onb-dot.active{background:var(--cn);box-shadow:0 0 8px rgba(0,212,245,.5);width:24px;border-radius:4px;}
+.onb-dot.done{background:var(--gn);}
+.onb-upload-zone{border:2px dashed rgba(0,212,245,.25);border-radius:16px;padding:32px;text-align:center;cursor:pointer;transition:all .2s;margin-bottom:16px;}
+.onb-upload-zone:hover,.onb-upload-zone.drag{border-color:rgba(0,212,245,.5);background:rgba(0,212,245,.05);}
+.onb-upload-icon{font-size:40px;margin-bottom:8px;}
+.onb-upload-text{font-size:14px;color:var(--t2);}
+.onb-upload-hint{font-size:11px;color:var(--t3);margin-top:6px;}
+.onb-features{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px;}
+.onb-feat{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--t2);padding:8px 10px;background:rgba(255,255,255,.03);border-radius:8px;border:1px solid rgba(255,255,255,.06);}
+.onb-feat-icon{font-size:14px;}
 </style>
 <link rel="icon" type="image/png" href="data:image/png;base64,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">
 </head>
@@ -1656,6 +1685,73 @@ input[type=range]:hover { transform: scaleY(1.1); }
 // ─── AUTH CHECK ─────────────────────────────────────────────────────────────
 requireAuth();
 
+// ── AUTO-LOAD LAST UPLOAD FROM SUPABASE ────────────────────────
+(async function autoLoadLastUpload(){
+  try {
+    const upload = await getLastUpload();
+    if(!upload) return; // No previous uploads, user needs to upload first
+    // Only auto-load if no data currently loaded
+    if(typeof G !== 'undefined' && G && G.total > 0) return;
+
+    const [cities, carriers] = await Promise.all([
+      getUploadCities(upload.id),
+      getUploadCarriers(upload.id)
+    ]);
+
+    if(!cities.length && !carriers.length) return;
+
+    // Populate global stats
+    G = {
+      total: upload.total_orders || 0,
+      entregados: upload.delivered || 0,
+      devoluciones: upload.returned || 0,
+      tasa_entrega: parseFloat(upload.delivery_rate) || 0,
+      ciudades: upload.cities_count || cities.length,
+      transportadoras: upload.carriers_count || carriers.length
+    };
+
+    // Populate cities array
+    C = cities.map(function(c){
+      var breakdown = [];
+      if(c.carrier_breakdown && typeof c.carrier_breakdown === 'object'){
+        Object.entries(c.carrier_breakdown).forEach(function(entry){
+          breakdown.push([entry[0], entry[1].count||0, entry[1].delivered||0, entry[1].rate||0]);
+        });
+      }
+      return [
+        c.city,
+        c.total || 0,
+        c.delivered || 0,
+        c.returned || 0,
+        parseFloat(c.rate) || 0,
+        c.best_carrier ? [c.best_carrier] : null,
+        breakdown
+      ];
+    });
+
+    // Populate carriers array
+    T = carriers.map(function(c){
+      return {
+        transportadora: c.carrier,
+        total: c.total || 0,
+        entregados: c.delivered || 0,
+        devoluciones: c.returned || 0,
+        tasa_entrega: parseFloat(c.rate) || 0
+      };
+    });
+
+    // Render dashboard
+    if(typeof popSelects === 'function') popSelects();
+    if(typeof rMetrics === 'function') rMetrics();
+    if(typeof rSem === 'function') rSem();
+    if(typeof rCiu === 'function') rCiu();
+    if(typeof rAlertas === 'function') rAlertas();
+    if(typeof rBloq === 'function') rBloq();
+
+    console.log('✅ Last upload auto-loaded from Supabase:', upload.id);
+  } catch(e){ console.warn('Auto-load failed (ok for first use):', e); }
+})();
+
 // ─── AI API PROXY HELPER ────────────────────────────────────────────────────
 async function _getAuthToken(){
   const s = await getSession();
@@ -2057,6 +2153,17 @@ function setChip(el,k){activeAI=k;document.querySelectorAll('.chip').forEach(c=>
 function saveKey(){}
 function toggleKeyVis(){}
 async function runAI(){
+  // ── CHECK AI QUOTA ─────────────────────────────────────────
+  try {
+    const quota = await checkAIQuota();
+    if(!quota.allowed){
+      const out = document.getElementById('ai-out');
+      out.className = 'aiout';
+      out.innerHTML = '⚠️ Límite de consultas IA alcanzado (' + quota.used + '/' + quota.quota + ')\n\nActualiza tu plan para más consultas:\n→ Pro: 50 análisis/mes · $79.000 COP\n→ Enterprise: Ilimitado · $299.000 COP\n\nVisita /pricing para ver los planes.';
+      return;
+    }
+  } catch(e){ /* continue if quota check fails */ }
+
   // Usar currentModel de la arquitectura existente del dashboard
   const model = currentModel || 'gemini';
 
@@ -2081,8 +2188,9 @@ async function runAI(){
     out.className='aiout';
     out.textContent=icons[model]+' '+modelNames[model]+'\n'+'-'.repeat(40)+'\n\n'+txt;
 
-    // Persistir análisis en Supabase
+    // Persistir análisis en Supabase + incrementar uso
     saveAIAnalysis({ model, type: activeAI||'gen', prompt: prompt.slice(0,500), response: txt.slice(0,2000), duration_ms: Date.now()-_aiStart }).catch(()=>{});
+    incrementAIUsage().catch(()=>{});
 
   }catch(e){
     out.className='aiout loading';
@@ -4064,6 +4172,15 @@ function lpSend(){
 
 // ── LLAMADA A LA API (vía servidor) ──────────────────────────
 async function lpCallAPI(directPrompt, userMsg){
+  // Check AI quota
+  try {
+    var q = await checkAIQuota();
+    if(!q.allowed){
+      lpAddMsg('bot', '⚠️ Límite de consultas IA alcanzado ('+q.used+'/'+q.quota+'). Actualiza tu plan en /pricing para continuar.');
+      return;
+    }
+  } catch(e){}
+
   lpTyping = true;
   document.getElementById('lp-send').disabled = true;
   lpAddMsg('bot', '', true);
@@ -4079,6 +4196,7 @@ async function lpCallAPI(directPrompt, userMsg){
     lpHistory.push({role:'assistant',content:txt,ts:Date.now()});
     if(lpHistory.length>40) lpHistory.splice(0,2);
     lpSaveHistoryChatDB();
+    incrementAIUsage().catch(function(){});
 
   }catch(e){
     lpRemoveTyping();
@@ -4293,4 +4411,131 @@ function lpShowToast(msg){
     <div class="mbody" id="mbody"></div>
   </div>
 </div>
+<!-- ── ONBOARDING WIZARD ── -->
+<div class="onb-overlay" id="onb-overlay" style="display:none">
+  <div class="onb-card">
+    <div class="onb-progress" id="onb-progress">
+      <div class="onb-dot active" id="onb-d1"></div>
+      <div class="onb-dot" id="onb-d2"></div>
+      <div class="onb-dot" id="onb-d3"></div>
+    </div>
+
+    <!-- STEP 1: Welcome -->
+    <div class="onb-step active" id="onb-s1">
+      <div class="onb-icon">🚀</div>
+      <div class="onb-title">¡Bienvenido a <span style="color:var(--cn)">LitperPro</span>!</div>
+      <div class="onb-sub">Tu centro de inteligencia logística COD. Configura tu cuenta en 30 segundos.</div>
+      <input class="onb-input" id="onb-store" type="text" placeholder="¿Cómo se llama tu tienda? Ej: MiTiendaCOD" autocomplete="off" autofocus>
+      <button class="onb-btn onb-btn-primary" onclick="onbNext(1)">Continuar →</button>
+      <button class="onb-btn onb-btn-skip" onclick="onbSkip()">Configurar después</button>
+    </div>
+
+    <!-- STEP 2: Upload first report -->
+    <div class="onb-step" id="onb-s2">
+      <div class="onb-icon">📊</div>
+      <div class="onb-title">Sube tu primer reporte</div>
+      <div class="onb-sub">Arrastra tu Excel de Dropi y en segundos verás el semáforo de tus ciudades.</div>
+      <div class="onb-upload-zone" id="onb-drop" onclick="document.getElementById('onb-file').click()" ondragover="event.preventDefault();this.classList.add('drag')" ondragleave="this.classList.remove('drag')" ondrop="event.preventDefault();this.classList.remove('drag');onbHandleFile(event.dataTransfer.files[0])">
+        <div class="onb-upload-icon">📁</div>
+        <div class="onb-upload-text">Arrastra tu Excel aquí o <strong style="color:var(--cn)">haz clic</strong></div>
+        <div class="onb-upload-hint">Formatos: .xlsx, .xls, .csv — Exporta desde Dropi → Órdenes</div>
+      </div>
+      <input type="file" id="onb-file" accept=".xlsx,.xls,.csv" style="display:none" onchange="onbHandleFile(this.files[0])">
+      <button class="onb-btn onb-btn-primary" id="onb-upload-btn" onclick="onbNext(2)" disabled style="opacity:.5">Analizar datos →</button>
+      <button class="onb-btn onb-btn-skip" onclick="onbNext(2)">Subir después →</button>
+    </div>
+
+    <!-- STEP 3: Ready -->
+    <div class="onb-step" id="onb-s3">
+      <div class="onb-icon">✅</div>
+      <div class="onb-title">¡Todo listo!</div>
+      <div class="onb-sub">Tu cuenta está configurada. Esto es lo que puedes hacer:</div>
+      <div class="onb-features">
+        <div class="onb-feat"><span class="onb-feat-icon">🚦</span> Semáforo de ciudades</div>
+        <div class="onb-feat"><span class="onb-feat-icon">🤖</span> Análisis con IA</div>
+        <div class="onb-feat"><span class="onb-feat-icon">📈</span> Scorecard carriers</div>
+        <div class="onb-feat"><span class="onb-feat-icon">💬</span> Chat LitperBot</div>
+        <div class="onb-feat"><span class="onb-feat-icon">🔔</span> Alertas automáticas</div>
+        <div class="onb-feat"><span class="onb-feat-icon">📊</span> Reportes ejecutivos</div>
+      </div>
+      <button class="onb-btn onb-btn-primary" onclick="onbFinish()">🎯 Empezar a analizar →</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── ONBOARDING WIZARD LOGIC ─────────────────────────────────
+var _onbFile = null;
+(async function checkOnboarding(){
+  try {
+    var profile = await getProfile();
+    if(!profile) return;
+    if(profile.onboarding_completed) return;
+    // Show onboarding
+    document.getElementById('onb-overlay').style.display = 'flex';
+    // Pre-fill store name if org has one
+    if(profile.organizations && profile.organizations.name){
+      document.getElementById('onb-store').value = profile.organizations.name;
+    }
+  } catch(e){ console.warn('Onboarding check:', e); }
+})();
+
+function onbNext(step){
+  // Save step 1 data
+  if(step === 1){
+    var storeName = document.getElementById('onb-store').value.trim();
+    if(storeName){
+      updateProfile({ store_name: storeName }).catch(function(){});
+      // Also update org name
+      (async function(){
+        var orgId = await getOrgId();
+        if(orgId){
+          supabase.from('organizations').update({ name: storeName }).eq('id', orgId).then(function(){});
+        }
+      })();
+    }
+  }
+  // Handle file from step 2
+  if(step === 2 && _onbFile){
+    // Trigger the main upload handler
+    var mainInput = document.getElementById('fi');
+    if(mainInput){
+      var dt = new DataTransfer();
+      dt.items.add(_onbFile);
+      mainInput.files = dt.files;
+      mainInput.dispatchEvent(new Event('change', {bubbles:true}));
+    }
+  }
+  // Navigate
+  var next = step + 1;
+  if(next > 3) return onbFinish();
+  for(var i=1;i<=3;i++){
+    document.getElementById('onb-s'+i).classList.toggle('active', i===next);
+    var dot = document.getElementById('onb-d'+i);
+    dot.classList.remove('active','done');
+    if(i < next) dot.classList.add('done');
+    else if(i === next) dot.classList.add('active');
+  }
+}
+
+function onbHandleFile(file){
+  if(!file) return;
+  _onbFile = file;
+  var zone = document.getElementById('onb-drop');
+  zone.innerHTML = '<div class="onb-upload-icon">✅</div><div class="onb-upload-text" style="color:var(--cn);font-weight:600">'+file.name+'</div><div class="onb-upload-hint">'+Math.round(file.size/1024)+'KB · Listo para analizar</div>';
+  var btn = document.getElementById('onb-upload-btn');
+  btn.disabled = false;
+  btn.style.opacity = '1';
+}
+
+async function onbFinish(){
+  document.getElementById('onb-overlay').style.display = 'none';
+  try { await updateProfile({ onboarding_completed: true }); } catch(e){}
+}
+
+function onbSkip(){
+  onbFinish();
+}
+</script>
+
 </body>

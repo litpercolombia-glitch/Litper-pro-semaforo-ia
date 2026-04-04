@@ -128,6 +128,8 @@ footer{position:relative;z-index:1;border-top:1px solid var(--e1);padding:32px 2
 .footer-links a:hover{color:var(--teal);}
 .footer-copy{font-family:var(--mono);font-size:11px;color:var(--t3);}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="/js/supabase-client.js"></script>
 </head>
 <body>
 <div style="position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.55;background:radial-gradient(ellipse at 30% 40%,rgba(0,212,245,.07) 0%,transparent 50%),radial-gradient(ellipse at 70% 60%,rgba(157,78,255,.05) 0%,transparent 50%),radial-gradient(ellipse at 50% 80%,rgba(0,255,136,.03) 0%,transparent 40%)"></div>
@@ -143,7 +145,7 @@ footer{position:relative;z-index:1;border-top:1px solid var(--e1);padding:32px 2
   <div class="nav-links">
     <a href="/" class="nav-link">Inicio</a>
     <a href="/dashboard" class="nav-link">Dashboard</a>
-    <a href="/login" class="nav-btn">Empezar gratis</a>
+    <a href="/login" class="nav-btn" id="nav-auth-btn">Empezar gratis</a>
   </div>
 </nav>
 
@@ -368,6 +370,29 @@ document.querySelectorAll('.plan-card,.faq-item,.cta-bottom').forEach(function(e
   el.style.opacity='0';el.style.transform='translateY(20px)';el.style.transition='opacity .5s ease, transform .5s ease';
   observer.observe(el);
 });
+</script>
+<script>
+// ── AUTH-AWARE NAV ──────────────────────────────────────────
+(async function(){
+  try {
+    const session = await getSession();
+    const btn = document.getElementById('nav-auth-btn');
+    if(session && btn){
+      btn.href = '/dashboard';
+      btn.textContent = 'Mi Dashboard →';
+    }
+    // Update plan CTAs for logged-in users to go to checkout
+    if(session){
+      document.querySelectorAll('.plan-cta').forEach(function(cta){
+        var href = cta.getAttribute('href')||'';
+        if(href.includes('login.html?mode=register')){
+          var plan = href.includes('plan=pro') ? 'pro' : href.includes('plan=enterprise') ? 'enterprise' : '';
+          if(plan) cta.href = '/checkout?plan=' + plan;
+        }
+      });
+    }
+  } catch(e){ console.warn('Auth check:', e); }
+})();
 </script>
 </body>
 </html>

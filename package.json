@@ -7,6 +7,10 @@
     "build": "echo 'Static site - no build needed'",
     "start": "npx serve public -p 3000"
   },
-  "dependencies": {},
+  "dependencies": {
+    "stripe": "^14.0.0",
+    "micro": "^10.0.1",
+    "@supabase/supabase-js": "^2.39.0"
+  },
   "devDependencies": {}
 }

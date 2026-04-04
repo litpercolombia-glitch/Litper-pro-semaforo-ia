@@ -158,10 +158,10 @@ body{background:var(--ink);color:var(--tx);font-family:var(--font);font-size:14p
       </div>
       <!-- KPI cards -->
       <div class="dash-grid">
-        <div class="dc"><div class="dc-lbl">Tasa de entrega</div><div class="dc-val" style="color:var(--teal);text-shadow:0 0 30px rgba(0,212,245,.6),0 0 60px rgba(0,212,245,.25)">80.5%</div><div class="dc-sub">Colombia activo</div></div>
-        <div class="dc"><div class="dc-lbl">Pedidos analizados</div><div class="dc-val" style="color:var(--green)">31.159</div><div class="dc-sub">Mayo 25 – Ene 26</div></div>
-        <div class="dc"><div class="dc-lbl">Análisis IA usados</div><div class="dc-val" style="color:var(--violet)">12<span style="font-size:13px;color:var(--t3)">/50</span></div><div class="dc-sub">Este mes · Plan Pro</div></div>
-        <div class="dc"><div class="dc-lbl">Próxima factura</div><div class="dc-val" style="color:var(--amber)">$79K</div><div class="dc-sub">Abr 19, 2026</div></div>
+        <div class="dc"><div class="dc-lbl">Tasa de entrega</div><div class="dc-val" id="pf-rate" style="color:var(--teal);text-shadow:0 0 30px rgba(0,212,245,.6),0 0 60px rgba(0,212,245,.25)">80.5%</div><div class="dc-sub">Colombia activo</div></div>
+        <div class="dc"><div class="dc-lbl">Pedidos analizados</div><div class="dc-val" id="pf-orders" style="color:var(--green)">31.159</div><div class="dc-sub">Mayo 25 – Ene 26</div></div>
+        <div class="dc"><div class="dc-lbl">Análisis IA usados</div><div class="dc-val" id="pf-ai-usage" style="color:var(--violet)">12<span style="font-size:13px;color:var(--t3)">/50</span></div><div class="dc-sub">Este mes · Plan Pro</div></div>
+        <div class="dc"><div class="dc-lbl">Próxima factura</div><div class="dc-val" id="pf-billing" style="color:var(--amber)">$79K</div><div class="dc-sub">Abr 19, 2026</div></div>
       </div>
       <!-- Quick actions -->
       <div class="qa-grid">
@@ -202,14 +202,14 @@ body{background:var(--ink);color:var(--tx);font-family:var(--font);font-size:14p
         <div class="card-title">Información personal</div>
         <div class="card-sub">Datos de tu cuenta LitperPro</div>
         <div class="form-grid" style="gap:14px">
-          <div class="fg"><label class="flbl">Nombre</label><input type="text" class="inp" value="Jeferson"></div>
-          <div class="fg"><label class="flbl">Apellido</label><input type="text" class="inp" value="Rodríguez"></div>
-          <div class="fg"><label class="flbl">Correo electrónico</label><input type="email" class="inp" value="jeferson@litper.co"></div>
-          <div class="fg"><label class="flbl">Teléfono</label><input type="text" class="inp" value="+57 300 000 0000"></div>
+          <div class="fg"><label class="flbl">Nombre</label><input type="text" class="inp" id="pf-name" placeholder="Tu nombre"></div>
+          <div class="fg"><label class="flbl">Apellido</label><input type="text" class="inp" id="pf-lastname" placeholder="Tu apellido"></div>
+          <div class="fg"><label class="flbl">Correo electrónico</label><input type="email" class="inp" id="pf-email" placeholder="tu@email.com" disabled></div>
+          <div class="fg"><label class="flbl">Teléfono</label><input type="text" class="inp" id="pf-phone" placeholder="+57 300 000 0000"></div>
         </div>
-        <div class="fg" style="margin-top:14px"><label class="flbl">Empresa</label><input type="text" class="inp" value="Litper Group LLC"></div>
-        <div class="fg" style="margin-top:14px"><label class="flbl">Ciudad</label><input type="text" class="inp" value="Duitama, Boyacá, Colombia"></div>
-        <div style="margin-top:20px"><button class="btn btn-glow" onclick="saved()">Guardar cambios</button></div>
+        <div class="fg" style="margin-top:14px"><label class="flbl">Empresa / Tienda</label><input type="text" class="inp" id="pf-company" placeholder="Nombre de tu empresa"></div>
+        <div class="fg" style="margin-top:14px"><label class="flbl">Ciudad</label><input type="text" class="inp" id="pf-city" placeholder="Tu ciudad"></div>
+        <div style="margin-top:20px"><button class="btn btn-glow" onclick="saveProfile()">Guardar cambios</button></div>
       </div>
     </div>
 
@@ -323,33 +323,81 @@ function showPage(id,el){pages.forEach(p=>document.getElementById('page-'+p).sty
 function saved(msg='Cambios guardados'){const t=document.getElementById('toast');document.getElementById('toast-msg').textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
 // ─── AUTH + LOAD REAL DATA ──────────────────────────────────
 requireAuth();
+// ─── LOAD REAL DATA FROM SUPABASE ──────────────────────────
 (async function loadProfileData(){
-  const profile = await getProfile();
-  if(!profile) return;
-  // Fill profile fields
-  const nameEl = document.querySelector('.profile-name, .pn-name, [id*="user-name"]');
-  const emailEl = document.querySelector('.profile-email, [id*="user-email"]');
-  // Try to fill name/email in the UI
-  document.querySelectorAll('input').forEach(inp => {
-    const ph = (inp.placeholder||'').toLowerCase();
-    const lbl = (inp.closest('.fg,.field-group')?.querySelector('label')?.textContent||'').toLowerCase();
-    if((ph.includes('nombre')||lbl.includes('nombre'))&&!ph.includes('empresa')&&!lbl.includes('empresa')){
-      if(!inp.value) inp.value = profile.full_name||'';
+  try {
+    const profile = await getProfile();
+    if(!profile) return;
+
+    // Fill personal info
+    const names = (profile.full_name || '').split(' ');
+    var nameEl = document.getElementById('pf-name');
+    var lastEl = document.getElementById('pf-lastname');
+    var emailEl = document.getElementById('pf-email');
+    var phoneEl = document.getElementById('pf-phone');
+    var companyEl = document.getElementById('pf-company');
+
+    if(nameEl) nameEl.value = names[0] || '';
+    if(lastEl) lastEl.value = names.slice(1).join(' ') || '';
+    if(emailEl) emailEl.value = profile.email || '';
+    if(phoneEl) phoneEl.value = profile.phone || '';
+
+    // Org info
+    if(profile.organizations){
+      var org = profile.organizations;
+      if(companyEl) companyEl.value = org.name || profile.store_name || '';
+
+      // Plan info
+      var planNames = {starter:'Starter',pro:'Pro',enterprise:'Enterprise'};
+      var planEl = document.querySelector('.plan-name');
+      if(planEl) planEl.innerHTML = '<span class="grad">Plan '+(planNames[org.plan]||org.plan)+' ✓ Activo</span>';
+
+      // AI usage stats
+      var aiEl = document.getElementById('pf-ai-usage');
+      if(aiEl){
+        var quota = org.plan === 'enterprise' ? '∞' : (org.ai_quota || 10);
+        aiEl.innerHTML = (org.ai_used||0) + '<span style="font-size:13px;color:var(--t3)">/' + quota + '</span>';
+      }
     }
-    if(ph.includes('correo')||ph.includes('email')||lbl.includes('correo')||lbl.includes('email')){
-      if(!inp.value) inp.value = profile.email||'';
+
+    // Load last upload stats
+    var upload = await getLastUpload();
+    if(upload){
+      var rateEl = document.getElementById('pf-rate');
+      var ordersEl = document.getElementById('pf-orders');
+      if(rateEl) rateEl.textContent = (upload.delivery_rate || 0) + '%';
+      if(ordersEl) ordersEl.textContent = (upload.total_orders || 0).toLocaleString('es-CO');
     }
-  });
-  // Update plan info
-  if(profile.organizations){
-    const org = profile.organizations;
-    const planNames = {starter:'Starter',pro:'Pro',enterprise:'Enterprise'};
-    const planEl = document.querySelector('.plan-name');
-    if(planEl) planEl.innerHTML = '<span class="grad">Plan '+(planNames[org.plan]||org.plan)+' ✓ Activo</span>';
-    const quotaEls = document.querySelectorAll('[class*="quota"], [id*="quota"]');
-    quotaEls.forEach(el => { el.textContent = (org.ai_used||0)+' / '+(org.plan==='enterprise'?'∞':org.ai_quota)+' consultas IA'; });
-  }
+
+    // Update user avatar
+    var avEl = document.querySelector('.user-av');
+    if(avEl && profile.full_name){
+      avEl.textContent = profile.full_name.split(' ').map(function(w){return w[0]}).join('').slice(0,2).toUpperCase();
+    }
+  } catch(e){ console.warn('Profile load error:', e); }
 })();
+
+// ─── SAVE PROFILE ──────────────────────────────────────────
+async function saveProfile(){
+  var nameVal = (document.getElementById('pf-name')?.value || '').trim();
+  var lastVal = (document.getElementById('pf-lastname')?.value || '').trim();
+  var phoneVal = (document.getElementById('pf-phone')?.value || '').trim();
+  var companyVal = (document.getElementById('pf-company')?.value || '').trim();
+
+  var fullName = [nameVal, lastVal].filter(Boolean).join(' ');
+
+  try {
+    await updateProfile({ full_name: fullName, phone: phoneVal });
+    // Update org name if company changed
+    if(companyVal){
+      var orgId = await getOrgId();
+      if(orgId) await supabase.from('organizations').update({ name: companyVal }).eq('id', orgId);
+    }
+    saved('Perfil actualizado correctamente');
+  } catch(e){
+    saved('Error al guardar: ' + (e.message || 'Intenta de nuevo'));
+  }
+}
 </script>
 <style>@keyframes ripple{to{transform:scale(1);opacity:0;}}@keyframes bg{0%{background-position:0%}100%{background-position:100%}}</style>
 </body>

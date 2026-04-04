@@ -687,23 +687,63 @@ async function activarPlanEnSupabase(){
 
 async function pagarExpress(method){
   const btn = document.getElementById('btn-pagar');
-  btn.classList.add('loading');
-  btn.textContent = 'Procesando...';
-  await activarPlanEnSupabase();
-  setTimeout(()=>window.location.href='/dashboard?plan_activated=1', 1800);
+  if(btn){ btn.classList.add('loading'); btn.textContent = 'Procesando...'; }
+  await procesarPago();
+}
+
+async function _getAuthToken(){
+  const s = await getSession();
+  if(!s || !s.access_token) throw new Error('Sesión expirada');
+  return s.access_token;
 }
 
 async function procesarPago(){
-  const card = document.getElementById('inp-card').value.replace(/\s/g,'');
-  if(card.length<16){alert('Verifica el número de tarjeta.');return;}
   const btn = document.getElementById('btn-pagar');
   btn.classList.add('loading');
-  btn.innerHTML = '⏳ Procesando pago de forma segura...';
-  await activarPlanEnSupabase();
-  setTimeout(()=>{
-    btn.innerHTML = '✅ ¡Activado! Redirigiendo...';
-    setTimeout(()=>window.location.href='/dashboard?plan_activated=1', 1000);
-  }, 2000);
+  btn.innerHTML = '⏳ Conectando con pasarela segura...';
+
+  try {
+    const token = await _getAuthToken();
+    const profile = await getProfile();
+    const orgId = await getOrgId();
+
+    const r = await fetch('/api/create-checkout', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json','Authorization':'Bearer '+token},
+      body: JSON.stringify({
+        plan: planSel,
+        annual: anual,
+        email: profile?.email || '',
+        org_id: orgId || ''
+      })
+    });
+
+    if(!r.ok){
+      const d = await r.json().catch(()=>({}));
+      // If Stripe not configured, fall back to demo mode
+      if(r.status === 500 && (d.error||'').includes('Stripe no configurado')){
+        console.warn('Stripe not configured, using demo mode');
+        await activarPlanEnSupabase();
+        btn.innerHTML = '✅ ¡Plan activado (modo demo)!';
+        setTimeout(()=>window.location.href='/dashboard?plan_activated=1', 1500);
+        return;
+      }
+      throw new Error(d.error || 'Error al crear sesión de pago');
+    }
+
+    const { url } = await r.json();
+    if(url){
+      btn.innerHTML = '🔄 Redirigiendo a Stripe...';
+      window.location.href = url;
+    } else {
+      throw new Error('No se recibió URL de pago');
+    }
+  } catch(e){
+    console.error('Payment error:', e);
+    btn.classList.remove('loading');
+    btn.innerHTML = '💳 PAGAR Y ACTIVAR AHORA';
+    alert('Error: ' + (e.message || 'No se pudo procesar el pago. Intenta de nuevo.'));
+  }
 }
 
 // ─── FORMATO TARJETA ──────────────────────────────────────

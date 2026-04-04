@@ -27,13 +27,29 @@ El archivo principal es `public/index.html` — contiene toda la logica en un so
 ### API Backend (Vercel Serverless)
 - `/api/ai.js` — Proxy para analisis IA (POST {model, prompt})
 - `/api/chat.js` — Proxy para chat multi-turno (POST {model, messages, system})
+- `/api/create-checkout.js` — Crea sesion de Stripe Checkout
+- `/api/stripe-webhook.js` — Webhook de Stripe para actualizar plan
 - Keys seguras en env vars del servidor
+
+### Pagos (Stripe)
+- Stripe Checkout (redirect flow) para suscripciones
+- Webhook maneja: checkout.session.completed, subscription.updated/deleted, invoice.payment_failed
+- Fallback a modo demo si Stripe no esta configurado
+- Plans: starter (gratis, 10 IA), pro ($79K COP/mes, 50 IA), enterprise ($299K, ilimitado)
+
+### Onboarding
+- Wizard de 3 pasos al primer login (onboarding_completed=false en profiles)
+- Paso 1: Nombre de tienda, Paso 2: Subir primer Excel, Paso 3: Features overview
+- Dashboard auto-carga ultimo upload desde Supabase al entrar
 
 ## Supabase
 - URL: https://gtsivwbnhcawvmsfujby.supabase.co
 - Anon key: ver .env.example
 - Tablas: organizations, profiles, uploads, city_stats, carrier_stats, ai_analyses, chat_sessions
-- Schema completo en: supabase/migrations/001_schema.sql
+- Schema completo en: supabase/migrations/001_schema.sql + 002_commercial.sql
+- View auth_profiles apunta a profiles (el codigo usa auth_profiles)
+- Campos comerciales: onboarding_completed, store_name, phone, avatar_url en profiles
+- Campos Stripe: stripe_customer_id, stripe_subscription_id, subscription_status en organizations
 
 ## Vercel
 - Team: team_NatP2ZfiRnuEUHoydeDtHX5C
@@ -44,6 +60,13 @@ El archivo principal es `public/index.html` — contiene toda la logica en un so
 GEMINI_API_KEY=...
 CLAUDE_API_KEY=...
 OPENAI_API_KEY=...
+STRIPE_SECRET_KEY=sk_...
+STRIPE_WEBHOOK_SECRET=whsec_...
+STRIPE_PRICE_PRO_MONTHLY=price_...
+STRIPE_PRICE_PRO_ANNUAL=price_...
+STRIPE_PRICE_ENTERPRISE_MONTHLY=price_...
+STRIPE_PRICE_ENTERPRISE_ANNUAL=price_...
+SUPABASE_SERVICE_ROLE_KEY=...
 ```
 
 ## Como correr localmente
