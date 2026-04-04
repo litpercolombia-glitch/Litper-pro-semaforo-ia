@@ -9,9 +9,11 @@
 <script src="/js/supabase-client.js"></script>
 <style>
 :root{
-  --teal:#00d4f5;--violet:#9d4eff;--red:#ff2d55;--green:#00e676;--amber:#ffb300;
-  --bg:#050509;--bg2:#0b0d16;--bg3:#111320;
+  --accent:#F97316;--accent-dim:rgba(249,115,22,.12);--accent-glow:0 0 25px rgba(249,115,22,.4),0 0 50px rgba(249,115,22,.15);
+  --teal:var(--accent);--violet:#6366f1;--red:#ef4444;--green:#22c55e;--amber:#eab308;
+  --bg:#0f172a;--bg2:#1e293b;--bg3:#334155;
   --t1:rgba(255,255,255,.95);--t2:rgba(255,255,255,.6);--t3:rgba(255,255,255,.3);--t4:rgba(255,255,255,.12);
+  --glass-bg:rgba(30,41,59,.65);--glass-border:rgba(255,255,255,.1);
   --mono:'IBM Plex Mono',monospace;
   --sans:'Outfit',sans-serif;
   --r:14px;
@@ -38,7 +40,7 @@ body{background:var(--bg);color:var(--t1);font-family:var(--sans);min-height:100
 @media(max-width:760px){.main{padding:72px 20px 40px}.sidebar{padding:20px;height:auto;position:relative}}
 
 /* ─── URGENCIA BANNER ────────────────────────────────────── */
-.urgencia{background:linear-gradient(90deg,rgba(255,45,85,.12),rgba(157,78,255,.1));border:1px solid rgba(255,45,85,.25);border-radius:10px;padding:10px 14px;margin-bottom:22px;display:flex;align-items:center;gap:10px}
+.urgencia{background:linear-gradient(90deg,rgba(255,45,85,.12),rgba(99,102,241,.1));border:1px solid rgba(255,45,85,.25);border-radius:10px;padding:10px 14px;margin-bottom:22px;display:flex;align-items:center;gap:10px}
 .urgencia-dot{width:8px;height:8px;border-radius:50%;background:var(--red);flex-shrink:0;animation:pulse 1.5s infinite}
 .urgencia span{font-size:12px;color:rgba(255,100,130,.9);font-family:var(--mono);font-weight:500}
 #spots-left{font-weight:700;color:var(--red)}
@@ -51,7 +53,7 @@ body{background:var(--bg);color:var(--t1);font-family:var(--sans);min-height:100
 .social-txt{font-size:12px;color:var(--t2)}<br>.social-num{font-weight:600;color:var(--teal)}
 
 /* ─── PLAN CARD (resumen en sidebar) ─────────────────────── */
-.plan-card{background:var(--bg3);border:1px solid rgba(0,212,245,.2);border-radius:var(--r);padding:20px;margin-bottom:20px}
+.plan-card{background:var(--bg3);border:1px solid rgba(249,115,22,.2);border-radius:var(--r);padding:20px;margin-bottom:20px}
 .plan-badge{font-size:10px;font-family:var(--mono);font-weight:600;color:var(--teal);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px}
 .plan-name{font-size:20px;font-weight:700;margin-bottom:4px}
 .plan-desc{font-size:12px;color:var(--t2);margin-bottom:14px;line-height:1.6}
@@ -62,7 +64,7 @@ body{background:var(--bg);color:var(--t1);font-family:var(--sans);min-height:100
 .plan-savings{font-size:11px;font-family:var(--mono);color:var(--green);background:rgba(0,230,118,.1);border:1px solid rgba(0,230,118,.2);border-radius:6px;padding:3px 8px;display:inline-block;margin-bottom:14px}
 .plan-items{display:flex;flex-direction:column;gap:7px}
 .plan-item{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--t2);line-height:1.4}
-.plan-item-icon{width:16px;height:16px;border-radius:4px;background:rgba(0,212,245,.15);display:flex;align-items:center;justify-content:center;font-size:9px;flex-shrink:0;margin-top:1px;color:var(--teal)}
+.plan-item-icon{width:16px;height:16px;border-radius:4px;background:rgba(249,115,22,.15);display:flex;align-items:center;justify-content:center;font-size:9px;flex-shrink:0;margin-top:1px;color:var(--teal)}
 
 /* ─── TRUST SIGNALS EN SIDEBAR ───────────────────────────── */
 .trust-section{margin-top:20px;padding-top:20px;border-top:1px solid var(--t4)}
@@ -95,8 +97,8 @@ body{background:var(--bg);color:var(--t1);font-family:var(--sans);min-height:100
 
 .plan-opts{display:flex;flex-direction:column;gap:8px;margin-bottom:24px}
 .plan-opt{border:1.5px solid var(--t4);border-radius:var(--r);padding:14px 16px;cursor:pointer;transition:all .2s;position:relative}
-.plan-opt:hover{border-color:rgba(0,212,245,.3);background:rgba(0,212,245,.03)}
-.plan-opt.selected{border-color:var(--teal);background:rgba(0,212,245,.05)}
+.plan-opt:hover{border-color:rgba(249,115,22,.3);background:rgba(249,115,22,.03)}
+.plan-opt.selected{border-color:var(--teal);background:rgba(249,115,22,.05)}
 .plan-opt-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
 .plan-opt-name{font-size:14px;font-weight:600}
 .plan-opt-price{font-size:14px;font-weight:700;font-family:var(--mono);color:var(--teal)}
@@ -115,7 +117,7 @@ body{background:var(--bg);color:var(--t1);font-family:var(--sans);min-height:100
 .field{display:flex;flex-direction:column;gap:5px}
 .field label{font-size:11px;font-family:var(--mono);color:var(--t2);font-weight:500;letter-spacing:.04em}
 .field input,.field select{background:var(--bg3);border:1px solid var(--t4);border-radius:10px;padding:11px 14px;font-size:14px;color:var(--t1);font-family:var(--sans);outline:none;transition:border-color .2s,box-shadow .2s;-webkit-appearance:none;width:100%}
-.field input:focus,.field select:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(0,212,245,.12)}
+.field input:focus,.field select:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(249,115,22,.12)}
 .field input::placeholder{color:var(--t3)}
 .field select{cursor:pointer}
 .field select option{background:var(--bg3)}
@@ -127,7 +129,7 @@ body{background:var(--bg);color:var(--t1);font-family:var(--sans);min-height:100
 
 /* ─── CTA BUTTON ─────────────────────────────────────────── */
 .cta-btn{width:100%;padding:16px;border:none;border-radius:12px;background:linear-gradient(135deg,var(--teal),var(--violet));color:#000;font-family:var(--sans);font-size:15px;font-weight:700;cursor:pointer;transition:all .25s;position:relative;overflow:hidden;letter-spacing:.02em;margin-top:20px}
-.cta-btn:hover{transform:translateY(-1px);box-shadow:0 8px 32px rgba(0,212,245,.3)}
+.cta-btn:hover{transform:translateY(-1px);box-shadow:0 8px 32px rgba(249,115,22,.3)}
 .cta-btn:active{transform:scale(.99)}
 .cta-btn::after{content:'';position:absolute;inset:0;background:rgba(255,255,255,.06);opacity:0;transition:opacity .2s}
 .cta-btn:hover::after{opacity:1}
@@ -383,10 +385,10 @@ body{background:var(--bg);color:var(--t1);font-family:var(--sans);min-height:100
       <div style="margin-bottom:16px">
         <div style="font-size:11px;font-family:var(--mono);color:var(--t3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">Pago express</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-          <button onclick="pagarExpress('nequi')" style="padding:10px;border:1px solid var(--t4);border-radius:10px;background:var(--bg3);color:var(--t1);font-size:13px;font-weight:600;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='rgba(0,212,245,.4)'" onmouseout="this.style.borderColor='rgba(255,255,255,.12)'">
+          <button onclick="pagarExpress('nequi')" style="padding:10px;border:1px solid var(--t4);border-radius:10px;background:var(--bg3);color:var(--t1);font-size:13px;font-weight:600;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='rgba(249,115,22,.4)'" onmouseout="this.style.borderColor='rgba(255,255,255,.12)'">
             💜 Nequi
           </button>
-          <button onclick="pagarExpress('daviplata')" style="padding:10px;border:1px solid var(--t4);border-radius:10px;background:var(--bg3);color:var(--t1);font-size:13px;font-weight:600;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='rgba(0,212,245,.4)'" onmouseout="this.style.borderColor='rgba(255,255,255,.12)'">
+          <button onclick="pagarExpress('daviplata')" style="padding:10px;border:1px solid var(--t4);border-radius:10px;background:var(--bg3);color:var(--t1);font-size:13px;font-weight:600;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='rgba(249,115,22,.4)'" onmouseout="this.style.borderColor='rgba(255,255,255,.12)'">
             🔴 Daviplata
           </button>
         </div>
@@ -468,7 +470,7 @@ body{background:var(--bg);color:var(--t1);font-family:var(--sans);min-height:100
       </div>
       <div class="review-card">
         <div class="review-header">
-          <div class="review-av" style="background:linear-gradient(135deg,#ff2d55,#9d4eff)">CE</div>
+          <div class="review-av" style="background:linear-gradient(135deg,#ff2d55,#6366f1)">CE</div>
           <div>
             <div class="review-name">Catalina E. <span style="font-size:11px;color:var(--t3)">· Gerente General</span></div>
             <div class="stars">★★★★★</div>
@@ -514,8 +516,8 @@ body{background:var(--bg);color:var(--t1);font-family:var(--sans);min-height:100
     </div>
 
     <!-- ROI Calculator -->
-    <div style="background:rgba(0,212,245,.05);border:1px solid rgba(0,212,245,.15);border-radius:var(--r);padding:16px;margin-bottom:16px">
-      <div style="font-size:10px;font-family:var(--mono);color:rgba(0,212,245,.7);text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px">Cuánto recuperas con LitperPro</div>
+    <div style="background:rgba(249,115,22,.05);border:1px solid rgba(249,115,22,.15);border-radius:var(--r);padding:16px;margin-bottom:16px">
+      <div style="font-size:10px;font-family:var(--mono);color:rgba(249,115,22,.7);text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px">Cuánto recuperas con LitperPro</div>
       <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:12px">
         <div style="font-size:11px;color:var(--t3);font-family:var(--mono)">Pedidos/semana:</div>
         <input type="range" id="roi-pedidos" min="100" max="5000" value="1000" step="100" oninput="calcROI()" style="accent-color:var(--teal)">
