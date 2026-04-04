@@ -4,17 +4,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>LitperPro — Activar Plan Pro</title>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="/js/supabase-client.js"></script>
 <style>
-:root{
-  --teal:#00d4f5;--violet:#9d4eff;--red:#ff2d55;--green:#00e676;--amber:#ffb300;
-  --bg:#050509;--bg2:#0b0d16;--bg3:#111320;
-  --t1:rgba(255,255,255,.95);--t2:rgba(255,255,255,.6);--t3:rgba(255,255,255,.3);--t4:rgba(255,255,255,.12);
-  --mono:'IBM Plex Mono',monospace;
-  --sans:'Outfit',sans-serif;
-  --r:14px;
+:root{--brand:#00FF88;--brand-hover:#00CC6A;--brand-muted:rgba(0,255,136,0.1);--brand-glow:0 0 25px rgba(0,255,136,.4), 0 0 60px rgba(0,255,136,.12);--bg:#07080A;--surface:#0D1117;--surface-elevated:#161B22;--border:rgba(255,255,255,0.08);--border-hover:rgba(255,255,255,0.15);--text-primary:#F0F6FC;--text-secondary:rgba(240,246,252,0.7);--text-tertiary:rgba(240,246,252,0.4);--accent-cyan:#00D4FF;--accent-violet:#A855F7;--error:#FF4757;--warning:#FFBE0B;--success:#00FF88;--font:'Inter',system-ui,-apple-system,sans-serif;--mono:'JetBrains Mono','Fira Code',monospace;--ease-spring:cubic-bezier(.34,1.56,.64,1);--ease-out:cubic-bezier(.16,1,.3,1);--r-sm:6px;--r-md:8px;--r-lg:12px;--r-xl:16px;--r-full:9999px;
+  /* Legacy aliases for compatibility */
+  --teal:var(--brand);--violet:var(--accent-violet);--red:var(--error);--green:var(--success);--amber:var(--warning);
+  --bg2:var(--surface);--bg3:var(--surface-elevated);
+  --t1:var(--text-primary);--t2:var(--text-secondary);--t3:var(--text-tertiary);--t4:var(--border);
+  --sans:var(--font);
+  --r:var(--r-lg);
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
@@ -25,7 +25,7 @@ body{background:var(--bg);color:var(--t1);font-family:var(--sans);min-height:100
 @media(max-width:760px){.page{grid-template-columns:1fr}.sidebar{order:-1;border-bottom:1px solid var(--t4);border-right:none!important}}
 
 /* ─── TOP BAR ────────────────────────────────────────────── */
-.topbar{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(5,5,9,.95);border-bottom:1px solid var(--t4);display:flex;align-items:center;justify-content:space-between;padding:0 24px;height:52px}
+.topbar{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(7,8,10,.85);backdrop-filter:blur(20px) saturate(1.2);-webkit-backdrop-filter:blur(20px) saturate(1.2);border-bottom:1px solid var(--t4);display:flex;align-items:center;justify-content:space-between;padding:0 24px;height:52px}
 .logo-mark{font-family:var(--mono);font-size:13px;font-weight:600;letter-spacing:.1em;color:var(--teal)}
 .secure-badge{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--t3);font-family:var(--mono)}
 .secure-dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green);animation:pulse 2s infinite}
@@ -37,20 +37,20 @@ body{background:var(--bg);color:var(--t1);font-family:var(--sans);min-height:100
 @media(max-width:760px){.main{padding:72px 20px 40px}.sidebar{padding:20px;height:auto;position:relative}}
 
 /* ─── URGENCIA BANNER ────────────────────────────────────── */
-.urgencia{background:linear-gradient(90deg,rgba(255,45,85,.12),rgba(157,78,255,.1));border:1px solid rgba(255,45,85,.25);border-radius:10px;padding:10px 14px;margin-bottom:22px;display:flex;align-items:center;gap:10px}
+.urgencia{background:linear-gradient(90deg,rgba(255,71,87,.12),rgba(168,85,247,.1));border:1px solid rgba(255,71,87,.25);border-radius:10px;padding:10px 14px;margin-bottom:22px;display:flex;align-items:center;gap:10px}
 .urgencia-dot{width:8px;height:8px;border-radius:50%;background:var(--red);flex-shrink:0;animation:pulse 1.5s infinite}
-.urgencia span{font-size:12px;color:rgba(255,100,130,.9);font-family:var(--mono);font-weight:500}
+.urgencia span{font-size:12px;color:rgba(255,71,87,.9);font-family:var(--mono);font-weight:500}
 #spots-left{font-weight:700;color:var(--red)}
 
 /* ─── SOCIAL PROOF BANNER ────────────────────────────────── */
-.social-bar{display:flex;align-items:center;gap:12px;margin-bottom:20px;padding:10px 14px;background:var(--bg3);border-radius:10px;border:1px solid var(--t4)}
+.social-bar{display:flex;align-items:center;gap:12px;margin-bottom:20px;padding:10px 14px;background:rgba(13,17,23,0.8);backdrop-filter:blur(20px) saturate(1.2);-webkit-backdrop-filter:blur(20px) saturate(1.2);border-radius:10px;border:1px solid var(--t4)}
 .avatars{display:flex}
-.av{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--teal),var(--violet));border:2px solid var(--bg2);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;margin-left:-8px;color:#000}
+.av{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--brand),var(--accent-cyan));border:2px solid var(--bg2);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;margin-left:-8px;color:#000}
 .av:first-child{margin-left:0}
 .social-txt{font-size:12px;color:var(--t2)}<br>.social-num{font-weight:600;color:var(--teal)}
 
 /* ─── PLAN CARD (resumen en sidebar) ─────────────────────── */
-.plan-card{background:var(--bg3);border:1px solid rgba(0,212,245,.2);border-radius:var(--r);padding:20px;margin-bottom:20px}
+.plan-card{background:rgba(13,17,23,0.8);backdrop-filter:blur(20px) saturate(1.2);-webkit-backdrop-filter:blur(20px) saturate(1.2);border:1px solid rgba(0,255,136,.2);border-radius:var(--r);padding:20px;margin-bottom:20px}
 .plan-badge{font-size:10px;font-family:var(--mono);font-weight:600;color:var(--teal);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px}
 .plan-name{font-size:20px;font-weight:700;margin-bottom:4px}
 .plan-desc{font-size:12px;color:var(--t2);margin-bottom:14px;line-height:1.6}
@@ -58,10 +58,10 @@ body{background:var(--bg);color:var(--t1);font-family:var(--sans);min-height:100
 .plan-original{font-size:13px;color:var(--t3);text-decoration:line-through;font-family:var(--mono)}
 .plan-price{font-size:32px;font-weight:800;color:var(--t1);font-family:var(--mono)}
 .plan-per{font-size:12px;color:var(--t3);font-family:var(--mono)}
-.plan-savings{font-size:11px;font-family:var(--mono);color:var(--green);background:rgba(0,230,118,.1);border:1px solid rgba(0,230,118,.2);border-radius:6px;padding:3px 8px;display:inline-block;margin-bottom:14px}
+.plan-savings{font-size:11px;font-family:var(--mono);color:var(--green);background:rgba(0,255,136,.1);border:1px solid rgba(0,255,136,.2);border-radius:6px;padding:3px 8px;display:inline-block;margin-bottom:14px}
 .plan-items{display:flex;flex-direction:column;gap:7px}
 .plan-item{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--t2);line-height:1.4}
-.plan-item-icon{width:16px;height:16px;border-radius:4px;background:rgba(0,212,245,.15);display:flex;align-items:center;justify-content:center;font-size:9px;flex-shrink:0;margin-top:1px;color:var(--teal)}
+.plan-item-icon{width:16px;height:16px;border-radius:4px;background:rgba(0,255,136,.15);display:flex;align-items:center;justify-content:center;font-size:9px;flex-shrink:0;margin-top:1px;color:var(--teal)}
 
 /* ─── TRUST SIGNALS EN SIDEBAR ───────────────────────────── */
 .trust-section{margin-top:20px;padding-top:20px;border-top:1px solid var(--t4)}
@@ -90,17 +90,17 @@ body{background:var(--bg);color:var(--t1);font-family:var(--sans);min-height:100
 .toggle-track.on{background:var(--teal)}
 .toggle-thumb{width:18px;height:18px;border-radius:50%;background:#fff;position:absolute;top:2px;left:2px;transition:transform .3s}
 .toggle-track.on .toggle-thumb{transform:translateX(18px)}
-.save-badge{background:rgba(0,230,118,.12);color:var(--green);font-size:10px;font-family:var(--mono);font-weight:600;padding:2px 8px;border-radius:6px;border:1px solid rgba(0,230,118,.2)}
+.save-badge{background:rgba(0,255,136,.12);color:var(--green);font-size:10px;font-family:var(--mono);font-weight:600;padding:2px 8px;border-radius:6px;border:1px solid rgba(0,255,136,.2)}
 
 .plan-opts{display:flex;flex-direction:column;gap:8px;margin-bottom:24px}
 .plan-opt{border:1.5px solid var(--t4);border-radius:var(--r);padding:14px 16px;cursor:pointer;transition:all .2s;position:relative}
-.plan-opt:hover{border-color:rgba(0,212,245,.3);background:rgba(0,212,245,.03)}
-.plan-opt.selected{border-color:var(--teal);background:rgba(0,212,245,.05)}
+.plan-opt:hover{border-color:rgba(0,255,136,.3);background:rgba(0,255,136,.03)}
+.plan-opt.selected{border-color:var(--teal);background:rgba(0,255,136,.05)}
 .plan-opt-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
 .plan-opt-name{font-size:14px;font-weight:600}
 .plan-opt-price{font-size:14px;font-weight:700;font-family:var(--mono);color:var(--teal)}
 .plan-opt-desc{font-size:12px;color:var(--t3)}
-.pop-badge{position:absolute;top:-10px;left:16px;background:linear-gradient(90deg,var(--teal),var(--violet));color:#000;font-size:9px;font-weight:700;padding:2px 10px;border-radius:99px;font-family:var(--mono);letter-spacing:.06em}
+.pop-badge{position:absolute;top:-10px;left:16px;background:linear-gradient(90deg,var(--brand),var(--accent-cyan));color:#000;font-size:9px;font-weight:700;padding:2px 10px;border-radius:99px;font-family:var(--mono);letter-spacing:.06em}
 .radio-dot{width:18px;height:18px;border-radius:50%;border:1.5px solid var(--t3);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s;position:absolute;right:16px;top:50%;transform:translateY(-50%)}
 .plan-opt.selected .radio-dot{border-color:var(--teal);background:var(--teal)}
 .radio-dot::after{content:'';width:8px;height:8px;border-radius:50%;background:#000;opacity:0;transition:opacity .2s}
@@ -114,7 +114,7 @@ body{background:var(--bg);color:var(--t1);font-family:var(--sans);min-height:100
 .field{display:flex;flex-direction:column;gap:5px}
 .field label{font-size:11px;font-family:var(--mono);color:var(--t2);font-weight:500;letter-spacing:.04em}
 .field input,.field select{background:var(--bg3);border:1px solid var(--t4);border-radius:10px;padding:11px 14px;font-size:14px;color:var(--t1);font-family:var(--sans);outline:none;transition:border-color .2s,box-shadow .2s;-webkit-appearance:none;width:100%}
-.field input:focus,.field select:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(0,212,245,.12)}
+.field input:focus,.field select:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(0,255,136,.12)}
 .field input::placeholder{color:var(--t3)}
 .field select{cursor:pointer}
 .field select option{background:var(--bg3)}
@@ -125,8 +125,8 @@ body{background:var(--bg);color:var(--t1);font-family:var(--sans);min-height:100
 .input-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:14px;color:var(--t3)}
 
 /* ─── CTA BUTTON ─────────────────────────────────────────── */
-.cta-btn{width:100%;padding:16px;border:none;border-radius:12px;background:linear-gradient(135deg,var(--teal),var(--violet));color:#000;font-family:var(--sans);font-size:15px;font-weight:700;cursor:pointer;transition:all .25s;position:relative;overflow:hidden;letter-spacing:.02em;margin-top:20px}
-.cta-btn:hover{transform:translateY(-1px);box-shadow:0 8px 32px rgba(0,212,245,.3)}
+.cta-btn{width:100%;padding:16px;border:none;border-radius:12px;background:linear-gradient(135deg,var(--brand),var(--accent-cyan));color:#000;font-family:var(--sans);font-size:15px;font-weight:700;cursor:pointer;transition:all .25s;position:relative;overflow:hidden;letter-spacing:.02em;margin-top:20px}
+.cta-btn:hover{transform:translateY(-1px);box-shadow:0 8px 32px rgba(0,255,136,.3)}
 .cta-btn:active{transform:scale(.99)}
 .cta-btn::after{content:'';position:absolute;inset:0;background:rgba(255,255,255,.06);opacity:0;transition:opacity .2s}
 .cta-btn:hover::after{opacity:1}
@@ -134,15 +134,15 @@ body{background:var(--bg);color:var(--t1);font-family:var(--sans);min-height:100
 .cta-sub{text-align:center;font-size:11px;color:var(--t3);margin-top:10px;font-family:var(--mono)}
 
 /* ─── GARANTÍA ───────────────────────────────────────────── */
-.garantia{background:rgba(0,230,118,.06);border:1px solid rgba(0,230,118,.18);border-radius:12px;padding:14px 16px;display:flex;align-items:flex-start;gap:12px;margin-top:20px}
+.garantia{background:rgba(0,255,136,.06);border:1px solid rgba(0,255,136,.18);border-radius:12px;padding:14px 16px;display:flex;align-items:flex-start;gap:12px;margin-top:20px}
 .garantia-icon{font-size:24px;flex-shrink:0;margin-top:2px}
 .garantia-title{font-size:13px;font-weight:600;color:var(--green);margin-bottom:3px}
 .garantia-text{font-size:11px;color:var(--t2);line-height:1.6}
 
 /* ─── UPSELL ─────────────────────────────────────────────── */
-.upsell{border:1px solid rgba(255,179,0,.2);border-radius:12px;padding:14px 16px;margin-top:16px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:all .2s}
-.upsell:hover{border-color:rgba(255,179,0,.4);background:rgba(255,179,0,.03)}
-.upsell.checked{border-color:var(--amber);background:rgba(255,179,0,.05)}
+.upsell{border:1px solid rgba(255,190,11,.2);border-radius:12px;padding:14px 16px;margin-top:16px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:all .2s}
+.upsell:hover{border-color:rgba(255,190,11,.4);background:rgba(255,190,11,.03)}
+.upsell.checked{border-color:var(--amber);background:rgba(255,190,11,.05)}
 .upsell-check{width:20px;height:20px;border-radius:5px;border:1.5px solid var(--t3);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s;font-size:11px}
 .upsell.checked .upsell-check{background:var(--amber);border-color:var(--amber);color:#000}
 .upsell-title{font-size:13px;font-weight:600;margin-bottom:2px}
@@ -151,26 +151,31 @@ body{background:var(--bg);color:var(--t1);font-family:var(--sans);min-height:100
 
 /* ─── SOCIAL PROOF REVIEWS ───────────────────────────────── */
 .reviews{margin-top:24px}
-.review-card{background:var(--bg3);border:1px solid var(--t4);border-radius:12px;padding:14px 16px;margin-bottom:10px}
+.review-card{background:rgba(13,17,23,0.8);backdrop-filter:blur(20px) saturate(1.2);-webkit-backdrop-filter:blur(20px) saturate(1.2);border:1px solid var(--t4);border-radius:12px;padding:14px 16px;margin-bottom:10px}
 .review-header{display:flex;align-items:center;gap:10px;margin-bottom:8px}
-.review-av{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--violet),var(--teal));display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#000;flex-shrink:0}
+.review-av{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--brand),var(--accent-cyan));display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#000;flex-shrink:0}
 .review-name{font-size:13px;font-weight:600}
 .review-loc{font-size:11px;color:var(--t3)}
 .stars{color:var(--amber);font-size:12px}
 .review-text{font-size:12px;color:var(--t2);line-height:1.6}
 
 /* ─── POPUP DE ACTIVIDAD ─────────────────────────────────── */
-.activity-popup{position:fixed;bottom:24px;left:24px;background:var(--bg2);border:1px solid var(--t4);border-radius:12px;padding:10px 14px;display:flex;align-items:center;gap:10px;font-size:12px;color:var(--t2);z-index:999;box-shadow:0 8px 32px rgba(0,0,0,.5);animation:slideUp .4s ease-out;max-width:280px}
+.activity-popup{position:fixed;bottom:24px;left:24px;background:rgba(13,17,23,0.8);backdrop-filter:blur(20px) saturate(1.2);-webkit-backdrop-filter:blur(20px) saturate(1.2);border:1px solid var(--t4);border-radius:12px;padding:10px 14px;display:flex;align-items:center;gap:10px;font-size:12px;color:var(--t2);z-index:999;box-shadow:0 8px 32px rgba(0,0,0,.5);animation:slideUp .4s ease-out;max-width:280px}
 @keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 .activity-popup.hide{animation:slideDown .3s ease-in forwards}
 @keyframes slideDown{to{opacity:0;transform:translateY(20px)}}
-.act-av{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--teal),var(--violet));display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#000;flex-shrink:0}
+.act-av{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--brand),var(--accent-cyan));display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#000;flex-shrink:0}
 .act-name{font-weight:600;color:var(--t1)}
 
 /* ─── MISC ───────────────────────────────────────────────── */
 .divider{height:1px;background:var(--t4);margin:22px 0}
 .secure-icons{display:flex;align-items:center;gap:16px;flex-wrap:wrap;justify-content:center;margin-top:14px;opacity:.5}
 .secure-icons span{font-size:10px;font-family:var(--mono);color:var(--t3);display:flex;align-items:center;gap:4px}
+
+/* ─── FADE IN UP ANIMATION ──────────────────────────────── */
+@keyframes fadeInUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.main{animation:fadeInUp .5s ease-out}
+.sidebar{animation:fadeInUp .5s ease-out .1s both}
 </style>
 </head>
 <body>
@@ -382,10 +387,10 @@ body{background:var(--bg);color:var(--t1);font-family:var(--sans);min-height:100
       <div style="margin-bottom:16px">
         <div style="font-size:11px;font-family:var(--mono);color:var(--t3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">Pago express</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-          <button onclick="pagarExpress('nequi')" style="padding:10px;border:1px solid var(--t4);border-radius:10px;background:var(--bg3);color:var(--t1);font-size:13px;font-weight:600;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='rgba(0,212,245,.4)'" onmouseout="this.style.borderColor='rgba(255,255,255,.12)'">
+          <button onclick="pagarExpress('nequi')" style="padding:10px;border:1px solid var(--t4);border-radius:10px;background:var(--bg3);color:var(--t1);font-size:13px;font-weight:600;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='rgba(0,255,136,.4)'" onmouseout="this.style.borderColor='rgba(255,255,255,.12)'">
             💜 Nequi
           </button>
-          <button onclick="pagarExpress('daviplata')" style="padding:10px;border:1px solid var(--t4);border-radius:10px;background:var(--bg3);color:var(--t1);font-size:13px;font-weight:600;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='rgba(0,212,245,.4)'" onmouseout="this.style.borderColor='rgba(255,255,255,.12)'">
+          <button onclick="pagarExpress('daviplata')" style="padding:10px;border:1px solid var(--t4);border-radius:10px;background:var(--bg3);color:var(--t1);font-size:13px;font-weight:600;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='rgba(0,255,136,.4)'" onmouseout="this.style.borderColor='rgba(255,255,255,.12)'">
             🔴 Daviplata
           </button>
         </div>
@@ -467,7 +472,7 @@ body{background:var(--bg);color:var(--t1);font-family:var(--sans);min-height:100
       </div>
       <div class="review-card">
         <div class="review-header">
-          <div class="review-av" style="background:linear-gradient(135deg,#ff2d55,#9d4eff)">CE</div>
+          <div class="review-av" style="background:linear-gradient(135deg,#FF4757,#A855F7)">CE</div>
           <div>
             <div class="review-name">Catalina E. <span style="font-size:11px;color:var(--t3)">· Gerente General</span></div>
             <div class="stars">★★★★★</div>
@@ -477,7 +482,7 @@ body{background:var(--bg);color:var(--t1);font-family:var(--sans);min-height:100
       </div>
       <div class="review-card">
         <div class="review-header">
-          <div class="review-av" style="background:linear-gradient(135deg,#ffb300,#ff2d55)">EV</div>
+          <div class="review-av" style="background:linear-gradient(135deg,#FFBE0B,#FF4757)">EV</div>
           <div>
             <div class="review-name">Evan V. <span style="font-size:11px;color:var(--t3)">· Marketing & Expansión</span></div>
             <div class="stars">★★★★★</div>
@@ -513,8 +518,8 @@ body{background:var(--bg);color:var(--t1);font-family:var(--sans);min-height:100
     </div>
 
     <!-- ROI Calculator -->
-    <div style="background:rgba(0,212,245,.05);border:1px solid rgba(0,212,245,.15);border-radius:var(--r);padding:16px;margin-bottom:16px">
-      <div style="font-size:10px;font-family:var(--mono);color:rgba(0,212,245,.7);text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px">Cuánto recuperas con LitperPro</div>
+    <div style="background:rgba(0,255,136,.05);border:1px solid rgba(0,255,136,.15);border-radius:var(--r);padding:16px;margin-bottom:16px">
+      <div style="font-size:10px;font-family:var(--mono);color:rgba(0,255,136,.7);text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px">Cuánto recuperas con LitperPro</div>
       <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:12px">
         <div style="font-size:11px;color:var(--t3);font-family:var(--mono)">Pedidos/semana:</div>
         <input type="range" id="roi-pedidos" min="100" max="5000" value="1000" step="100" oninput="calcROI()" style="accent-color:var(--teal)">
@@ -523,7 +528,7 @@ body{background:var(--bg);color:var(--t1);font-family:var(--sans);min-height:100
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
         <div style="text-align:center">
           <div style="font-size:10px;color:var(--t3);font-family:var(--mono);margin-bottom:2px">Tasa actual</div>
-          <div style="font-size:18px;font-weight:700;color:rgba(255,179,0,.9)" id="roi-tasa-act">80%</div>
+          <div style="font-size:18px;font-weight:700;color:rgba(255,190,11,.9)" id="roi-tasa-act">80%</div>
         </div>
         <div style="text-align:center">
           <div style="font-size:10px;color:var(--t3);font-family:var(--mono);margin-bottom:2px">Recuperas/mes</div>
@@ -534,8 +539,8 @@ body{background:var(--bg);color:var(--t1);font-family:var(--sans);min-height:100
     </div>
 
     <!-- Contador regresivo -->
-    <div style="background:rgba(255,45,85,.06);border:1px solid rgba(255,45,85,.18);border-radius:var(--r);padding:14px;margin-bottom:16px;text-align:center">
-      <div style="font-size:10px;font-family:var(--mono);color:rgba(255,45,85,.7);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px">Oferta de lanzamiento expira en</div>
+    <div style="background:rgba(255,71,87,.06);border:1px solid rgba(255,71,87,.18);border-radius:var(--r);padding:14px;margin-bottom:16px;text-align:center">
+      <div style="font-size:10px;font-family:var(--mono);color:rgba(255,71,87,.7);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px">Oferta de lanzamiento expira en</div>
       <div style="display:flex;justify-content:center;gap:12px">
         <div style="text-align:center"><div style="font-size:24px;font-weight:800;font-family:var(--mono);color:var(--t1)" id="cnt-h">08</div><div style="font-size:9px;color:var(--t3);font-family:var(--mono)">HRS</div></div>
         <div style="font-size:24px;color:var(--t3);line-height:1.3">:</div>
