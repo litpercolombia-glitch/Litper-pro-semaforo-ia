@@ -574,10 +574,10 @@ function goTab(name,el){
 // ═══════════════════════════════════════════════════════════
 
 const PAISES = {
-  CO: { nombre:'COLOMBIA',  moneda:'COP', flag:'🇨🇴', costo_dev:18000, costo_flete:9000,  verde:80.5, amarillo:70 },
-  CL: { nombre:'CHILE',     moneda:'CLP', flag:'🇨🇱', costo_dev:3500,  costo_flete:2500,  verde:85,   amarillo:75 },
-  GT: { nombre:'GUATEMALA', moneda:'GTQ', flag:'🇬🇹', costo_dev:45,    costo_flete:30,    verde:80,   amarillo:70 },
-  MX: { nombre:'MÉXICO',    moneda:'MXN', flag:'🇲🇽', costo_dev:95,    costo_flete:70,    verde:82,   amarillo:72 },
+  CO: { nombre:'COLOMBIA',  moneda:'COP', flag:'CO', costo_dev:18000, costo_flete:9000,  verde:80.5, amarillo:70 },
+  CL: { nombre:'CHILE',     moneda:'CLP', flag:'CL', costo_dev:3500,  costo_flete:2500,  verde:85,   amarillo:75 },
+  GT: { nombre:'GUATEMALA', moneda:'GTQ', flag:'GT', costo_dev:45,    costo_flete:30,    verde:80,   amarillo:70 },
+  MX: { nombre:'MÉXICO',    moneda:'MXN', flag:'MX', costo_dev:95,    costo_flete:70,    verde:82,   amarillo:72 },
 };
 
 // Estado por país — cada país guarda sus propios datos

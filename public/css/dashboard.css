@@ -1014,7 +1014,8 @@ input[type=range]:hover { transform: scaleY(1.1); }
 /* ── TOOLBAR ── */
 .toolbar{padding:10px 28px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;border-bottom:1px solid var(--b1);}
 .pais-selector{display:flex;gap:6px;align-items:center;}
-.pais-flag{font-size:28px;}
+.pais-flag{font-family:var(--mono);font-size:13px;font-weight:700;letter-spacing:.05em;color:var(--text-secondary);}
+.pais-btn.active .pais-flag{color:var(--brand);}
 .toolbar-sep{width:1px;height:28px;background:var(--b2);}
 .pais-active-badge{display:flex;align-items:center;gap:8px;background:rgba(0,255,136,.06);border:1px solid rgba(0,255,136,.18);border-radius:10px;padding:6px 14px;}
 .pais-active-flag{font-size:18px;}

@@ -69,9 +69,9 @@ async function getOrganization() {
 async function requireAuth() {
   try {
     const session = await getSession();
-    if (!session) { window.location.href = '/login'; return null; }
+    if (!session) { window.location.href = '/landing'; return null; }
     return session;
-  } catch (e) { console.error('requireAuth error:', e); window.location.href = '/login'; return null; }
+  } catch (e) { console.error('requireAuth error:', e); window.location.href = '/landing'; return null; }
 }
 
 async function redirectIfAuth() {
@@ -84,7 +84,7 @@ async function redirectIfAuth() {
 
 async function signOut() {
   await supabase.auth.signOut();
-  window.location.href = '/login';
+  window.location.href = '/landing';
 }
 
 // ── Supabase Data Helpers ────────────────────────────────────
