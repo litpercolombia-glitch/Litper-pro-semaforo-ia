@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LitperPro — Reduce tus pérdidas logísticas en un 40%</title>
+<meta name="description" content="Dashboard de IA para optimizar logística COD en LATAM. Semáforo de ciudades, scorecard de carriers, IA predictiva. +200 empresas en 4 países.">
+<meta name="theme-color" content="#07080A">
+<meta property="og:title" content="LitperPro — Inteligencia logística que salva tu margen">
+<meta property="og:description" content="Reduce tus pérdidas logísticas en un 40% desde el día 1. Dashboard de IA para empresas COD en LATAM.">
+<meta property="og:type" content="website">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+--brand:#00FF88;--brand-hover:#00CC6A;--brand-muted:rgba(0,255,136,0.1);
+--bg:#07080A;--surface:#0D1117;--surface-el:#161B22;
+--border:rgba(255,255,255,0.08);--border-hover:rgba(255,255,255,0.15);
+--text:#F0F6FC;--text2:rgba(240,246,252,0.7);--text3:rgba(240,246,252,0.4);
+--cyan:#00D4FF;--violet:#A855F7;--error:#FF4757;--warning:#FFBE0B;
+--font:'Inter',system-ui,sans-serif;--mono:'JetBrains Mono',monospace;
+--r-sm:6px;--r-md:8px;--r-lg:12px;--r-xl:16px;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.6;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+.container{max-width:1200px;margin:0 auto;padding:0 24px}
+
+/* Noise overlay */
+body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;opacity:.03;
+background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:16px 0;
+background:rgba(7,8,10,0.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+nav .container{display:flex;align-items:center;justify-content:space-between}
+.nav-logo{font-weight:700;font-size:20px;color:var(--brand);letter-spacing:-.02em}
+.nav-links{display:flex;align-items:center;gap:32px}
+.nav-links a{font-size:14px;color:var(--text2);font-weight:500;transition:color .2s}
+.nav-links a:hover{color:var(--text)}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:var(--r-md);font-weight:600;font-size:14px;border:none;cursor:pointer;transition:all .2s cubic-bezier(.34,1.56,.64,1);font-family:var(--font)}
+.btn-primary{background:var(--brand);color:var(--bg);box-shadow:0 0 20px rgba(0,255,136,.3),0 0 60px rgba(0,255,136,.1)}
+.btn-primary:hover{background:var(--brand-hover);transform:translateY(-1px);box-shadow:0 0 30px rgba(0,255,136,.45),0 0 80px rgba(0,255,136,.15)}
+.btn-ghost{background:transparent;color:var(--text);border:1px solid var(--border)}
+.btn-ghost:hover{border-color:var(--border-hover);background:rgba(255,255,255,.04)}
+@keyframes pulseGlow{0%,100%{box-shadow:0 0 20px rgba(0,255,136,.3),0 0 60px rgba(0,255,136,.1)}50%{box-shadow:0 0 40px rgba(0,255,136,.5),0 0 80px rgba(0,255,136,.2)}}
+.btn-glow{animation:pulseGlow 2s ease-in-out infinite}
+
+/* HERO */
+.hero{padding:160px 0 96px;position:relative;overflow:hidden;text-align:center}
+.hero::before{content:'';position:absolute;inset:0;
+background-image:radial-gradient(rgba(255,255,255,.08) 1px,transparent 1px);background-size:32px 32px;z-index:0}
+.hero::after{content:'';position:absolute;top:50%;left:50%;width:800px;height:800px;transform:translate(-50%,-50%);
+background:radial-gradient(circle,rgba(0,255,136,.06) 0%,transparent 70%);z-index:0}
+.hero .container{position:relative;z-index:1}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;padding:8px 16px;border-radius:9999px;
+background:var(--brand-muted);border:1px solid rgba(0,255,136,.2);font-size:14px;font-weight:500;color:var(--brand);margin-bottom:24px}
+.hero h1{font-size:clamp(36px,5vw,64px);font-weight:700;line-height:1.1;margin-bottom:20px;letter-spacing:-.03em;max-width:900px;margin-left:auto;margin-right:auto}
+.hero h1 span{color:var(--brand)}
+.hero p{font-size:clamp(16px,1.8vw,20px);color:var(--text2);max-width:700px;margin:0 auto 40px;line-height:1.6}
+.hero-ctas{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+
+/* SOCIAL PROOF */
+.social-proof{padding:48px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.social-proof .container{display:flex;align-items:center;justify-content:center;gap:40px;flex-wrap:wrap;text-align:center}
+.proof-flags{display:flex;gap:12px;font-size:24px}
+.proof-text{font-size:15px;color:var(--text2);font-weight:500}
+.proof-text strong{color:var(--brand);font-family:var(--mono)}
+.counter{font-family:var(--mono);color:var(--brand);font-weight:600;font-size:18px}
+
+/* PROBLEM/SOLUTION */
+.problem-solution{padding:96px 0}
+.problem-solution h2{text-align:center;font-size:clamp(28px,3.5vw,40px);font-weight:700;margin-bottom:48px;letter-spacing:-.02em}
+.ps-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px}
+.ps-card{padding:32px;border-radius:var(--r-lg);border:1px solid var(--border)}
+.ps-card.problem{background:rgba(255,71,87,.04);border-color:rgba(255,71,87,.15)}
+.ps-card.solution{background:rgba(0,255,136,.04);border-color:rgba(0,255,136,.15)}
+.ps-card h3{font-size:20px;font-weight:600;margin-bottom:20px;display:flex;align-items:center;gap:10px}
+.ps-card.problem h3{color:var(--error)}
+.ps-card.solution h3{color:var(--brand)}
+.ps-card ul{list-style:none;display:flex;flex-direction:column;gap:14px}
+.ps-card li{display:flex;align-items:flex-start;gap:10px;font-size:15px;color:var(--text2);line-height:1.5}
+.ps-card li::before{content:'';width:6px;height:6px;border-radius:50%;margin-top:8px;flex-shrink:0}
+.ps-card.problem li::before{background:var(--error)}
+.ps-card.solution li::before{background:var(--brand)}
+
+/* FEATURES */
+.features{padding:96px 0}
+.features h2{text-align:center;font-size:clamp(28px,3.5vw,40px);font-weight:700;margin-bottom:16px;letter-spacing:-.02em}
+.features>p{text-align:center;color:var(--text2);font-size:17px;margin-bottom:48px;max-width:600px;margin-left:auto;margin-right:auto}
+.feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.feat-card{background:rgba(13,17,23,.8);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+border:1px solid var(--border);border-radius:var(--r-lg);padding:28px;transition:border-color .2s}
+.feat-card:hover{border-color:rgba(0,255,136,.2)}
+.feat-icon{font-size:32px;margin-bottom:16px}
+.feat-card h3{font-size:17px;font-weight:600;margin-bottom:8px}
+.feat-card p{font-size:14px;color:var(--text2);line-height:1.6}
+
+/* PRICING */
+.pricing{padding:96px 0}
+.pricing h2{text-align:center;font-size:clamp(28px,3.5vw,40px);font-weight:700;margin-bottom:12px;letter-spacing:-.02em}
+.pricing>p{text-align:center;color:var(--text2);font-size:17px;margin-bottom:48px}
+.price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;align-items:start}
+.price-card{background:rgba(13,17,23,.8);backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:var(--r-xl);padding:32px;position:relative}
+.price-card.featured{border-color:rgba(0,255,136,.3);box-shadow:0 0 30px rgba(0,255,136,.1),0 0 80px rgba(0,255,136,.05)}
+.price-badge{position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:var(--brand);color:var(--bg);
+padding:6px 16px;border-radius:9999px;font-size:12px;font-weight:700;letter-spacing:.03em;text-transform:uppercase}
+.price-card h3{font-size:22px;font-weight:700;margin-bottom:8px}
+.price-card .price{font-size:40px;font-weight:700;font-family:var(--mono);margin-bottom:4px}
+.price-card .price small{font-size:16px;color:var(--text2);font-weight:400}
+.price-card .price-sub{font-size:13px;color:var(--text3);margin-bottom:20px}
+.price-card .old-price{text-decoration:line-through;color:var(--text3);font-size:16px;font-family:var(--mono)}
+.price-features{list-style:none;display:flex;flex-direction:column;gap:12px;margin-bottom:24px}
+.price-features li{font-size:14px;color:var(--text2);display:flex;align-items:flex-start;gap:8px}
+.price-features li::before{content:'✓';color:var(--brand);font-weight:700;flex-shrink:0}
+.bonus{margin-top:16px;padding-top:16px;border-top:1px solid var(--border)}
+.bonus-item{font-size:13px;color:var(--text2);margin-bottom:8px;display:flex;align-items:flex-start;gap:6px}
+.bonus-item .val{color:var(--text3);text-decoration:line-through;font-family:var(--mono);font-size:12px}
+.price-total{text-align:center;margin:20px 0 16px;padding:12px;border-radius:var(--r-md);background:var(--brand-muted)}
+.price-total .crossed{text-decoration:line-through;color:var(--text3);font-family:var(--mono)}
+.price-total .final{color:var(--brand);font-weight:700;font-family:var(--mono);font-size:20px}
+.price-card .btn{width:100%;justify-content:center;padding:14px;font-size:15px;margin-top:8px}
+.price-guarantee{text-align:center;font-size:12px;color:var(--text3);margin-top:12px}
+
+/* GUARANTEE */
+.guarantee{padding:96px 0}
+.guarantee-card{max-width:700px;margin:0 auto;text-align:center;padding:48px 40px;border-radius:var(--r-xl);
+background:rgba(13,17,23,.8);backdrop-filter:blur(20px);border:1px solid rgba(0,255,136,.2)}
+.guarantee-card .icon{font-size:48px;margin-bottom:16px}
+.guarantee-card h2{font-size:28px;font-weight:700;margin-bottom:12px}
+.guarantee-card p{font-size:16px;color:var(--text2);line-height:1.6}
+
+/* FAQ */
+.faq{padding:96px 0}
+.faq h2{text-align:center;font-size:clamp(28px,3.5vw,40px);font-weight:700;margin-bottom:48px;letter-spacing:-.02em}
+.faq-list{max-width:700px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
+.faq-item{border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;transition:border-color .2s}
+.faq-item.active{border-color:rgba(0,255,136,.2)}
+.faq-q{padding:20px 24px;cursor:pointer;font-weight:600;font-size:15px;display:flex;justify-content:space-between;align-items:center;transition:background .2s}
+.faq-q:hover{background:rgba(255,255,255,.02)}
+.faq-q .arrow{transition:transform .2s;color:var(--text3)}
+.faq-item.active .arrow{transform:rotate(180deg)}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .3s ease}
+.faq-item.active .faq-a{max-height:200px}
+.faq-a p{padding:0 24px 20px;font-size:14px;color:var(--text2);line-height:1.7}
+
+/* FINAL CTA */
+.final-cta{padding:96px 0;text-align:center}
+.final-cta h2{font-size:clamp(28px,3.5vw,40px);font-weight:700;margin-bottom:12px;letter-spacing:-.02em}
+.final-cta p{color:var(--text2);font-size:17px;margin-bottom:32px}
+.final-cta .sub{font-size:13px;color:var(--text3);margin-top:16px}
+
+/* FOOTER */
+footer{padding:48px 0;border-top:1px solid var(--border)}
+footer .container{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
+.footer-left{display:flex;flex-direction:column;gap:8px}
+.footer-logo{font-weight:700;font-size:18px;color:var(--brand)}
+.footer-copy{font-size:13px;color:var(--text3)}
+.footer-links{display:flex;gap:24px}
+.footer-links a{font-size:13px;color:var(--text3);transition:color .2s}
+.footer-links a:hover{color:var(--text)}
+.footer-flags{font-size:20px;display:flex;gap:8px}
+
+/* ANIMATIONS */
+.fade-up{opacity:0;transform:translateY(30px);transition:opacity .6s,transform .6s cubic-bezier(.16,1,.3,1)}
+.fade-up.visible{opacity:1;transform:translateY(0)}
+
+/* RESPONSIVE */
+@media(max-width:1024px){
+.feat-grid{grid-template-columns:repeat(2,1fr)}
+.price-grid{grid-template-columns:1fr}
+.price-card.featured{order:-1}
+}
+@media(max-width:768px){
+.nav-links a:not(.btn){display:none}
+.hero h1{font-size:32px}
+.ps-grid{grid-template-columns:1fr}
+.feat-grid{grid-template-columns:1fr}
+footer .container{flex-direction:column;text-align:center}
+.footer-links{flex-wrap:wrap;justify-content:center}
+}
+</style>
+</head>
+<body>
+<!-- NAV -->
+<nav>
+<div class="container">
+<a href="/" class="nav-logo">LitperPro</a>
+<div class="nav-links">
+<a href="#features">Producto</a>
+<a href="#pricing">Pricing</a>
+<a href="/login.html">Login</a>
+<a href="/login.html" class="btn btn-primary" style="padding:8px 18px;font-size:13px">Empieza gratis</a>
+</div>
+</div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+<div class="container">
+<div class="hero-badge fade-up">🟢 +200 empresas en 4 países</div>
+<h1 class="fade-up">Reduce tus pérdidas logísticas en un <span>40%</span> desde el día 1</h1>
+<p class="fade-up">El dashboard de IA que las empresas COD más rentables de LATAM usan para optimizar carriers, predecir devoluciones y escalar operaciones.</p>
+<div class="hero-ctas fade-up">
+<a href="/login.html" class="btn btn-primary btn-glow" style="padding:14px 32px;font-size:16px">Empieza gratis →</a>
+<a href="#features" class="btn btn-ghost" style="padding:14px 32px;font-size:16px">Ver demo</a>
+</div>
+</div>
+</section>
+
+<!-- SOCIAL PROOF -->
+<section class="social-proof">
+<div class="container">
+<div class="proof-flags">🇨🇴 🇨🇱 🇬🇹 🇲🇽</div>
+<span class="proof-text">Procesando <strong>+$2M USD</strong> en operaciones COD mensuales</span>
+<span class="counter" data-target="1015">0 ciudades monitoreadas</span>
+</div>
+</section>
+
+<!-- PROBLEM / SOLUTION -->
+<section class="problem-solution" id="problem">
+<div class="container">
+<h2 class="fade-up">El problema que nadie te está mostrando</h2>
+<div class="ps-grid">
+<div class="ps-card problem fade-up">
+<h3>✕ Sin LitperPro</h3>
+<ul>
+<li>Pérdidas invisibles por devoluciones sin rastrear</li>
+<li>Carriers sin control ni comparación real</li>
+<li>Datos en Excel sin análisis automático</li>
+<li>Decisiones a ciegas sin predicción</li>
+</ul>
+</div>
+<div class="ps-card solution fade-up">
+<h3>✓ Con LitperPro</h3>
+<ul>
+<li>Semáforo en tiempo real de 1,015 ciudades</li>
+<li>Scorecard automático de carriers con CPA</li>
+<li>IA predictiva con 3 modelos de análisis</li>
+<li>Alertas inteligentes y reportes accionables</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+
+<!-- FEATURES -->
+<section class="features" id="features">
+<div class="container">
+<h2 class="fade-up">Todo lo que necesitas en una pantalla</h2>
+<p class="fade-up">14 tabs. 3 modelos de IA. 4 países. Zero learning curve.</p>
+<div class="feat-grid">
+<div class="feat-card fade-up">
+<div class="feat-icon">🚦</div>
+<h3>Semáforo de Ciudades</h3>
+<p>Verde, amarillo, rojo. Visualiza la tasa de entrega de cada ciudad en tiempo real.</p>
+</div>
+<div class="feat-card fade-up">
+<div class="feat-icon">📊</div>
+<h3>Scorecard de Carriers</h3>
+<p>Compara Coordinadora, Inter, TCC y Envía con CPA logístico automático.</p>
+</div>
+<div class="feat-card fade-up">
+<div class="feat-icon">🤖</div>
+<h3>IA Predictiva</h3>
+<p>3 modelos (Claude, Gemini, GPT) analizan tus datos y predicen tendencias.</p>
+</div>
+<div class="feat-card fade-up">
+<div class="feat-icon">💬</div>
+<h3>Chat Inteligente</h3>
+<p>Pregúntale a LitperBot cualquier cosa sobre tus operaciones.</p>
+</div>
+<div class="feat-card fade-up">
+<div class="feat-icon">📈</div>
+<h3>Matriz de Prioridad</h3>
+<p>Pareto automático: encuentra el 20% de ciudades que causan el 80% de pérdidas.</p>
+</div>
+<div class="feat-card fade-up">
+<div class="feat-icon">📁</div>
+<h3>Export Multi-formato</h3>
+<p>CSV, JSON, Excel. Reportes listos para tu equipo en un clic.</p>
+</div>
+</div>
+</div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing" id="pricing">
+<div class="container">
+<h2 class="fade-up">Planes diseñados para tu operación</h2>
+<p class="fade-up">Sin sorpresas. Sin contratos. Cancela cuando quieras.</p>
+<div class="price-grid">
+
+<!-- STARTER -->
+<div class="price-card fade-up">
+<h3>Starter</h3>
+<div class="price">$0<small>/mes</small></div>
+<div class="price-sub">Gratis para siempre</div>
+<ul class="price-features">
+<li>Dashboard completo (14 tabs)</li>
+<li>1 país, datos demo</li>
+<li>Export básico (CSV)</li>
+<li>Perfecto para conocer la plataforma</li>
+</ul>
+<a href="/login.html" class="btn btn-ghost">Empezar gratis</a>
+</div>
+
+<!-- PRO -->
+<div class="price-card featured fade-up">
+<div class="price-badge">Más popular</div>
+<h3>Pro</h3>
+<div><span class="old-price">$49</span></div>
+<div class="price">$29<small>/mes</small></div>
+<div class="price-sub">Early bird — precio sube pronto</div>
+<ul class="price-features">
+<li>Todo de Starter +</li>
+<li>Datos reales ilimitados</li>
+<li>4 países (CO, CL, GT, MX)</li>
+<li>IA predictiva (3 modelos)</li>
+<li>Chat inteligente LitperBot</li>
+<li>API access</li>
+</ul>
+<div class="bonus">
+<div class="bonus-item">🎁 Templates reportes ejecutivos <span class="val">$97</span></div>
+<div class="bonus-item">🎁 Onboarding personalizado 1-on-1 <span class="val">$200</span></div>
+<div class="bonus-item">🎁 Grupo privado operadores LATAM <span class="val">$47</span></div>
+</div>
+<div class="price-total">
+<span class="crossed">$443/mes</span> → <span class="final">$29/mes</span>
+</div>
+<a href="/login.html" class="btn btn-primary btn-glow">Comenzar prueba Pro →</a>
+<div class="price-guarantee">Garantía 30 días. Sin preguntas.</div>
+</div>
+
+<!-- ENTERPRISE -->
+<div class="price-card fade-up">
+<h3>Enterprise</h3>
+<div class="price">$199<small>/mes</small></div>
+<div class="price-sub">Para operaciones de +1000 envíos/día</div>
+<ul class="price-features">
+<li>Todo de Pro +</li>
+<li>White label</li>
+<li>API dedicada</li>
+<li>SLA 99.9%</li>
+<li>Account manager dedicado</li>
+<li>Integraciones custom</li>
+</ul>
+<a href="mailto:jeferson@litper.co" class="btn btn-ghost">Contactar ventas</a>
+</div>
+
+</div>
+</div>
+</section>
+
+<!-- GUARANTEE -->
+<section class="guarantee">
+<div class="container">
+<div class="guarantee-card fade-up">
+<div class="icon">🛡️</div>
+<h2>Garantía Litper de 30 días</h2>
+<p>Si no reduces tus pérdidas en 30 días, te devolvemos el 100%. Sin preguntas, sin letras pequeñas.</p>
+</div>
+</div>
+</section>
+
+<!-- FAQ -->
+<section class="faq" id="faq">
+<div class="container">
+<h2 class="fade-up">Preguntas frecuentes</h2>
+<div class="faq-list">
+<div class="faq-item fade-up">
+<div class="faq-q">¿Qué datos necesito para empezar? <span class="arrow">▾</span></div>
+<div class="faq-a"><p>Solo necesitas tu archivo Excel de envíos con columnas de ciudad, carrier y estado de entrega. Setup en 5 minutos.</p></div>
+</div>
+<div class="faq-item fade-up">
+<div class="faq-q">¿Funciona para mi país? <span class="arrow">▾</span></div>
+<div class="faq-a"><p>Sí. Cubrimos Colombia, Chile, Guatemala y México con datos de 1,015 ciudades.</p></div>
+</div>
+<div class="faq-item fade-up">
+<div class="faq-q">¿Puedo usar la IA con mis propios datos? <span class="arrow">▾</span></div>
+<div class="faq-a"><p>Sí. Los 3 modelos de IA analizan TUS datos reales. No son respuestas genéricas.</p></div>
+</div>
+<div class="faq-item fade-up">
+<div class="faq-q">¿Qué pasa si cancelo? <span class="arrow">▾</span></div>
+<div class="faq-a"><p>Cancelas cuando quieras. Si estás en los primeros 30 días, te devolvemos el 100%.</p></div>
+</div>
+<div class="faq-item fade-up">
+<div class="faq-q">¿Necesito conocimientos técnicos? <span class="arrow">▾</span></div>
+<div class="faq-a"><p>No. Si sabes usar Excel, sabes usar LitperPro. Zero learning curve.</p></div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="final-cta">
+<div class="container">
+<h2 class="fade-up">¿Listo para dejar de perder plata en logística?</h2>
+<p class="fade-up">Empieza gratis hoy. Setup en 5 minutos.</p>
+<a href="/login.html" class="btn btn-primary btn-glow fade-up" style="padding:16px 40px;font-size:17px">Empieza gratis →</a>
+<div class="sub fade-up">Sin tarjeta de crédito • Cancela cuando quieras</div>
+</div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+<div class="container">
+<div class="footer-left">
+<div class="footer-logo">LitperPro</div>
+<div class="footer-copy">© 2025 Litper Group LLC. Duitama, Colombia.</div>
+</div>
+<div class="footer-links">
+<a href="#features">Producto</a>
+<a href="#pricing">Pricing</a>
+<a href="/login.html">Login</a>
+<a href="#">Términos</a>
+<a href="#">Privacidad</a>
+</div>
+<div class="footer-flags">🇨🇴 🇨🇱 🇬🇹 🇲🇽</div>
+</div>
+</footer>
+
+<script>
+// Scroll fade-in animations
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+}, { threshold: 0.1 });
+document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+// Counter animation
+const counterEl = document.querySelector('.counter');
+if (counterEl) {
+  const target = parseInt(counterEl.dataset.target);
+  let current = 0;
+  const counterObs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting && current === 0) {
+        const duration = 2000;
+        const step = target / (duration / 16);
+        const timer = setInterval(() => {
+          current += step;
+          if (current >= target) { current = target; clearInterval(timer); }
+          counterEl.textContent = Math.floor(current).toLocaleString() + ' ciudades monitoreadas';
+        }, 16);
+        counterObs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.5 });
+  counterObs.observe(counterEl);
+}
+
+// FAQ accordion
+document.querySelectorAll('.faq-q').forEach(q => {
+  q.addEventListener('click', () => {
+    const item = q.parentElement;
+    const wasActive = item.classList.contains('active');
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('active'));
+    if (!wasActive) item.classList.add('active');
+  });
+});
+
+// Smooth nav background on scroll
+const nav = document.querySelector('nav');
+window.addEventListener('scroll', () => {
+  nav.style.borderBottomColor = window.scrollY > 50 ? 'rgba(255,255,255,0.08)' : 'transparent';
+});
+</script>
+</body>
+</html>
