@@ -1,4 +1,4 @@
-﻿# LitperPro Semáforo IA — Guía completa para Claude Code
+# LitperPro Semáforo IA — Guía completa para Claude Code
 
 ## Qué es esto
 Dashboard logístico COD (Cash on Delivery) de **Litper Group LLC** (Wyoming LLC, EIN: 38-4366550).
@@ -33,19 +33,60 @@ URL producción: https://litper-semaforo.vercel.app
 | public/checkout.html | /checkout | Checkout 3 pasos + Stripe | 188KB |
 | public/profile.html | /profile | Perfil + plan + equipo | 174KB |
 
+### Persistencia (Supabase)
+- uploads, city_stats, carrier_stats — se guardan al subir Excel
+- ai_analyses — cada analisis de IA se persiste
+- chat_sessions — conversaciones del LitperBot
+- Columnas generadas: city_stats.semaforo, carrier_stats.cpa_cop
+
+### API Backend (Vercel Serverless)
+- `/api/ai.js` — Proxy para analisis IA (POST {model, prompt})
+- `/api/chat.js` — Proxy para chat multi-turno (POST {model, messages, system})
+- `/api/create-checkout.js` — Crea sesion de Stripe Checkout
+- `/api/stripe-webhook.js` — Webhook de Stripe para actualizar plan
+- Keys seguras en env vars del servidor
+
+### Pagos (Stripe)
+- Stripe Checkout (redirect flow) para suscripciones
+- Webhook maneja: checkout.session.completed, subscription.updated/deleted, invoice.payment_failed
+- Fallback a modo demo si Stripe no esta configurado
+- Plans: starter (gratis, 10 IA), pro ($79K COP/mes, 50 IA), enterprise ($299K, ilimitado)
+
+### Onboarding
+- Wizard de 3 pasos al primer login (onboarding_completed=false en profiles)
+- Paso 1: Nombre de tienda, Paso 2: Subir primer Excel, Paso 3: Features overview
+- Dashboard auto-carga ultimo upload desde Supabase al entrar
+
 ## Arquitectura Supabase
 - URL: https://gtsivwbnhcawvmsfujby.supabase.co
 - Tablas: organizations, profiles, uploads, city_stats, carrier_stats, ai_analyses, chat_sessions
+- Schema completo en: supabase/migrations/001_schema.sql + 002_commercial.sql
+- View auth_profiles apunta a profiles (el codigo usa auth_profiles)
+- Campos comerciales: onboarding_completed, store_name, phone, avatar_url en profiles
+- Campos Stripe: stripe_customer_id, stripe_subscription_id, subscription_status en organizations
 - Columnas generadas: city_stats.semaforo, carrier_stats.cpa_cop
 - Auth trigger: auto-crea org + profile al registrarse
 - RLS activo en todas las tablas
-- Schema: supabase/migrations/001_schema.sql
 
 ## API Backend (Vercel Serverless)
 - /api/ai.js — Proxy IA (POST {model, prompt})
 - /api/chat.js — Chat multi-turno (POST {model, messages, system})
 - Keys en Vercel env vars: GEMINI_API_KEY, CLAUDE_API_KEY, OPENAI_API_KEY
 - ⚠️ NUNCA exponer keys en frontend
+
+## Variables de entorno necesarias en Vercel
+```
+GEMINI_API_KEY=...
+CLAUDE_API_KEY=...
+OPENAI_API_KEY=...
+STRIPE_SECRET_KEY=sk_...
+STRIPE_WEBHOOK_SECRET=whsec_...
+STRIPE_PRICE_PRO_MONTHLY=price_...
+STRIPE_PRICE_PRO_ANNUAL=price_...
+STRIPE_PRICE_ENTERPRISE_MONTHLY=price_...
+STRIPE_PRICE_ENTERPRISE_ANNUAL=price_...
+SUPABASE_SERVICE_ROLE_KEY=...
+```
 
 ## JS compartido
 - public/js/supabase-client.js — helpers auth + Supabase

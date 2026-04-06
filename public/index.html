@@ -311,6 +311,8 @@ body.has-urgencia nav{top:40px}
 .trust-item{display:flex;align-items:center;gap:8px;font-size:12px;color:rgba(255,255,255,.5);font-family:var(--mono);flex-shrink:0}
 .trust-item strong{color:rgba(255,255,255,.8)}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="/js/supabase-client.js"></script>
 </head>
 <body>
 <!-- URGENCIA TOP BAR -->
@@ -343,7 +345,7 @@ body.has-urgencia nav{top:40px}
     <a href="#features" class="nav-link">Funciones</a>
     <a href="#quiz" class="nav-link">Diagnóstico</a>
     <a href="#pricing" class="nav-link">Precios</a>
-    <a href="/login" class="nav-signin">Ingresar</a>
+    <a href="/login" class="nav-signin" id="nav-auth-btn">Ingresar</a>
   </div>
   <div class="nav-flags"><span title="Colombia">🇨🇴</span><span title="Chile">🇨🇱</span><span title="Guatemala">🇬🇹</span><span title="México">🇲🇽</span></div>
 </nav>
@@ -926,6 +928,24 @@ document.addEventListener('click',e=>{
     });
   }, { rootMargin: '-30% 0px -60% 0px' });
   sections.forEach(s => observer.observe(s));
+})();
+</script>
+<script>
+// ── AUTH-AWARE NAV ──────────────────────────────────────────
+(async function(){
+  try {
+    const session = await getSession();
+    const btn = document.getElementById('nav-auth-btn');
+    if(session && btn){
+      btn.href = '/dashboard';
+      btn.textContent = 'Mi Dashboard →';
+      btn.style.background = 'linear-gradient(135deg,var(--teal),var(--violet))';
+      btn.style.color = '#000';
+      btn.style.border = 'none';
+      btn.style.fontWeight = '700';
+      btn.style.boxShadow = '0 0 16px rgba(0,212,245,.3)';
+    }
+  } catch(e){ console.warn('Auth check:', e); }
 })();
 </script>
 </body>
