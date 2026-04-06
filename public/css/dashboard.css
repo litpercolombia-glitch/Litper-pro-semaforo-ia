@@ -75,6 +75,8 @@ body{background:var(--bg);color:var(--tx);font-family:var(--font);font-size:14px
 body.light .pais-btn{opacity:.6;background:rgba(0,0,0,.03);border-color:rgba(0,0,0,.08);}
 body.light .pais-btn:hover{opacity:1;background:rgba(0,0,0,.06);border-color:rgba(0,0,0,.15);}
 body.light .pais-btn.active{border-color:var(--cn);background:var(--cndim);box-shadow:0 0 10px rgba(8,145,178,.12);}
+.pais-flag{font-family:var(--mono);font-size:13px;font-weight:700;letter-spacing:.05em;color:var(--text-secondary);}
+.pais-btn.active .pais-flag{color:var(--brand);}
 input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{opacity:.3}
 .ubar{margin:0;background:rgba(13,17,23,0.6);border:1px dashed rgba(255,255,255,.1);border-radius:var(--r);padding:11px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:all .2s;}
 .ubar:hover,.ubar.drag{border-color:rgba(0,255,136,.45);background:rgba(0,255,136,.07);box-shadow:0 0 28px rgba(0,255,136,.15),0 0 0 1px rgba(0,255,136,.1);}
