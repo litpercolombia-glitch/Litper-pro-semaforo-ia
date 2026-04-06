@@ -1086,14 +1086,14 @@ input[type=range]:hover { transform: scaleY(1.1); }
   <div style="display:flex;gap:8px;align-items:center">
     <div style="display:flex;align-items:center;gap:4px;background:var(--rddim);border:1px solid var(--rdb);border-radius:8px;padding:5px 10px">
       <span style="font-size:10px;color:var(--rd);font-family:var(--mono);font-weight:600">DEV $</span>
-      <input type="number" id="costo-dev" value="18000" min="0" step="1000"
+      <input type="number" id="costo-dev" aria-label="Costo de devolución COP" value="18000" min="0" step="1000"
         style="width:65px;background:transparent;border:none;outline:none;font-family:var(--mono);font-size:12px;color:var(--rd);font-weight:700;-moz-appearance:textfield"
         onchange="savePaisConfig()">
       <span id="moneda-label" style="font-size:9px;color:var(--t3);font-family:var(--mono)">COP</span>
     </div>
     <div style="display:flex;align-items:center;gap:4px;background:var(--cndim);border:1px solid rgba(0,255,136,.15);border-radius:8px;padding:5px 10px">
       <span style="font-size:10px;color:var(--cn);font-family:var(--mono);font-weight:600">FLETE $</span>
-      <input type="number" id="costo-flete" value="9000" min="0" step="500"
+      <input type="number" id="costo-flete" aria-label="Costo de flete COP" value="9000" min="0" step="500"
         style="width:65px;background:transparent;border:none;outline:none;font-family:var(--mono);font-size:12px;color:var(--cn);font-weight:700;-moz-appearance:textfield"
         onchange="savePaisConfig()">
       <span id="moneda-flete" style="font-size:9px;color:var(--t3);font-family:var(--mono)">COP</span>
@@ -1107,7 +1107,7 @@ input[type=range]:hover { transform: scaleY(1.1); }
   <button class="btn-up" onclick="document.getElementById('fi').click()" style="display:flex;align-items:center;gap:8px;padding:7px 16px;font-size:12px;border-radius:10px">
     📂 Subir Excel
   </button>
-  <input type="file" id="fi" accept=".xlsx,.xls" style="display:none" multiple onchange="handleFiles(this.files)">
+  <input type="file" id="fi" aria-label="Subir archivo Excel con datos logísticos" accept=".xlsx,.xls" style="display:none" multiple onchange="handleFiles(this.files)">
   <div id="files-loaded-badge" style="display:none;font-family:var(--mono);font-size:10px;background:rgba(0,230,118,.08);border:1px solid rgba(0,230,118,.2);border-radius:99px;padding:4px 12px;color:rgba(0,230,118,.9)"></div>
 
 </div>
@@ -1130,10 +1130,10 @@ input[type=range]:hover { transform: scaleY(1.1); }
       <div class="scard sr"><div class="scl rd">Rojo &lt;70%</div><div class="scn rd" id="sc-r">—</div><div class="scs">restringir</div></div>
     </div>
     <div class="ctrls">
-      <input class="ci search" id="ss-q" type="text" placeholder="Buscar ciudad..." oninput="rSem()">
-      <select class="ci" id="ss-c" onchange="rSem()"><option value="">Todos</option><option value="v">Verde</option><option value="a">Amarillo</option><option value="r">Rojo</option></select>
-      <select class="ci" id="ss-v" onchange="rSem()"><option value="1">Desde 1</option><option value="10" selected>Desde 10</option><option value="50">Desde 50</option><option value="100">Desde 100</option></select>
-      <select class="ci" id="ss-t" onchange="rSem()"><option value="">Todas las transportadoras</option></select>
+      <input class="ci search" id="ss-q" type="text" aria-label="Buscar ciudad en semáforo" placeholder="Buscar ciudad..." oninput="rSem()">
+      <select class="ci" id="ss-c" aria-label="Filtrar por color semáforo" onchange="rSem()"><option value="">Todos</option><option value="v">Verde</option><option value="a">Amarillo</option><option value="r">Rojo</option></select>
+      <select class="ci" id="ss-v" aria-label="Filtrar por volumen mínimo" onchange="rSem()"><option value="1">Desde 1</option><option value="10" selected>Desde 10</option><option value="50">Desde 50</option><option value="100">Desde 100</option></select>
+      <select class="ci" id="ss-t" aria-label="Filtrar por transportadora" onchange="rSem()"><option value="">Todas las transportadoras</option></select>
     </div>
     <div class="tw"><table><thead><tr><th style="width:24px"></th><th onclick="thS('n')" style="cursor:pointer" id="th-n">Ciudad ↕</th><th onclick="thS('t')" style="text-align:right;cursor:pointer" id="th-t">Pedidos ↕</th><th onclick="thS('te')" style="cursor:pointer" id="th-te">% Entrega ↕</th><th>Estado</th><th>Mejor carrier</th></tr></thead><tbody id="tb-sem"></tbody></table></div>
     <div class="pag" id="pag-sem"></div>
@@ -1145,10 +1145,10 @@ input[type=range]:hover { transform: scaleY(1.1); }
   <div class="phdr"><div class="phdr-l"><h2>Ciudades × Transportadora</h2><p>▶ para ver cada carrier por separado</p></div><button class="btn-inst" onclick="showInst('ciudades')">❓ Cómo usar</button></div>
   <div class="pb">
     <div class="ctrls">
-      <input class="ci search" id="cc-q" type="text" placeholder="Buscar ciudad..." oninput="rCiu()">
-      <select class="ci" id="cc-t" onchange="rCiu()"><option value="">Todas las transportadoras</option></select>
-      <select class="ci" id="cc-s" onchange="rCiu()"><option value="t">Mayor volumen</option><option value="te">Mejor entrega</option><option value="d">Mayor devolución</option></select>
-      <select class="ci" id="cc-v" onchange="rCiu()"><option value="1">Desde 1</option><option value="10">Desde 10</option><option value="50" selected>Desde 50</option></select>
+      <input class="ci search" id="cc-q" type="text" aria-label="Buscar ciudad en ciudades-transportadora" placeholder="Buscar ciudad..." oninput="rCiu()">
+      <select class="ci" id="cc-t" aria-label="Filtrar transportadora en ciudades" onchange="rCiu()"><option value="">Todas las transportadoras</option></select>
+      <select class="ci" id="cc-s" aria-label="Ordenar ciudades por" onchange="rCiu()"><option value="t">Mayor volumen</option><option value="te">Mejor entrega</option><option value="d">Mayor devolución</option></select>
+      <select class="ci" id="cc-v" aria-label="Volumen mínimo ciudades" onchange="rCiu()"><option value="1">Desde 1</option><option value="10">Desde 10</option><option value="50" selected>Desde 50</option></select>
     </div>
     <div class="tw"><table><thead><tr><th style="width:24px"></th><th>Ciudad</th><th style="text-align:right">Total</th><th style="text-align:right">Entregados</th><th style="text-align:right">Devol.</th><th>% Entrega</th><th>Estado</th><th>Mejor carrier</th></tr></thead><tbody id="tb-ciu"></tbody></table></div>
     <div class="pag" id="pag-ciu"></div>
@@ -1158,7 +1158,7 @@ input[type=range]:hover { transform: scaleY(1.1); }
 <!-- SCORECARD -->
 <div class="panel" id="panel-transportadoras">
   <div class="phdr"><div class="phdr-l"><h2>Scorecard de Transportadoras</h2><p>Score = 70% entrega + 30% participación · CPA real por entrega exitosa</p></div>
-    <div class="phdr-r"><span style="font-size:10px;color:var(--t3)">Tarifa $</span><input class="ti" id="tarifa" type="number" value="15000" oninput="rTrans()"><button class="btn-inst" onclick="showInst('transportadoras')">❓ Cómo usar</button></div>
+    <div class="phdr-r"><span style="font-size:10px;color:var(--t3)">Tarifa $</span><input class="ti" id="tarifa" type="number" aria-label="Tarifa logística en pesos COP" value="15000" oninput="rTrans()"><button class="btn-inst" onclick="showInst('transportadoras')">❓ Cómo usar</button></div>
   </div>
   <div class="pb">
     <div class="sgrid" id="scards"></div>
@@ -1172,13 +1172,13 @@ input[type=range]:hover { transform: scaleY(1.1); }
   <div class="phdr"><div class="phdr-l"><h2>🚫 Reglas de bloqueo</h2><p>Amazon Carrier Suspension — define umbral, obtén lista de rutas a bloquear</p></div><button class="btn-inst" onclick="showInst('bloqueo')">❓ Cómo usar</button></div>
   <div class="pb">
     <div style="background:var(--s1);border:1px solid var(--b1);border-radius:var(--r);padding:13px;margin-bottom:11px;backdrop-filter:blur(8px)">
-      <div class="slrow"><span class="sllbl">Umbral de bloqueo</span><input type="range" min="10" max="80" value="50" id="sl-u" oninput="rBloq()" style="flex:1"><span class="slval" id="sl-uv">50%</span></div>
-      <div class="slrow"><span class="sllbl">Mínimo de pedidos</span><input type="range" min="1" max="50" value="5" id="sl-m" oninput="rBloq()" style="flex:1"><span class="slval" id="sl-mv">5 ped</span></div>
+      <div class="slrow"><span class="sllbl">Umbral de bloqueo</span><input type="range" min="10" max="80" value="50" id="sl-u" aria-label="Umbral de bloqueo %" oninput="rBloq()" style="flex:1"><span class="slval" id="sl-uv">50%</span></div>
+      <div class="slrow"><span class="sllbl">Mínimo de pedidos</span><input type="range" min="1" max="50" value="5" id="sl-m" aria-label="Mínimo de pedidos para bloqueo" oninput="rBloq()" style="flex:1"><span class="slval" id="sl-mv">5 ped</span></div>
     </div>
     <div class="ctrls">
-      <input class="ci search" id="bl-q-ciudad" type="text" placeholder="Filtrar por ciudad..." oninput="rBloq()" style="flex:1;min-width:140px">
-      <select class="ci" id="bl-trans" onchange="rBloq()"><option value="">Todas las transportadoras</option></select>
-      <select class="ci" id="bl-modo" onchange="rBloq()">
+      <input class="ci search" id="bl-q-ciudad" type="text" aria-label="Filtrar ciudades en bloqueo" placeholder="Filtrar por ciudad..." oninput="rBloq()" style="flex:1;min-width:140px">
+      <select class="ci" id="bl-trans" aria-label="Filtrar transportadora en bloqueo" onchange="rBloq()"><option value="">Todas las transportadoras</option></select>
+      <select class="ci" id="bl-modo" aria-label="Modo de bloqueo" onchange="rBloq()">
         <option value="ambos">Ciudad + Transportadora</option>
         <option value="ciudad">Solo por ciudad</option>
         <option value="trans">Solo por transportadora</option>
@@ -1197,7 +1197,7 @@ input[type=range]:hover { transform: scaleY(1.1); }
 <!-- MATRIZ -->
 <div class="panel" id="panel-matriz">
   <div class="phdr"><div class="phdr-l"><h2>📊 Matriz de prioridad</h2><p>MercadoLibre Zone Risk — volumen vs tasa de entrega</p></div>
-    <div class="phdr-r"><select class="ci" id="mz-min" onchange="rMatriz()"><option value="10">Desde 10</option><option value="50" selected>Desde 50</option><option value="100">Desde 100</option></select><button class="btn-inst" onclick="showInst('matriz')">❓ Cómo usar</button></div>
+    <div class="phdr-r"><select class="ci" id="mz-min" aria-label="Volumen mínimo en matriz" onchange="rMatriz()"><option value="10">Desde 10</option><option value="50" selected>Desde 50</option><option value="100">Desde 100</option></select><button class="btn-inst" onclick="showInst('matriz')">❓ Cómo usar</button></div>
   </div>
   <div class="pb">
     <div class="cuad4">
@@ -1229,11 +1229,11 @@ input[type=range]:hover { transform: scaleY(1.1); }
     <div class="cg2c">
       <div class="ccard">
         <div class="flbl">Tarifa por envío (COP)</div>
-        <input class="ci" id="rc-t" type="number" value="15000" style="width:100%;margin-bottom:10px" oninput="calcRec()">
+        <input class="ci" id="rc-t" type="number" aria-label="Tarifa de recuperación COP" value="15000" style="width:100%;margin-bottom:10px" oninput="calcRec()">
         <div class="flbl">Ciudad problemática</div>
-        <select class="ci" id="rc-c" style="width:100%;margin-bottom:10px" onchange="calcRec()"><option value="">— Seleccionar —</option></select>
+        <select class="ci" id="rc-c" aria-label="Transportadora para recuperación" style="width:100%;margin-bottom:10px" onchange="calcRec()"><option value="">— Seleccionar —</option></select>
         <div class="flbl">Meta de tasa de entrega</div>
-        <div style="display:flex;align-items:center;gap:8px"><input type="range" min="50" max="95" value="85" id="rc-m" oninput="calcRec();document.getElementById('rc-mv').textContent=this.value+'%'" style="flex:1"><span id="rc-mv" style="font-family:var(--mono);font-size:12px;color:var(--cn);min-width:36px">80%</span></div>
+        <div style="display:flex;align-items:center;gap:8px"><input type="range" min="50" max="95" value="85" id="rc-m" aria-label="Meta de tasa de entrega %" oninput="calcRec();document.getElementById('rc-mv').textContent=this.value+'%'" style="flex:1"><span id="rc-mv" style="font-family:var(--mono);font-size:12px;color:var(--cn);min-width:36px">80%</span></div>
       </div>
       <div id="rc-result" style="background:rgba(255,255,255,.02);border:1px solid var(--b1);border-radius:var(--r);padding:13px;display:flex;flex-direction:column;justify-content:center;backdrop-filter:blur(8px)">
         <div style="font-size:11px;color:var(--t3);text-align:center">Selecciona una ciudad para ver el impacto financiero</div>
@@ -1251,7 +1251,7 @@ input[type=range]:hover { transform: scaleY(1.1); }
   <div class="pb">
     <div style="background:var(--s1);border:1px solid var(--b1);border-radius:var(--r);padding:13px;margin-bottom:12px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;backdrop-filter:blur(8px)">
       <div><div class="flbl">Ciudad</div><select class="ci" id="as-c" style="width:100%" onchange="calcAsig()"><option value="">— Seleccionar —</option></select></div>
-      <div><div class="flbl">Pedidos a repartir</div><input class="ci" id="as-v" type="number" value="100" style="width:100%" oninput="calcAsig()"></div>
+      <div><div class="flbl">Pedidos a repartir</div><input class="ci" id="as-v" type="number" aria-label="Volumen de pedidos para asignación" value="100" style="width:100%" oninput="calcAsig()"></div>
       <div><div class="flbl">Método</div><select class="ci" id="as-m" style="width:100%" onchange="calcAsig()"><option value="prop">Proporcional a tasa</option><option value="winner">Winner-takes-most 70/30</option><option value="igual">Igualitario</option></select></div>
     </div>
     <div id="as-result" style="background:rgba(255,255,255,.02);border:1px solid var(--b1);border-radius:var(--r);padding:20px;color:var(--t3);font-size:11px;text-align:center;backdrop-filter:blur(8px)">Selecciona una ciudad para ver la asignación recomendada</div>
@@ -1545,8 +1545,8 @@ input[type=range]:hover { transform: scaleY(1.1); }
       </div>
     </div>
     <!-- Hidden CSV input -->
-    <input type="file" id="fi-csv" accept=".csv" style="display:none" onchange="handleCSVImport(this)">
-    <input type="file" id="fi-json-imp" accept=".json" style="display:none" onchange="handleJSONImport(this)">
+    <input type="file" id="fi-csv" aria-label="Importar CSV" accept=".csv" style="display:none" onchange="handleCSVImport(this)">
+    <input type="file" id="fi-json-imp" aria-label="Importar configuración JSON" accept=".json" style="display:none" onchange="handleJSONImport(this)">
   </div>
 </div>
 

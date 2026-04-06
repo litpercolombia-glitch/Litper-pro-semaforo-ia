@@ -217,13 +217,13 @@ body{background:var(--bg);color:var(--text-primary);font-family:var(--font);font
         <div class="card-title">Información personal</div>
         <div class="card-sub">Datos de tu cuenta LitperPro</div>
         <div class="form-grid" style="gap:14px">
-          <div class="fg"><label class="flbl">Nombre</label><input type="text" class="inp" value="Jeferson"></div>
-          <div class="fg"><label class="flbl">Apellido</label><input type="text" class="inp" value="Rodríguez"></div>
-          <div class="fg"><label class="flbl">Correo electrónico</label><input type="email" class="inp" value="jeferson@litper.co"></div>
-          <div class="fg"><label class="flbl">Teléfono</label><input type="text" class="inp" value="+57 300 000 0000"></div>
+          <div class="fg"><label class="flbl" for="p-nombre">Nombre</label><input type="text" class="inp" id="p-nombre" aria-label="Nombre" value="Jeferson"></div>
+          <div class="fg"><label class="flbl" for="p-apellido">Apellido</label><input type="text" class="inp" id="p-apellido" aria-label="Apellido" value="Rodríguez"></div>
+          <div class="fg"><label class="flbl" for="p-email">Correo electrónico</label><input type="email" class="inp" id="p-email" aria-label="Correo electrónico" value="jeferson@litper.co"></div>
+          <div class="fg"><label class="flbl" for="p-tel">Teléfono</label><input type="text" class="inp" id="p-tel" aria-label="Teléfono" value="+57 300 000 0000"></div>
         </div>
-        <div class="fg" style="margin-top:14px"><label class="flbl">Empresa</label><input type="text" class="inp" value="Litper Group LLC"></div>
-        <div class="fg" style="margin-top:14px"><label class="flbl">Ciudad</label><input type="text" class="inp" value="Duitama, Boyacá, Colombia"></div>
+        <div class="fg" style="margin-top:14px"><label class="flbl" for="p-empresa">Empresa</label><input type="text" class="inp" id="p-empresa" aria-label="Empresa" value="Litper Group LLC"></div>
+        <div class="fg" style="margin-top:14px"><label class="flbl" for="p-ciudad">Ciudad</label><input type="text" class="inp" id="p-ciudad" aria-label="Ciudad" value="Duitama, Boyacá, Colombia"></div>
         <div style="margin-top:20px"><button class="btn btn-glow" onclick="saved()">Guardar cambios</button></div>
       </div>
     </div>
@@ -308,9 +308,9 @@ body{background:var(--bg);color:var(--text-primary);font-family:var(--font);font
         <div class="card-title">Cambiar contraseña</div>
         <div class="card-sub">Última actualización: hace 30 días</div>
         <div style="display:flex;flex-direction:column;gap:12px;margin-top:4px">
-          <div class="fg"><label class="flbl">Contraseña actual</label><input type="password" class="inp" placeholder="••••••••"></div>
-          <div class="fg"><label class="flbl">Nueva contraseña</label><input type="password" class="inp" placeholder="Mínimo 8 caracteres"></div>
-          <div class="fg"><label class="flbl">Confirmar contraseña</label><input type="password" class="inp" placeholder="Repetir contraseña"></div>
+          <div class="fg"><label class="flbl" for="p-pass-old">Contraseña actual</label><input type="password" class="inp" id="p-pass-old" aria-label="Contraseña actual" placeholder="••••••••"></div>
+          <div class="fg"><label class="flbl" for="p-pass-new">Nueva contraseña</label><input type="password" class="inp" id="p-pass-new" aria-label="Nueva contraseña" placeholder="Mínimo 8 caracteres"></div>
+          <div class="fg"><label class="flbl" for="p-pass-confirm">Confirmar contraseña</label><input type="password" class="inp" id="p-pass-confirm" aria-label="Confirmar contraseña" placeholder="Repetir contraseña"></div>
         </div>
         <div style="margin-top:18px"><button class="btn btn-glow" onclick="saved()">Actualizar contraseña</button></div>
       </div>

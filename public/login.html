@@ -166,8 +166,8 @@ body{background:var(--bg);color:var(--text-primary);font-family:var(--font);-web
             <div class="sb" onclick="soc('Microsoft')"><svg viewBox="0 0 24 24"><path fill="#F25022" d="M0 0h11v11H0z"/><path fill="#00A4EF" d="M13 0h11v11H13z"/><path fill="#7FBA00" d="M0 13h11v11H0z"/><path fill="#FFB900" d="M13 13h11v11H13z"/></svg>Microsoft</div>
           </div>
           <div class="dor"><span>o con email</span></div>
-          <div class="fg" id="g-le"><label class="flbl">Correo electrónico</label><input type="email" class="inp" id="le" placeholder="tu@empresa.com" oninput="vE('le','g-le')"><div class="fe">Email inválido</div></div>
-          <div class="fg" id="g-lp"><label class="flbl">Contraseña</label><div class="pw-w"><input type="password" class="inp" id="lp" placeholder="••••••••" onkeydown="if(event.key==='Enter')doL()"><span class="pwe" onclick="tPw('lp')">👁</span></div><div class="fe">Contraseña incorrecta</div></div>
+          <div class="fg" id="g-le"><label class="flbl">Correo electrónico</label><input type="email" class="inp" id="le" aria-label="Correo electrónico" placeholder="tu@empresa.com" oninput="vE('le','g-le')"><div class="fe">Email inválido</div></div>
+          <div class="fg" id="g-lp"><label class="flbl">Contraseña</label><div class="pw-w"><input type="password" class="inp" id="lp" aria-label="Contraseña" placeholder="••••••••" onkeydown="if(event.key==='Enter')doL()"><span class="pwe" onclick="tPw('lp')">👁</span></div><div class="fe">Contraseña incorrecta</div></div>
           <div class="rrow"><div class="cw" onclick="tC(event,this)"><div class="cb"></div><span class="cl">Recordarme</span></div><a href="#" class="fgt" onclick="showF();return false">¿Olvidaste tu contraseña?</a></div>
           <button class="btn btn-glow btn-full" onclick="doL()">🔓 INGRESAR A MI CUENTA →</button>
           <p class="auth-ft">¿Sin cuenta? <a href="#" onclick="swTab('reg');return false">Crear cuenta gratis</a></p>
@@ -181,13 +181,13 @@ body{background:var(--bg);color:var(--text-primary);font-family:var(--font);-web
           </div>
           <div class="dor"><span>o con email</span></div>
           <div class="nr">
-            <div class="fg" id="g-fn"><label class="flbl">Nombre</label><input type="text" class="inp" id="fn" placeholder="Jeferson"><div class="fe">Requerido</div></div>
-            <div class="fg" id="g-ln"><label class="flbl">Apellido</label><input type="text" class="inp" id="ln" placeholder="Rodríguez"><div class="fe">Requerido</div></div>
+            <div class="fg" id="g-fn"><label class="flbl">Nombre</label><input type="text" class="inp" id="fn" aria-label="Nombre" placeholder="Jeferson"><div class="fe">Requerido</div></div>
+            <div class="fg" id="g-ln"><label class="flbl">Apellido</label><input type="text" class="inp" id="ln" aria-label="Apellido" placeholder="Rodríguez"><div class="fe">Requerido</div></div>
           </div>
-          <div class="fg" id="g-re"><label class="flbl">Correo</label><input type="email" class="inp" id="re" placeholder="tu@empresa.com" oninput="vE('re','g-re')"><div class="fe">Email inválido</div></div>
-          <div class="fg" id="g-em"><label class="flbl">Empresa</label><input type="text" class="inp" id="em" placeholder="Litper Group"><div class="fe">Requerido</div></div>
-          <div class="fg" id="g-rp"><label class="flbl">Contraseña</label><div class="pw-w"><input type="password" class="inp" id="rp" placeholder="Mínimo 8 caracteres" oninput="str(this.value)"><span class="pwe" onclick="tPw('rp')">👁</span></div><div class="sb2" id="sbar"><div class="sbf" id="sfill"></div></div><div class="sbt" id="stxt"></div><div class="fe">Mínimo 8 caracteres</div></div>
-          <div class="fg" id="g-rp2"><label class="flbl">Confirmar contraseña</label><div class="pw-w"><input type="password" class="inp" id="rp2" placeholder="Repetir contraseña" oninput="mPw()"><span class="pwe" onclick="tPw('rp2')">👁</span></div><div class="fe">Las contraseñas no coinciden</div></div>
+          <div class="fg" id="g-re"><label class="flbl">Correo</label><input type="email" class="inp" id="re" aria-label="Correo electrónico" placeholder="tu@empresa.com" oninput="vE('re','g-re')"><div class="fe">Email inválido</div></div>
+          <div class="fg" id="g-em"><label class="flbl">Empresa</label><input type="text" class="inp" id="em" aria-label="Empresa" placeholder="Litper Group"><div class="fe">Requerido</div></div>
+          <div class="fg" id="g-rp"><label class="flbl">Contraseña</label><div class="pw-w"><input type="password" class="inp" id="rp" aria-label="Contraseña" placeholder="Mínimo 8 caracteres" oninput="str(this.value)"><span class="pwe" onclick="tPw('rp')">👁</span></div><div class="sb2" id="sbar"><div class="sbf" id="sfill"></div></div><div class="sbt" id="stxt"></div><div class="fe">Mínimo 8 caracteres</div></div>
+          <div class="fg" id="g-rp2"><label class="flbl">Confirmar contraseña</label><div class="pw-w"><input type="password" class="inp" id="rp2" aria-label="Confirmar contraseña" placeholder="Repetir contraseña" oninput="mPw()"><span class="pwe" onclick="tPw('rp2')">👁</span></div><div class="fe">Las contraseñas no coinciden</div></div>
           <div style="margin-bottom:20px"><div class="cw" id="tc" onclick="tC(event,this)" style="align-items:flex-start"><div class="cb" style="flex-shrink:0;margin-top:1px"></div><span class="cl" style="line-height:1.6">Acepto los <a href="/terms" style="color:var(--brand)" target="_blank">Términos</a> y la <a href="/privacy" style="color:var(--brand)" target="_blank">Política de privacidad</a></span></div></div>
           <button class="btn btn-glow btn-full" onclick="doR()">✅ CREAR CUENTA GRATIS — SIN TARJETA →</button>
           <p class="auth-ft">¿Ya tienes cuenta? <a href="#" onclick="swTab('login');return false">Iniciar sesión</a></p>
@@ -197,7 +197,7 @@ body{background:var(--bg);color:var(--text-primary);font-family:var(--font);-web
         <button class="bkbtn" onclick="hF()">← Volver</button>
         <h2 class="ah">Recuperar acceso</h2><p class="asb">Te enviamos el enlace en segundos. Revisa también el spam. 📧</p>
         <div id="al2" class="alert"></div>
-        <div class="fg" id="g-fe"><label class="flbl">Correo</label><input type="email" class="inp" id="fe" placeholder="tu@empresa.com" oninput="vE('fe','g-fe')"><div class="fe">Email inválido</div></div>
+        <div class="fg" id="g-fe"><label class="flbl">Correo</label><input type="email" class="inp" id="fe" aria-label="Correo electrónico para recuperación" placeholder="tu@empresa.com" oninput="vE('fe','g-fe')"><div class="fe">Email inválido</div></div>
         <button class="btn btn-glow btn-full" onclick="doF()">📧 ENVIAR ENLACE DE RECUPERACIÓN →</button>
       </div>
     </div>

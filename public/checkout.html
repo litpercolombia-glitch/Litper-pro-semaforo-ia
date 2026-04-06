@@ -327,7 +327,7 @@ body{background:var(--bg);color:var(--t1);font-family:var(--sans);min-height:100
           <label>Nombre completo</label>
           <div class="input-wrap">
             <span class="input-icon">👤</span>
-            <input type="text" id="inp-nombre" placeholder="Jeferson López" autocomplete="name">
+            <input type="text" id="inp-nombre" aria-label="Nombre completo" placeholder="Jeferson López" autocomplete="name">
           </div>
         </div>
       </div>
@@ -336,21 +336,21 @@ body{background:var(--bg);color:var(--t1);font-family:var(--sans);min-height:100
           <label>Email</label>
           <div class="input-wrap">
             <span class="input-icon">✉️</span>
-            <input type="email" id="inp-email" placeholder="tu@empresa.com" autocomplete="email">
+            <input type="email" id="inp-email" aria-label="Correo electrónico" placeholder="tu@empresa.com" autocomplete="email">
           </div>
         </div>
         <div class="field">
           <label>WhatsApp</label>
           <div class="input-wrap">
             <span class="input-icon">📱</span>
-            <input type="tel" id="inp-wa" placeholder="3144754115" autocomplete="tel">
+            <input type="tel" id="inp-wa" aria-label="WhatsApp" placeholder="3144754115" autocomplete="tel">
           </div>
         </div>
       </div>
       <div class="form-grid" style="margin-bottom:12px">
         <div class="field">
           <label>País de operación</label>
-          <select id="inp-pais">
+          <select id="inp-pais" aria-label="País de operación">
             <option value="CO">🇨🇴 Colombia</option>
             <option value="CL">🇨🇱 Chile</option>
             <option value="GT">🇬🇹 Guatemala</option>
@@ -359,7 +359,7 @@ body{background:var(--bg);color:var(--t1);font-family:var(--sans);min-height:100
         </div>
         <div class="field">
           <label>Pedidos/semana (aprox)</label>
-          <select id="inp-vol">
+          <select id="inp-vol" aria-label="Volumen de pedidos por semana">
             <option>Menos de 200</option>
             <option selected>200 – 1.000</option>
             <option>1.000 – 5.000</option>
@@ -372,7 +372,7 @@ body{background:var(--bg);color:var(--t1);font-family:var(--sans);min-height:100
           <label>Contraseña</label>
           <div class="input-wrap">
             <span class="input-icon">🔒</span>
-            <input type="password" id="inp-pass" placeholder="Mínimo 8 caracteres" autocomplete="new-password">
+            <input type="password" id="inp-pass" aria-label="Contraseña" placeholder="Mínimo 8 caracteres" autocomplete="new-password">
           </div>
         </div>
       </div>
@@ -421,27 +421,27 @@ body{background:var(--bg);color:var(--t1);font-family:var(--sans);min-height:100
           <label>Número de tarjeta</label>
           <div class="input-wrap">
             <span class="input-icon">💳</span>
-            <input type="text" id="inp-card" placeholder="1234 5678 9012 3456" maxlength="19" oninput="formatCard(this)" autocomplete="cc-number">
+            <input type="text" id="inp-card" aria-label="Número de tarjeta" placeholder="1234 5678 9012 3456" maxlength="19" oninput="formatCard(this)" autocomplete="cc-number">
           </div>
         </div>
       </div>
       <div class="form-grid" style="margin-bottom:12px">
         <div class="field">
           <label>Vencimiento</label>
-          <input type="text" id="inp-exp" placeholder="MM / AA" maxlength="7" oninput="formatExp(this)" autocomplete="cc-exp">
+          <input type="text" id="inp-exp" aria-label="Fecha de vencimiento" placeholder="MM / AA" maxlength="7" oninput="formatExp(this)" autocomplete="cc-exp">
         </div>
         <div class="field">
           <label>CVV</label>
           <div class="input-wrap">
             <span class="input-icon">🔐</span>
-            <input type="text" id="inp-cvv" placeholder="123" maxlength="4" autocomplete="cc-csc">
+            <input type="text" id="inp-cvv" aria-label="Código de seguridad CVV" placeholder="123" maxlength="4" autocomplete="cc-csc">
           </div>
         </div>
       </div>
       <div class="form-grid full" style="margin-bottom:16px">
         <div class="field">
           <label>Nombre en la tarjeta</label>
-          <input type="text" id="inp-cardname" placeholder="JEFERSON LOPEZ" autocomplete="cc-name" style="text-transform:uppercase">
+          <input type="text" id="inp-cardname" aria-label="Nombre en la tarjeta" placeholder="JEFERSON LOPEZ" autocomplete="cc-name" style="text-transform:uppercase">
         </div>
       </div>
 
@@ -536,7 +536,7 @@ body{background:var(--bg);color:var(--t1);font-family:var(--sans);min-height:100
       <div style="font-size:10px;font-family:var(--mono);color:rgba(0,255,136,.7);text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px">Cuánto recuperas con LitperPro</div>
       <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:12px">
         <div style="font-size:11px;color:var(--t3);font-family:var(--mono)">Pedidos/semana:</div>
-        <input type="range" id="roi-pedidos" min="100" max="5000" value="1000" step="100" oninput="calcROI()" style="accent-color:var(--teal)">
+        <input type="range" id="roi-pedidos" aria-label="Pedidos por semana para calcular ROI" min="100" max="5000" value="1000" step="100" oninput="calcROI()" style="accent-color:var(--teal)">
         <div style="display:flex;justify-content:space-between;font-size:10px;font-family:var(--mono);color:var(--t3)"><span>100</span><span id="roi-pedidos-val" style="color:var(--teal);font-weight:600">1,000</span><span>5,000</span></div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
