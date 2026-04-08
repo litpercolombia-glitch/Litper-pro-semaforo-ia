@@ -7,6 +7,7 @@
 var SUPABASE_URL = 'https://gtsivwbnhcawvmsfujby.supabase.co';
 var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd0c2l2d2JuaGNhd3Ztc2Z1amJ5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY0NzE1OTksImV4cCI6MjA4MjA0NzU5OX0.aCLguM3d7vsX5z7PhOQs__TSORmiSmLOI7SINfzBKzg';
 
+// Store the SDK factory, then override window.supabase with the client instance
 var supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // ── Auth Helpers ─────────────────────────────────────────────
@@ -66,14 +67,16 @@ async function getOrganization() {
   } catch (e) { console.error('getOrganization exception:', e); return null; }
 }
 
+// Redirect to /login if not authenticated
 async function requireAuth() {
   try {
     const session = await getSession();
-    if (!session) { window.location.href = '/landing'; return null; }
+    if (!session) { window.location.href = '/login'; return null; }
     return session;
-  } catch (e) { console.error('requireAuth error:', e); window.location.href = '/landing'; return null; }
+  } catch (e) { console.error('requireAuth error:', e); window.location.href = '/login'; return null; }
 }
 
+// Redirect to /dashboard if already authenticated (for login page)
 async function redirectIfAuth() {
   try {
     const session = await getSession();
@@ -84,7 +87,7 @@ async function redirectIfAuth() {
 
 async function signOut() {
   await supabase.auth.signOut();
-  window.location.href = '/landing';
+  window.location.href = '/login';
 }
 
 // ── Supabase Data Helpers ────────────────────────────────────
@@ -159,7 +162,7 @@ async function loadAIHistory(limit = 20) {
     .order('created_at', { ascending: false })
     .limit(limit);
   return data || [];
-    }
+}
 
 async function saveChatSession(sessionData) {
   const orgId = await getOrgId();
@@ -257,6 +260,7 @@ async function incrementAIUsage() {
   const orgId = await getOrgId();
   if (!orgId) return;
   await supabase.rpc('increment_ai_used', { org: orgId }).catch(() => {
+    // Fallback: manual increment
     supabase.from('organizations').select('ai_used').eq('id', orgId).single().then(({ data }) => {
       if (data) supabase.from('organizations').update({ ai_used: (data.ai_used || 0) + 1 }).eq('id', orgId);
     });
