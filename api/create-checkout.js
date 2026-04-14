@@ -1,11 +1,44 @@
 // ══════════════════════════════════════════════════════════════
 // LITPERPRO — Vercel Serverless: Create Stripe Checkout Session
+// FIX 2026-04-14: Restricted CORS to allowed origins only
 // ══════════════════════════════════════════════════════════════
 
+// Allowed origins for CORS - add your domains here
+const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGINS || '')
+  .split(',')
+  .map(o => o.trim())
+  .filter(Boolean);
+
+// Fallback if env var not set
+if (ALLOWED_ORIGINS.length === 0) {
+  ALLOWED_ORIGINS.push(
+    'https://litper-semaforo.vercel.app',
+    'https://litperpro.com',
+    'https://www.litperpro.com'
+  );
+}
+
+function getCorsOrigin(req) {
+  const origin = req.headers.origin || req.headers.referer || '';
+  // Check if the request origin is in our allowed list
+  for (const allowed of ALLOWED_ORIGINS) {
+    if (origin.startsWith(allowed)) {
+      return allowed;
+    }
+  }
+  // In development, allow localhost
+  if (origin.includes('localhost') || origin.includes('127.0.0.1')) {
+    return origin;
+  }
+  return ALLOWED_ORIGINS[0]; // Default to first allowed origin
+}
+
 export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  const corsOrigin = getCorsOrigin(req);
+  res.setHeader('Access-Control-Allow-Origin', corsOrigin);
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
 
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
