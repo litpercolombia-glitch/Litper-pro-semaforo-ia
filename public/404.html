@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>404 — Página no encontrada | LitperPro</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" href="/favicon.ico" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --brand: #00FF88;
+      --brand-dim: #00cc6a;
+      --bg: #07080A;
+      --surface: #0f1117;
+      --border: rgba(0,255,136,0.15);
+      --text: #e8eaf0;
+      --muted: #6b7280;
+    }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      text-align: center;
+    }
+    .glow-ring {
+      width: 120px; height: 120px;
+      border-radius: 50%;
+      border: 2px solid var(--brand);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 2rem;
+      box-shadow: 0 0 40px rgba(0,255,136,0.2), inset 0 0 30px rgba(0,255,136,0.05);
+      animation: pulse 3s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 40px rgba(0,255,136,0.2), inset 0 0 30px rgba(0,255,136,0.05); }
+      50% { box-shadow: 0 0 60px rgba(0,255,136,0.35), inset 0 0 40px rgba(0,255,136,0.1); }
+    }
+    .error-code {
+      font-size: 3rem; font-weight: 800; color: var(--brand);
+      font-family: 'JetBrains Mono', monospace;
+      line-height: 1;
+    }
+    h1 { font-size: 1.5rem; font-weight: 600; margin: 1rem 0 0.5rem; }
+    p { color: var(--muted); font-size: 0.95rem; max-width: 380px; line-height: 1.6; }
+    .actions { display: flex; gap: 1rem; margin-top: 2.5rem; flex-wrap: wrap; justify-content: center; }
+    .btn-primary {
+      background: var(--brand); color: #07080A;
+      padding: 0.75rem 1.75rem; border-radius: 8px;
+      font-weight: 700; font-size: 0.9rem; text-decoration: none;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .btn-primary:hover { background: var(--brand-dim); transform: translateY(-1px); }
+    .btn-ghost {
+      border: 1px solid var(--border); color: var(--text);
+      padding: 0.75rem 1.75rem; border-radius: 8px;
+      font-weight: 500; font-size: 0.9rem; text-decoration: none;
+      transition: border-color 0.2s, transform 0.1s;
+    }
+    .btn-ghost:hover { border-color: var(--brand); transform: translateY(-1px); }
+    .logo { margin-bottom: 3rem; font-size: 1.1rem; font-weight: 700; color: var(--text); letter-spacing: -0.02em; }
+    .logo span { color: var(--brand); }
+  </style>
+</head>
+<body>
+  <div class="logo">Litper<span>Pro</span></div>
+  <div class="glow-ring">
+    <span class="error-code">404</span>
+  </div>
+  <h1>Página no encontrada</h1>
+  <p>La ruta que buscas no existe o fue movida. Vuelve al dashboard o al inicio.</p>
+  <div class="actions">
+    <a href="/dashboard" class="btn-primary">Ir al Dashboard</a>
+    <a href="/" class="btn-ghost">Página principal</a>
+  </div>
+</body>
+</html>

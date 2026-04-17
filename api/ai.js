@@ -1,155 +1,186 @@
-// ══════════════════════════════════════════════════════════════
-// LITPERPRO — Vercel Serverless Function: AI Proxy
-// Moves API keys to server side for security
-// Models: Claude Sonnet 4.6, Gemini 2.0 Flash, GPT-4o
-// ══════════════════════════════════════════════════════════════
+// api/ai.js — LitperPro AI proxy (Gemini / Claude / GPT-4o)
+// Fixed: rate limiting, removed hardcoded fallback, proper error handling
 
-const LITPER_SYSTEM_PROMPT = `Eres un analista logístico senior de LitperPro. Analizas datos COD (Cash on Delivery) de carriers en LATAM.
-- Responde siempre en español
-- Usa datos concretos y porcentajes
-- El semáforo de ciudades: verde ≥80.5%, amarillo 70-79.9%, rojo <70%
-- CPA logístico = $15,000 COP / tasa_de_entrega
-- Sé directo, sin rodeos, accionable
-- Carriers principales: Coordinadora, Interrapidísimo, TCC, Envía`;
+const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGINS || 'https://litperpro.com,https://www.litperpro.com').split(',');
+
+function corsHeaders(origin) {
+  const allowed = ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
+  return {
+    'Access-Control-Allow-Origin': allowed,
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    'Access-Control-Max-Age': '86400',
+  };
+}
 
 export default async function handler(req, res) {
-  // CORS headers — restrict to same origin (Vercel serves both frontend and API)
-  const allowedOrigins = process.env.ALLOWED_ORIGINS
-    ? process.env.ALLOWED_ORIGINS.split(',')
-    : [];
-  const origin = req.headers.origin;
-  if (origin && allowedOrigins.includes(origin)) {
-    res.setHeader('Access-Control-Allow-Origin', origin);
-  }
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  const origin = req.headers.origin || '';
+  const headers = corsHeaders(origin);
 
   if (req.method === 'OPTIONS') {
-    return res.status(200).end();
+    return res.status(204).set(headers).end();
   }
-
   if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
+    return res.status(405).set(headers).json({ error: 'Method not allowed' });
   }
 
-  const { model, prompt, context, max_tokens = 4096 } = req.body;
-
-  if (!model || !prompt) {
-    return res.status(400).json({ error: 'Missing model or prompt' });
+  // --- Auth ---
+  const authHeader = req.headers.authorization || '';
+  const token = authHeader.replace('Bearer ', '').trim();
+  if (!token) {
+    return res.status(401).set(headers).json({ error: 'Token requerido' });
   }
 
-  // Validate auth token from Supabase
-  const authHeader = req.headers.authorization;
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return res.status(401).json({ error: 'No autorizado. Inicia sesión primero.' });
+  const SUPABASE_URL = process.env.SUPABASE_URL;
+  const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
+
+  if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
+    return res.status(500).set(headers).json({ error: 'Configuración del servidor incompleta' });
   }
 
-  // Verify JWT against Supabase
-  const SUPABASE_URL = process.env.SUPABASE_URL || 'https://gtsivwbnhcawvmsfujby.supabase.co';
-  const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY || '';
-  const token = authHeader.replace('Bearer ', '');
-  try {
-    const userRes = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
-      headers: { 'Authorization': `Bearer ${token}`, 'apikey': SUPABASE_ANON_KEY }
-    });
-    if (!userRes.ok) {
-      return res.status(401).json({ error: 'Token inválido o expirado. Inicia sesión de nuevo.' });
+  // Verify JWT
+  const userRes = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      apikey: SUPABASE_SERVICE_KEY,
+    },
+  });
+
+  if (!userRes.ok) {
+    return res.status(401).set(headers).json({ error: 'Token inválido o expirado' });
+  }
+
+  const userData = await userRes.json();
+  const userId = userData.id;
+
+  // --- Rate limiting: check ai_quota ---
+  const quotaRes = await fetch(
+    `${SUPABASE_URL}/rest/v1/auth_profiles?user_id=eq.${userId}&select=ai_quota,ai_used`,
+    {
+      headers: {
+        apikey: SUPABASE_SERVICE_KEY,
+        Authorization: `Bearer ${SUPABASE_SERVICE_KEY}`,
+      },
     }
-  } catch (e) {
-    return res.status(401).json({ error: 'No se pudo verificar el token.' });
+  );
+
+  if (!quotaRes.ok) {
+    return res.status(500).set(headers).json({ error: 'Error verificando cuota' });
   }
 
-  try {
-    let text = '';
-    let usage = null;
+  const quotaData = await quotaRes.json();
+  const profile = quotaData[0];
 
+  if (!profile) {
+    return res.status(403).set(headers).json({ error: 'Perfil no encontrado' });
+  }
+
+  const { ai_quota, ai_used } = profile;
+  if (ai_used >= ai_quota) {
+    return res.status(429).set(headers).json({
+      error: 'Cuota de IA agotada',
+      quota: ai_quota,
+      used: ai_used,
+      message: 'Has alcanzado tu límite de consultas IA. Actualiza tu plan para continuar.',
+    });
+  }
+
+  // --- Parse body ---
+  const { prompt, model = 'gemini', context = '' } = req.body || {};
+  if (!prompt) {
+    return res.status(400).set(headers).json({ error: 'Prompt requerido' });
+  }
+
+  let result = '';
+
+  try {
     if (model === 'gemini') {
       const GEMINI_KEY = process.env.GEMINI_API_KEY;
-      if (!GEMINI_KEY) return res.status(500).json({ error: 'Gemini API key no configurada en el servidor' });
+      if (!GEMINI_KEY) throw new Error('GEMINI_API_KEY no configurada');
 
-      const r = await fetch(
+      const geminiRes = await fetch(
         `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_KEY}`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            contents: [{ parts: [{ text: prompt }] }],
-            systemInstruction: { parts: [{ text: LITPER_SYSTEM_PROMPT }] },
-            generationConfig: { maxOutputTokens: max_tokens }
-          })
+            contents: [{ parts: [{ text: context ? `${context}\n\n${prompt}` : prompt }] }],
+            generationConfig: { temperature: 0.7, maxOutputTokens: 2048 },
+          }),
         }
       );
-      const d = await r.json();
-      if (d.error) throw new Error('Gemini: ' + d.error.message);
-      text = d.candidates?.[0]?.content?.parts?.[0]?.text || 'Sin respuesta.';
+      if (!geminiRes.ok) throw new Error(`Gemini error: ${geminiRes.status}`);
+      const geminiData = await geminiRes.json();
+      result = geminiData.candidates?.[0]?.content?.parts?.[0]?.text || '';
 
     } else if (model === 'claude') {
-      const CLAUDE_KEY = process.env.CLAUDE_API_KEY;
-      if (!CLAUDE_KEY) return res.status(500).json({ error: 'Claude API key no configurada en el servidor' });
+      const CLAUDE_KEY = process.env.ANTHROPIC_API_KEY;
+      if (!CLAUDE_KEY) throw new Error('ANTHROPIC_API_KEY no configurada');
 
-      const r = await fetch('https://api.anthropic.com/v1/messages', {
+      const claudeRes = await fetch('https://api.anthropic.com/v1/messages', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'x-api-key': CLAUDE_KEY,
-          'anthropic-version': '2023-06-01'
+          'anthropic-version': '2023-06-01',
         },
         body: JSON.stringify({
           model: 'claude-sonnet-4-6',
-          max_tokens,
-          thinking: { type: 'adaptive' },
-          system: [
-            {
-              type: 'text',
-              text: LITPER_SYSTEM_PROMPT,
-              cache_control: { type: 'ephemeral' }
-            }
-          ],
-          messages: [{ role: 'user', content: prompt }]
-        })
+          max_tokens: 2048,
+          messages: [{ role: 'user', content: context ? `${context}\n\n${prompt}` : prompt }],
+        }),
       });
-      const d = await r.json();
-      if (d.error) throw new Error('Claude: ' + d.error.message);
-      // Extract text from content blocks (may contain thinking + text)
-      const textBlock = d.content?.find(b => b.type === 'text');
-      text = textBlock?.text || 'Sin respuesta.';
-      usage = d.usage ? {
-        input_tokens: d.usage.input_tokens,
-        output_tokens: d.usage.output_tokens,
-        cache_read: d.usage.cache_read_input_tokens || 0
-      } : null;
+      if (!claudeRes.ok) throw new Error(`Claude error: ${claudeRes.status}`);
+      const claudeData = await claudeRes.json();
+      result = claudeData.content?.[0]?.text || '';
 
     } else if (model === 'chatgpt') {
       const OPENAI_KEY = process.env.OPENAI_API_KEY;
-      if (!OPENAI_KEY) return res.status(500).json({ error: 'OpenAI API key no configurada en el servidor' });
+      if (!OPENAI_KEY) throw new Error('OPENAI_API_KEY no configurada');
 
-      const r = await fetch('https://api.openai.com/v1/chat/completions', {
+      const messages = [];
+      if (context) messages.push({ role: 'system', content: context });
+      messages.push({ role: 'user', content: prompt });
+
+      const gptRes = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${OPENAI_KEY}`
+          Authorization: `Bearer ${OPENAI_KEY}`,
         },
-        body: JSON.stringify({
-          model: 'gpt-4o',
-          max_tokens,
-          messages: [
-            { role: 'system', content: LITPER_SYSTEM_PROMPT },
-            { role: 'user', content: prompt }
-          ]
-        })
+        body: JSON.stringify({ model: 'gpt-4o', messages, max_tokens: 2048, temperature: 0.7 }),
       });
-      const d = await r.json();
-      if (d.error) throw new Error('OpenAI: ' + d.error.message);
-      text = d.choices?.[0]?.message?.content || 'Sin respuesta.';
+      if (!gptRes.ok) throw new Error(`GPT error: ${gptRes.status}`);
+      const gptData = await gptRes.json();
+      result = gptData.choices?.[0]?.message?.content || '';
 
     } else {
-      return res.status(400).json({ error: 'Modelo no soportado: ' + model });
+      return res.status(400).set(headers).json({ error: 'Modelo no válido. Usa: gemini, claude, chatgpt' });
     }
 
-    return res.status(200).json({ text, model, ...(usage && { usage }) });
+    // Increment ai_used counter
+    await fetch(
+      `${SUPABASE_URL}/rest/v1/auth_profiles?user_id=eq.${userId}`,
+      {
+        method: 'PATCH',
+        headers: {
+          apikey: SUPABASE_SERVICE_KEY,
+          Authorization: `Bearer ${SUPABASE_SERVICE_KEY}`,
+          'Content-Type': 'application/json',
+          Prefer: 'return=minimal',
+        },
+        body: JSON.stringify({ ai_used: ai_used + 1 }),
+      }
+    );
 
-  } catch (e) {
-    console.error('AI API error:', e);
-    return res.status(500).json({ error: e.message || 'Error interno del servidor' });
+    return res.status(200).set(headers).json({
+      result,
+      model,
+      quota_remaining: ai_quota - ai_used - 1,
+    });
+
+  } catch (err) {
+    console.error('[ai.js] Error:', err.message);
+    return res.status(500).set(headers).json({ error: 'Error procesando solicitud IA', detail: err.message });
   }
 }

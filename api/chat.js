@@ -1,148 +1,194 @@
-// ══════════════════════════════════════════════════════════════
-// LITPERPRO — Vercel Serverless Function: Chat Proxy
-// Multi-turn conversation support with system prompts
-// Models: Claude Sonnet 4.6 (w/ adaptive thinking + caching),
-//         Gemini 2.0 Flash, GPT-4o
-// ══════════════════════════════════════════════════════════════
+// api/chat.js — LitperPro multi-turn chat proxy
+// Fixed: rate limiting, removed hardcoded fallback, proper error handling
+
+const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGINS || 'https://litperpro.com,https://www.litperpro.com').split(',');
+
+function corsHeaders(origin) {
+  const allowed = ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
+  return {
+    'Access-Control-Allow-Origin': allowed,
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    'Access-Control-Max-Age': '86400',
+  };
+}
 
 export default async function handler(req, res) {
-  // CORS headers — restrict to same origin (Vercel serves both frontend and API)
-  const allowedOrigins = process.env.ALLOWED_ORIGINS
-    ? process.env.ALLOWED_ORIGINS.split(',')
-    : [];
-  const origin = req.headers.origin;
-  if (origin && allowedOrigins.includes(origin)) {
-    res.setHeader('Access-Control-Allow-Origin', origin);
+  const origin = req.headers.origin || '';
+  const headers = corsHeaders(origin);
+
+  if (req.method === 'OPTIONS') {
+    return res.status(204).set(headers).end();
   }
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-
-  if (req.method === 'OPTIONS') return res.status(200).end();
-  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
-
-  const { model, messages, system, max_tokens = 4096 } = req.body;
-
-  if (!model || !messages) {
-    return res.status(400).json({ error: 'Missing model or messages' });
+  if (req.method !== 'POST') {
+    return res.status(405).set(headers).json({ error: 'Method not allowed' });
   }
 
-  const authHeader = req.headers.authorization;
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return res.status(401).json({ error: 'No autorizado' });
+  const authHeader = req.headers.authorization || '';
+  const token = authHeader.replace('Bearer ', '').trim();
+  if (!token) {
+    return res.status(401).set(headers).json({ error: 'Token requerido' });
   }
 
-  // Verify JWT against Supabase
-  const SUPABASE_URL = process.env.SUPABASE_URL || 'https://gtsivwbnhcawvmsfujby.supabase.co';
-  const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY || '';
-  const token = authHeader.replace('Bearer ', '');
-  try {
-    const userRes = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
-      headers: { 'Authorization': `Bearer ${token}`, 'apikey': SUPABASE_ANON_KEY }
-    });
-    if (!userRes.ok) {
-      return res.status(401).json({ error: 'Token inválido o expirado. Inicia sesión de nuevo.' });
+  const SUPABASE_URL = process.env.SUPABASE_URL;
+  const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
+
+  if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
+    return res.status(500).set(headers).json({ error: 'Configuración del servidor incompleta' });
+  }
+
+  // Verify JWT
+  const userRes = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      apikey: SUPABASE_SERVICE_KEY,
+    },
+  });
+
+  if (!userRes.ok) {
+    return res.status(401).set(headers).json({ error: 'Token inválido o expirado' });
+  }
+
+  const userData = await userRes.json();
+  const userId = userData.id;
+
+  // --- Rate limiting: check ai_quota ---
+  const quotaRes = await fetch(
+    `${SUPABASE_URL}/rest/v1/auth_profiles?user_id=eq.${userId}&select=ai_quota,ai_used`,
+    {
+      headers: {
+        apikey: SUPABASE_SERVICE_KEY,
+        Authorization: `Bearer ${SUPABASE_SERVICE_KEY}`,
+      },
     }
-  } catch (e) {
-    return res.status(401).json({ error: 'No se pudo verificar el token.' });
+  );
+
+  if (!quotaRes.ok) {
+    return res.status(500).set(headers).json({ error: 'Error verificando cuota' });
   }
 
-  try {
-    let text = '';
-    let usage = null;
+  const quotaData = await quotaRes.json();
+  const profile = quotaData[0];
 
+  if (!profile) {
+    return res.status(403).set(headers).json({ error: 'Perfil no encontrado' });
+  }
+
+  const { ai_quota, ai_used } = profile;
+  if (ai_used >= ai_quota) {
+    return res.status(429).set(headers).json({
+      error: 'Cuota de IA agotada',
+      quota: ai_quota,
+      used: ai_used,
+      message: 'Has alcanzado tu límite de consultas IA. Actualiza tu plan para continuar.',
+    });
+  }
+
+  // --- Parse body ---
+  // messages: [{role: 'user'|'assistant', content: string}]
+  const { messages, model = 'gemini', systemPrompt = '' } = req.body || {};
+  if (!messages || !Array.isArray(messages) || messages.length === 0) {
+    return res.status(400).set(headers).json({ error: 'messages[] requerido' });
+  }
+
+  let result = '';
+
+  try {
     if (model === 'gemini') {
       const GEMINI_KEY = process.env.GEMINI_API_KEY;
-      if (!GEMINI_KEY) return res.status(500).json({ error: 'Gemini key no configurada' });
+      if (!GEMINI_KEY) throw new Error('GEMINI_API_KEY no configurada');
 
-      const contents = [];
-      messages.forEach(m => {
-        contents.push({ role: m.role === 'user' ? 'user' : 'model', parts: [{ text: m.content }] });
-      });
+      const contents = messages.map(m => ({
+        role: m.role === 'assistant' ? 'model' : 'user',
+        parts: [{ text: m.content }],
+      }));
 
-      const r = await fetch(
+      const geminiRes = await fetch(
         `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_KEY}`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             contents,
-            systemInstruction: system ? { parts: [{ text: system }] } : undefined,
-            generationConfig: { maxOutputTokens: max_tokens, temperature: 0.7 }
-          })
+            systemInstruction: systemPrompt ? { parts: [{ text: systemPrompt }] } : undefined,
+            generationConfig: { temperature: 0.7, maxOutputTokens: 2048 },
+          }),
         }
       );
-      const d = await r.json();
-      if (d.error) throw new Error(d.error.message);
-      text = d.candidates?.[0]?.content?.parts?.[0]?.text || 'Sin respuesta.';
+      if (!geminiRes.ok) throw new Error(`Gemini error: ${geminiRes.status}`);
+      const geminiData = await geminiRes.json();
+      result = geminiData.candidates?.[0]?.content?.parts?.[0]?.text || '';
 
     } else if (model === 'claude') {
-      const CLAUDE_KEY = process.env.CLAUDE_API_KEY;
-      if (!CLAUDE_KEY) return res.status(500).json({ error: 'Claude key no configurada' });
+      const CLAUDE_KEY = process.env.ANTHROPIC_API_KEY;
+      if (!CLAUDE_KEY) throw new Error('ANTHROPIC_API_KEY no configurada');
 
-      // Build system with prompt caching for multi-turn efficiency
-      const systemBlocks = system ? [
-        { type: 'text', text: system, cache_control: { type: 'ephemeral' } }
-      ] : undefined;
-
-      // Map messages — convert 'bot' role to 'assistant' for Claude API
-      const claudeMessages = messages.map(m => ({
-        role: m.role === 'bot' ? 'assistant' : m.role,
-        content: m.content
-      }));
-
-      const r = await fetch('https://api.anthropic.com/v1/messages', {
+      const claudeMessages = messages.map(m => ({ role: m.role, content: m.content }));
+      const claudeRes = await fetch('https://api.anthropic.com/v1/messages', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'x-api-key': CLAUDE_KEY,
-          'anthropic-version': '2023-06-01'
+          'anthropic-version': '2023-06-01',
         },
         body: JSON.stringify({
           model: 'claude-sonnet-4-6',
-          max_tokens,
-          thinking: { type: 'adaptive' },
-          system: systemBlocks,
-          messages: claudeMessages
-        })
+          max_tokens: 2048,
+          system: systemPrompt || undefined,
+          messages: claudeMessages,
+        }),
       });
-      const d = await r.json();
-      if (d.error) throw new Error(d.error.message);
-      // Extract text block (skip thinking blocks)
-      const textBlock = d.content?.find(b => b.type === 'text');
-      text = textBlock?.text || 'Sin respuesta.';
-      usage = d.usage ? {
-        input_tokens: d.usage.input_tokens,
-        output_tokens: d.usage.output_tokens,
-        cache_read: d.usage.cache_read_input_tokens || 0
-      } : null;
+      if (!claudeRes.ok) throw new Error(`Claude error: ${claudeRes.status}`);
+      const claudeData = await claudeRes.json();
+      result = claudeData.content?.[0]?.text || '';
 
     } else if (model === 'chatgpt') {
       const OPENAI_KEY = process.env.OPENAI_API_KEY;
-      if (!OPENAI_KEY) return res.status(500).json({ error: 'OpenAI key no configurada' });
+      if (!OPENAI_KEY) throw new Error('OPENAI_API_KEY no configurada');
 
-      const gptMsgs = [];
-      if (system) gptMsgs.push({ role: 'system', content: system });
-      messages.forEach(m => {
-        gptMsgs.push({ role: m.role === 'bot' ? 'assistant' : m.role, content: m.content });
-      });
+      const gptMessages = [];
+      if (systemPrompt) gptMessages.push({ role: 'system', content: systemPrompt });
+      messages.forEach(m => gptMessages.push({ role: m.role, content: m.content }));
 
-      const r = await fetch('https://api.openai.com/v1/chat/completions', {
+      const gptRes = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${OPENAI_KEY}` },
-        body: JSON.stringify({ model: 'gpt-4o', max_tokens, messages: gptMsgs })
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${OPENAI_KEY}`,
+        },
+        body: JSON.stringify({ model: 'gpt-4o', messages: gptMessages, max_tokens: 2048, temperature: 0.7 }),
       });
-      const d = await r.json();
-      if (d.error) throw new Error(d.error.message);
-      text = d.choices?.[0]?.message?.content || 'Sin respuesta.';
+      if (!gptRes.ok) throw new Error(`GPT error: ${gptRes.status}`);
+      const gptData = await gptRes.json();
+      result = gptData.choices?.[0]?.message?.content || '';
 
     } else {
-      return res.status(400).json({ error: 'Modelo no soportado: ' + model });
+      return res.status(400).set(headers).json({ error: 'Modelo no válido. Usa: gemini, claude, chatgpt' });
     }
 
-    return res.status(200).json({ text, model, ...(usage && { usage }) });
+    // Increment ai_used
+    await fetch(
+      `${SUPABASE_URL}/rest/v1/auth_profiles?user_id=eq.${userId}`,
+      {
+        method: 'PATCH',
+        headers: {
+          apikey: SUPABASE_SERVICE_KEY,
+          Authorization: `Bearer ${SUPABASE_SERVICE_KEY}`,
+          'Content-Type': 'application/json',
+          Prefer: 'return=minimal',
+        },
+        body: JSON.stringify({ ai_used: ai_used + 1 }),
+      }
+    );
 
-  } catch (e) {
-    console.error('Chat API error:', e);
-    return res.status(500).json({ error: e.message || 'Error interno' });
+    return res.status(200).set(headers).json({
+      result,
+      model,
+      quota_remaining: ai_quota - ai_used - 1,
+    });
+
+  } catch (err) {
+    console.error('[chat.js] Error:', err.message);
+    return res.status(500).set(headers).json({ error: 'Error procesando chat', detail: err.message });
   }
 }
