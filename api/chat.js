@@ -105,73 +105,78 @@ export default async function handler(req, res) {
   let result = '';
 
   try {
-    if (model === 'gemini') {
+    async function tryGeminiChat(msgs, sysPr) {
       const GEMINI_KEY = process.env.GEMINI_API_KEY;
       if (!GEMINI_KEY) throw new Error('GEMINI_API_KEY no configurada');
-
-      const contents = messages.map(m => ({
-        role: m.role === 'assistant' ? 'model' : 'user',
-        parts: [{ text: m.content }],
-      }));
-
+      const contents = msgs.map(m => ({ role: m.role === 'assistant' ? 'model' : 'user', parts: [{ text: m.content }] }));
       const geminiRes = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_KEY}`,
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_KEY}`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             contents,
-            systemInstruction: systemPrompt ? { parts: [{ text: systemPrompt }] } : undefined,
+            systemInstruction: sysPr ? { parts: [{ text: sysPr }] } : undefined,
             generationConfig: { temperature: 0.7, maxOutputTokens: 2048 },
           }),
         }
       );
-      if (!geminiRes.ok) throw new Error(`Gemini error: ${geminiRes.status}`);
-      const geminiData = await geminiRes.json();
-      result = geminiData.candidates?.[0]?.content?.parts?.[0]?.text || '';
+      if (!geminiRes.ok) throw new Error(`Gemini ${geminiRes.status}`);
+      const d = await geminiRes.json();
+      return d.candidates?.[0]?.content?.parts?.[0]?.text || '';
+    }
+
+    async function tryGroqChat(msgs, sysPr) {
+      const GROQ_KEY = process.env.GROQ_API_KEY;
+      if (!GROQ_KEY) throw new Error('GROQ_API_KEY no configurada');
+      const groqMsgs = [];
+      if (sysPr) groqMsgs.push({ role: 'system', content: sysPr });
+      msgs.forEach(m => groqMsgs.push({ role: m.role, content: m.content }));
+      const groqRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${GROQ_KEY}` },
+        body: JSON.stringify({ model: 'llama-3.3-70b-versatile', messages: groqMsgs, max_tokens: 2048, temperature: 0.7 }),
+      });
+      if (!groqRes.ok) throw new Error(`Groq ${groqRes.status}`);
+      const d = await groqRes.json();
+      return d.choices?.[0]?.message?.content || '';
+    }
+
+    if (model === 'gemini') {
+      try { result = await tryGeminiChat(messages, systemPrompt); }
+      catch (e) {
+        console.warn('[chat.js] Gemini failed, trying Groq:', e.message);
+        try { result = await tryGroqChat(messages, systemPrompt); }
+        catch (e2) { throw new Error(`Gemini y Groq fallaron: ${e.message} / ${e2.message}`); }
+      }
+
+    } else if (model === 'groq') {
+      result = await tryGroqChat(messages, systemPrompt);
 
     } else if (model === 'claude') {
-      const CLAUDE_KEY = process.env.ANTHROPIC_API_KEY;
-      if (!CLAUDE_KEY) throw new Error('ANTHROPIC_API_KEY no configurada');
-
-      const claudeMessages = messages.map(m => ({ role: m.role, content: m.content }));
+      const CLAUDE_KEY = process.env.ANTHROPIC_API_KEY || process.env.CLAUDE_API_KEY;
+      if (!CLAUDE_KEY) throw new Error('CLAUDE_API_KEY no configurada');
       const claudeRes = await fetch('https://api.anthropic.com/v1/messages', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': CLAUDE_KEY,
-          'anthropic-version': '2023-06-01',
-        },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-6',
-          max_tokens: 2048,
-          system: systemPrompt || undefined,
-          messages: claudeMessages,
-        }),
+        headers: { 'Content-Type': 'application/json', 'x-api-key': CLAUDE_KEY, 'anthropic-version': '2023-06-01' },
+        body: JSON.stringify({ model: 'claude-sonnet-4-6', max_tokens: 2048, system: systemPrompt || undefined, messages: messages.map(m => ({ role: m.role, content: m.content })) }),
       });
       if (!claudeRes.ok) throw new Error(`Claude error: ${claudeRes.status}`);
-      const claudeData = await claudeRes.json();
-      result = claudeData.content?.[0]?.text || '';
+      result = (await claudeRes.json()).content?.[0]?.text || '';
 
     } else if (model === 'chatgpt') {
       const OPENAI_KEY = process.env.OPENAI_API_KEY;
       if (!OPENAI_KEY) throw new Error('OPENAI_API_KEY no configurada');
-
       const gptMessages = [];
       if (systemPrompt) gptMessages.push({ role: 'system', content: systemPrompt });
       messages.forEach(m => gptMessages.push({ role: m.role, content: m.content }));
-
       const gptRes = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${OPENAI_KEY}`,
-        },
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${OPENAI_KEY}` },
         body: JSON.stringify({ model: 'gpt-4o', messages: gptMessages, max_tokens: 2048, temperature: 0.7 }),
       });
       if (!gptRes.ok) throw new Error(`GPT error: ${gptRes.status}`);
-      const gptData = await gptRes.json();
-      result = gptData.choices?.[0]?.message?.content || '';
+      result = (await gptRes.json()).choices?.[0]?.message?.content || '';
 
     } else {
       return res.status(400).set(headers).json({ error: 'Modelo no válido. Usa: gemini, claude, chatgpt' });
