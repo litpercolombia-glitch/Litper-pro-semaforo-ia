@@ -1,10 +1,10 @@
 // api/chat.js — LitperPro multi-turn chat proxy
 // Fixed: rate limiting, removed hardcoded fallback, proper error handling
 
-const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGINS || 'https://litperpro.com,https://www.litperpro.com').split(',');
+const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGINS || 'https://litper-semaforo.vercel.app,https://litperpro.com,https://www.litperpro.com,http://localhost:3000').split(',');
 
 function corsHeaders(origin) {
-  const allowed = ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
+  const allowed = ALLOWED_ORIGINS.some(o => origin.startsWith(o) || origin === o) ? origin : ALLOWED_ORIGINS[0];
   return {
     'Access-Control-Allow-Origin': allowed,
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
@@ -30,11 +30,11 @@ export default async function handler(req, res) {
     return res.status(401).set(headers).json({ error: 'Token requerido' });
   }
 
-  const SUPABASE_URL = process.env.SUPABASE_URL;
-  const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
+  const SUPABASE_URL = process.env.SUPABASE_URL || 'https://gtsivwbnhcawvmsfujby.supabase.co';
+  const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SERVICE_KEY;
 
-  if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
-    return res.status(500).set(headers).json({ error: 'Configuración del servidor incompleta' });
+  if (!SUPABASE_SERVICE_KEY) {
+    return res.status(500).set(headers).json({ error: 'SUPABASE_SERVICE_ROLE_KEY no configurada' });
   }
 
   // Verify JWT
@@ -52,9 +52,9 @@ export default async function handler(req, res) {
   const userData = await userRes.json();
   const userId = userData.id;
 
-  // --- Rate limiting: check ai_quota ---
-  const quotaRes = await fetch(
-    `${SUPABASE_URL}/rest/v1/auth_profiles?user_id=eq.${userId}&select=ai_quota,ai_used`,
+  // --- Rate limiting: get org_id from auth_profiles, then check quota on organizations ---
+  const profRes = await fetch(
+    `${SUPABASE_URL}/rest/v1/auth_profiles?id=eq.${userId}&select=org_id`,
     {
       headers: {
         apikey: SUPABASE_SERVICE_KEY,
@@ -63,18 +63,29 @@ export default async function handler(req, res) {
     }
   );
 
-  if (!quotaRes.ok) {
-    return res.status(500).set(headers).json({ error: 'Error verificando cuota' });
+  const profData = profRes.ok ? await profRes.json() : [];
+  const orgId = profData[0]?.org_id;
+
+  let ai_quota = 10, ai_used = 0;
+  if (orgId) {
+    const orgRes = await fetch(
+      `${SUPABASE_URL}/rest/v1/organizations?id=eq.${orgId}&select=ai_quota,ai_used,plan`,
+      {
+        headers: {
+          apikey: SUPABASE_SERVICE_KEY,
+          Authorization: `Bearer ${SUPABASE_SERVICE_KEY}`,
+        },
+      }
+    );
+    const orgData = orgRes.ok ? await orgRes.json() : [];
+    const org = orgData[0];
+    if (org) {
+      if (org.plan === 'enterprise') { ai_quota = Infinity; }
+      else { ai_quota = org.ai_quota || 10; }
+      ai_used = org.ai_used || 0;
+    }
   }
 
-  const quotaData = await quotaRes.json();
-  const profile = quotaData[0];
-
-  if (!profile) {
-    return res.status(403).set(headers).json({ error: 'Perfil no encontrado' });
-  }
-
-  const { ai_quota, ai_used } = profile;
   if (ai_used >= ai_quota) {
     return res.status(429).set(headers).json({
       error: 'Cuota de IA agotada',
@@ -166,22 +177,25 @@ export default async function handler(req, res) {
       return res.status(400).set(headers).json({ error: 'Modelo no válido. Usa: gemini, claude, chatgpt' });
     }
 
-    // Increment ai_used
-    await fetch(
-      `${SUPABASE_URL}/rest/v1/auth_profiles?user_id=eq.${userId}`,
-      {
-        method: 'PATCH',
-        headers: {
-          apikey: SUPABASE_SERVICE_KEY,
-          Authorization: `Bearer ${SUPABASE_SERVICE_KEY}`,
-          'Content-Type': 'application/json',
-          Prefer: 'return=minimal',
-        },
-        body: JSON.stringify({ ai_used: ai_used + 1 }),
-      }
-    );
+    // Increment ai_used on organizations table
+    if (orgId) {
+      await fetch(
+        `${SUPABASE_URL}/rest/v1/organizations?id=eq.${orgId}`,
+        {
+          method: 'PATCH',
+          headers: {
+            apikey: SUPABASE_SERVICE_KEY,
+            Authorization: `Bearer ${SUPABASE_SERVICE_KEY}`,
+            'Content-Type': 'application/json',
+            Prefer: 'return=minimal',
+          },
+          body: JSON.stringify({ ai_used: ai_used + 1 }),
+        }
+      );
+    }
 
     return res.status(200).set(headers).json({
+      text: result,
       result,
       model,
       quota_remaining: ai_quota - ai_used - 1,

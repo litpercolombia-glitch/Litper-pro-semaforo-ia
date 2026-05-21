@@ -530,13 +530,14 @@ async function runAI(){
 function switchTab(name){
   // Registrar tab activa para tracking
   window._activeTab = name;
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
-  const tabEl=document.querySelector(`.tab[onclick*="'${name}'"]`);
+  document.querySelectorAll('.sidebar-link').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p=>{p.classList.remove('active');p.style.display='';});
+  const tabEl=document.querySelector(`.sidebar-link[onclick*="'${name}'"]`);
   if(tabEl)tabEl.classList.add('active');
   const panelEl=document.getElementById('panel-'+name);
   if(panelEl)panelEl.classList.add('active');
-  if(name==='semaforo')rSem();
+  if(name==='semaforo'){rSem();name='ciudades';}
+  if(name==='ciudades')rCiu();
   else if(name==='transportadoras')rTrans();
   else if(name==='alertas')rAlertas();
   else if(name==='ciudades')rCiu();
@@ -2226,7 +2227,7 @@ function handleCSVImport(input){
       
       showExpToast('✅ CSV importado: '+C.length+' ciudades · '+totalP.toLocaleString('es-CO')+' pedidos');
       rMetrics(); // Actualizar métricas en pantalla
-      switchTab('semaforo'); // Ir al semáforo
+      switchTab('ciudades'); // Ir al semáforo
     }catch(err){
       alert('Error procesando CSV: '+err.message);
     }
@@ -2254,7 +2255,7 @@ function handleJSONImport(input){
       
       showExpToast('✅ JSON restaurado: '+C.length+' ciudades · Exportado: '+(data.exportado||'desconocido').substring(0,10));
       rMetrics();
-      switchTab('semaforo');
+      switchTab('ciudades');
     }catch(err){
       alert('Error leyendo JSON: '+err.message+'\n\nAsegúrate de que sea un archivo exportado por LitperPro.');
     }

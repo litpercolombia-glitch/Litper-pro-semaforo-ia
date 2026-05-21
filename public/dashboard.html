@@ -55,8 +55,7 @@
 <nav class="app-sidebar" id="sidebar" aria-label="Navegación principal">
 <button class="sb-collapse" onclick="toggleSidebar()" aria-label="Cerrar barra lateral">☰</button>
   <div class="sidebar-label">Herramientas</div>
-  <button class="sidebar-link active" onclick="goTab('semaforo',this)"><span class="sl-icon">🚦</span>Semáforo</button>
-  <button class="sidebar-link" onclick="goTab('ciudades',this)"><span class="sl-icon">📍</span>Ciudades × Trans.</button>
+  <button class="sidebar-link active" onclick="goTab('ciudades',this)"><span class="sl-icon">🚦</span>Semáforo Pro</button>
   <button class="sidebar-link" onclick="goTab('transportadoras',this)"><span class="sl-icon">🚚</span>Scorecard</button>
   <button class="sidebar-link" onclick="goTab('bloqueo',this)"><span class="sl-icon">🚫</span>Bloqueo</button>
   <button class="sidebar-link" onclick="goTab('matriz',this)"><span class="sl-icon">📊</span>Matriz</button>
@@ -117,7 +116,7 @@
 </div>
 
 <!-- SEMAFORO -->
-<div class="panel active" id="panel-semaforo" aria-label="Panel Semáforo de Ciudades">
+<div class="panel" id="panel-semaforo" aria-label="Panel Semáforo de Ciudades" style="display:none">
   <div class="phdr"><div class="phdr-l"><h2>Semáforo de ciudades</h2><p>▶ para ver desglose por transportadora en cada ciudad</p></div><button class="btn-inst" onclick="showInst('semaforo')">❓ Cómo usar</button></div>
   <div class="pb">
     <div class="sem3">
@@ -137,8 +136,8 @@
 </div>
 
 <!-- CIUDADES -->
-<div class="panel" id="panel-ciudades" aria-label="Panel Ciudades por Transportadora">
-  <div class="phdr"><div class="phdr-l"><h2>Ciudades × Transportadora</h2><p>▶ para ver cada carrier por separado</p></div><button class="btn-inst" onclick="showInst('ciudades')">❓ Cómo usar</button></div>
+<div class="panel active" id="panel-ciudades" aria-label="Panel Semáforo Pro">
+  <div class="phdr"><div class="phdr-l"><h2>Semáforo Pro</h2><p>▶ para ver cada carrier por separado en cada ciudad</p></div><button class="btn-inst" onclick="showInst('ciudades')">❓ Cómo usar</button></div>
   <div class="pb">
     <div class="ctrls">
       <input class="ci search" id="cc-q" type="text" aria-label="Buscar ciudad en ciudades-transportadora" placeholder="Buscar ciudad..." oninput="rCiu()">
