@@ -441,110 +441,34 @@
      PANEL: EXPORTAR / IMPORTAR
      ══════════════════════════════════════════ -->
 <div class="panel" id="panel-expImp" aria-label="Panel Exportar e Importar">
-  <div class="phdr">
-    <div class="phdr-l">
-      <h2>📤 Exportar · 📥 Importar</h2>
-      <p>Descarga tus datos en múltiples formatos · Importa desde otras fuentes</p>
-    </div>
-  </div>
+  <div class="phdr"><div class="phdr-l"><h2>Centro de Datos</h2><p>Exporta reportes e importa datos desde multiples fuentes</p></div></div>
   <div class="pb">
-
-    <!-- EXPORTAR -->
-    <div class="section-heading">📤 Exportar datos</div>
-    <div class="section-sub">Genera reportes listos para presentar, analizar o cargar en otras herramientas.</div>
-    <div class="exp-grid">
-      <div class="exp-card" onclick="exportCSV()">
-        <div class="exp-icon">📊</div>
-        <div>
-          <div class="exp-title">CSV — Semáforo de ciudades</div>
-          <div class="exp-desc">Todas las ciudades con tasa, volumen, mejor carrier y estado (verde/amarillo/rojo). Listo para Excel o Sheets.</div>
-          <span class="exp-badge" class="exp-badge--csv">CSV</span>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
+      <!-- EXPORTAR -->
+      <div>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px"><div style="width:32px;height:32px;border-radius:8px;background:rgba(0,255,136,.1);display:flex;align-items:center;justify-content:center;font-size:16px">📤</div><div><div style="font-weight:700;font-size:15px">Exportar</div><div style="font-size:11px;color:rgba(240,246,252,.5)">Descarga reportes listos para usar</div></div></div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <button onclick="exportCSV()" style="display:flex;align-items:center;gap:12px;padding:12px 16px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:10px;color:var(--text-primary);font-family:var(--font);font-size:13px;cursor:pointer;transition:all .2s;text-align:left;width:100%" onmouseover="this.style.background='rgba(0,255,136,.05)';this.style.borderColor='rgba(0,255,136,.2)'" onmouseout="this.style.background='rgba(255,255,255,.03)';this.style.borderColor='rgba(255,255,255,.06)'"><span style="font-size:18px;width:28px;text-align:center">📊</span><div style="flex:1"><strong>Semaforo de ciudades</strong><div style="font-size:11px;color:rgba(240,246,252,.4);margin-top:2px">Ciudades + tasa + carrier + estado</div></div><span style="font-family:var(--mono);font-size:10px;padding:3px 8px;background:rgba(0,255,136,.1);border-radius:4px;color:var(--brand)">CSV</span></button>
+          <button onclick="exportCarriersCSV()" style="display:flex;align-items:center;gap:12px;padding:12px 16px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:10px;color:var(--text-primary);font-family:var(--font);font-size:13px;cursor:pointer;transition:all .2s;text-align:left;width:100%" onmouseover="this.style.background='rgba(0,255,136,.05)';this.style.borderColor='rgba(0,255,136,.2)'" onmouseout="this.style.background='rgba(255,255,255,.03)';this.style.borderColor='rgba(255,255,255,.06)'"><span style="font-size:18px;width:28px;text-align:center">🚚</span><div style="flex:1"><strong>Scorecard carriers</strong><div style="font-size:11px;color:rgba(240,246,252,.4);margin-top:2px">Pedidos, tasa, CPA, score</div></div><span style="font-family:var(--mono);font-size:10px;padding:3px 8px;background:rgba(0,255,136,.1);border-radius:4px;color:var(--brand)">CSV</span></button>
+          <button onclick="exportJSON()" style="display:flex;align-items:center;gap:12px;padding:12px 16px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:10px;color:var(--text-primary);font-family:var(--font);font-size:13px;cursor:pointer;transition:all .2s;text-align:left;width:100%" onmouseover="this.style.background='rgba(168,85,247,.05)';this.style.borderColor='rgba(168,85,247,.2)'" onmouseout="this.style.background='rgba(255,255,255,.03)';this.style.borderColor='rgba(255,255,255,.06)'"><span style="font-size:18px;width:28px;text-align:center;font-family:var(--mono);font-weight:700">{ }</span><div style="flex:1"><strong>Datos completos</strong><div style="font-size:11px;color:rgba(240,246,252,.4);margin-top:2px">Todo en JSON para n8n, Make o API</div></div><span style="font-family:var(--mono);font-size:10px;padding:3px 8px;background:rgba(168,85,247,.1);border-radius:4px;color:var(--accent-violet)">JSON</span></button>
+          <button onclick="exportReport()" style="display:flex;align-items:center;gap:12px;padding:12px 16px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:10px;color:var(--text-primary);font-family:var(--font);font-size:13px;cursor:pointer;transition:all .2s;text-align:left;width:100%" onmouseover="this.style.background='rgba(0,212,255,.05)';this.style.borderColor='rgba(0,212,255,.2)'" onmouseout="this.style.background='rgba(255,255,255,.03)';this.style.borderColor='rgba(255,255,255,.06)'"><span style="font-size:18px;width:28px;text-align:center">📋</span><div style="flex:1"><strong>Reporte ejecutivo</strong><div style="font-size:11px;color:rgba(240,246,252,.4);margin-top:2px">Para Notion, WhatsApp o email</div></div><span style="font-family:var(--mono);font-size:10px;padding:3px 8px;background:rgba(0,212,255,.1);border-radius:4px;color:var(--accent-cyan)">TXT</span></button>
+          <button onclick="exportBloqueoCSV()" style="display:flex;align-items:center;gap:12px;padding:12px 16px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:10px;color:var(--text-primary);font-family:var(--font);font-size:13px;cursor:pointer;transition:all .2s;text-align:left;width:100%" onmouseover="this.style.background='rgba(255,71,87,.05)';this.style.borderColor='rgba(255,71,87,.2)'" onmouseout="this.style.background='rgba(255,255,255,.03)';this.style.borderColor='rgba(255,255,255,.06)'"><span style="font-size:18px;width:28px;text-align:center">🚫</span><div style="flex:1"><strong>Lista de bloqueo</strong><div style="font-size:11px;color:rgba(240,246,252,.4);margin-top:2px">Ciudades bajo umbral para Dropi</div></div><span style="font-family:var(--mono);font-size:10px;padding:3px 8px;background:rgba(255,71,87,.1);border-radius:4px;color:var(--error)">CSV</span></button>
         </div>
       </div>
-      <div class="exp-card" onclick="exportCarriersCSV()">
-        <div class="exp-icon">🚛</div>
-        <div>
-          <div class="exp-title">CSV — Scorecard de carriers</div>
-          <div class="exp-desc">Resumen por transportadora: pedidos totales, tasa entrega, CPA logístico, score ponderado.</div>
-          <span class="exp-badge" class="exp-badge--csv">CSV</span>
-        </div>
-      </div>
-      <div class="exp-card" onclick="exportJSON()">
-        <div class="exp-icon">{ }</div>
-        <div>
-          <div class="exp-title">JSON — Datos completos</div>
-          <div class="exp-desc">Objeto completo: ciudades, carriers, alertas, métricas globales. Para integraciones con n8n, Make o tu API.</div>
-          <span class="exp-badge" class="exp-badge--json">JSON</span>
-        </div>
-      </div>
-      <div class="exp-card" onclick="exportReport()">
-        <div class="exp-icon">📋</div>
-        <div>
-          <div class="exp-title">TXT — Reporte ejecutivo</div>
-          <div class="exp-desc">Resumen ejecutivo con métricas clave, top ciudades y alertas. Listo para pegar en Notion, WhatsApp o email.</div>
-          <span class="exp-badge" class="exp-badge--txt">TXT</span>
-        </div>
-      </div>
-      <div class="exp-card exp-card--full" onclick="exportBloqueoCSV()">
-        <div class="exp-icon">🚫</div>
-        <div>
-          <div class="exp-title">CSV — Lista de bloqueo activa</div>
-          <div class="exp-desc">Exporta exactamente las ciudades y carriers que están por debajo del umbral definido en la pestaña Bloqueo. Lista lista para cargar en Dropi.</div>
-          <span class="exp-badge" class="exp-badge--danger">CSV · Accionable</span>
+      <!-- IMPORTAR -->
+      <div>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px"><div style="width:32px;height:32px;border-radius:8px;background:rgba(0,212,255,.1);display:flex;align-items:center;justify-content:center;font-size:16px">📥</div><div><div style="font-weight:700;font-size:15px">Importar</div><div style="font-size:11px;color:rgba(240,246,252,.5)">Carga datos desde multiples fuentes</div></div></div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <button onclick="document.getElementById('fi').click()" style="display:flex;align-items:center;gap:12px;padding:12px 16px;background:rgba(0,255,136,.04);border:1px solid rgba(0,255,136,.15);border-radius:10px;color:var(--text-primary);font-family:var(--font);font-size:13px;cursor:pointer;transition:all .2s;text-align:left;width:100%" onmouseover="this.style.background='rgba(0,255,136,.08)'" onmouseout="this.style.background='rgba(0,255,136,.04)'"><span style="font-size:18px;width:28px;text-align:center">📊</span><div style="flex:1"><strong>Excel .xlsx</strong><div style="font-size:11px;color:rgba(240,246,252,.4);margin-top:2px">Dropi o cualquier sistema COD</div></div><span style="font-size:10px;padding:3px 8px;background:rgba(0,255,136,.15);border-radius:4px;color:var(--brand);font-weight:600">Activo</span></button>
+          <button onclick="triggerCSVImport()" style="display:flex;align-items:center;gap:12px;padding:12px 16px;background:rgba(0,255,136,.04);border:1px solid rgba(0,255,136,.15);border-radius:10px;color:var(--text-primary);font-family:var(--font);font-size:13px;cursor:pointer;transition:all .2s;text-align:left;width:100%" onmouseover="this.style.background='rgba(0,255,136,.08)'" onmouseout="this.style.background='rgba(0,255,136,.04)'"><span style="font-size:18px;width:28px;text-align:center">📄</span><div style="flex:1"><strong>CSV</strong><div style="font-size:11px;color:rgba(240,246,252,.4);margin-top:2px">Coordinadora, TCC, Envia</div></div><span style="font-size:10px;padding:3px 8px;background:rgba(0,255,136,.15);border-radius:4px;color:var(--brand);font-weight:600">Activo</span></button>
+          <button onclick="importFromJSON()" style="display:flex;align-items:center;gap:12px;padding:12px 16px;background:rgba(168,85,247,.04);border:1px solid rgba(168,85,247,.15);border-radius:10px;color:var(--text-primary);font-family:var(--font);font-size:13px;cursor:pointer;transition:all .2s;text-align:left;width:100%" onmouseover="this.style.background='rgba(168,85,247,.08)'" onmouseout="this.style.background='rgba(168,85,247,.04)'"><span style="font-size:18px;width:28px;text-align:center;font-family:var(--mono);font-weight:700">{ }</span><div style="flex:1"><strong>JSON</strong><div style="font-size:11px;color:rgba(240,246,252,.4);margin-top:2px">Restaurar backup de LitperPro</div></div><span style="font-size:10px;padding:3px 8px;background:rgba(168,85,247,.15);border-radius:4px;color:var(--accent-violet);font-weight:600">Activo</span></button>
+          <div style="display:flex;align-items:center;gap:12px;padding:12px 16px;background:rgba(255,255,255,.015);border:1px solid rgba(255,255,255,.04);border-radius:10px;opacity:.5"><span style="font-size:18px;width:28px;text-align:center">🔗</span><div style="flex:1"><strong style="color:rgba(240,246,252,.5)">API Dropi</strong><div style="font-size:11px;color:rgba(240,246,252,.3);margin-top:2px">Importar pedidos en tiempo real</div></div><span style="font-size:10px;padding:3px 8px;background:rgba(255,190,11,.1);border-radius:4px;color:var(--warning);font-weight:600">Pronto</span></div>
+          <div style="display:flex;align-items:center;gap:12px;padding:12px 16px;background:rgba(255,255,255,.015);border:1px solid rgba(255,255,255,.04);border-radius:10px;opacity:.5"><span style="font-size:18px;width:28px;text-align:center">📦</span><div style="flex:1"><strong style="color:rgba(240,246,252,.5)">API Carriers</strong><div style="font-size:11px;color:rgba(240,246,252,.3);margin-top:2px">Coordinadora, Interrapidisimo directo</div></div><span style="font-size:10px;padding:3px 8px;background:rgba(255,190,11,.1);border-radius:4px;color:var(--warning);font-weight:600">Pronto</span></div>
         </div>
       </div>
     </div>
-
-    <div class="spacer-md"></div>
-
-    <!-- IMPORTAR -->
-    <div class="section-heading">📥 Importar desde otras fuentes</div>
-    <div class="section-sub">Además del Excel de Dropi, LitperPro puede leer estos formatos:</div>
-    <div class="imp-sources">
-      <div class="imp-source" onclick="document.getElementById('fi').click()">
-        <div class="imp-source-icon imp-source-icon--green">📊</div>
-        <div>
-          <div class="imp-source-name">Excel .xlsx — Dropi / cualquier sistema</div>
-          <div class="imp-source-desc">Formato estándar. Columnas: ciudad, transportadora, estado (Entregado/Devuelto). Auto-detecta el layout.</div>
-        </div>
-        <span class="imp-source-badge" class="exp-badge--active">✅ Activo</span>
-      </div>
-      <div class="imp-source" onclick="triggerCSVImport()">
-        <div class="imp-source-icon imp-source-icon--brand">📄</div>
-        <div>
-          <div class="imp-source-name">CSV — Cualquier plataforma</div>
-          <div class="imp-source-desc">Ciudad, carrier, estado separados por coma. Compatible con exports de Coordinadora, TCC, Enviá y otros.</div>
-        </div>
-        <span class="imp-source-badge" class="exp-badge--csv">✅ Activo</span>
-      </div>
-      <div class="imp-source" onclick="importFromJSON()">
-        <div class="imp-source-icon imp-source-icon--violet">{ }</div>
-        <div>
-          <div class="imp-source-name">JSON — Exportado previamente</div>
-          <div class="imp-source-desc">Carga un JSON exportado anteriormente desde LitperPro. Restaura todos los datos instantáneamente.</div>
-        </div>
-        <span class="imp-source-badge" class="exp-badge--json">✅ Activo</span>
-      </div>
-      <div class="imp-source disabled">
-        <div class="imp-source-icon imp-source-icon--amber">🔗</div>
-        <div>
-          <div class="imp-source-name">API Dropi — Conexión directa</div>
-          <div class="imp-source-desc">Importar pedidos en tiempo real desde la API de Dropi. Sin necesidad de descargar Excel.</div>
-        </div>
-        <span class="imp-source-badge" class="exp-badge--soon">Próximamente</span>
-      </div>
-      <div class="imp-source disabled">
-        <div class="imp-source-icon imp-source-icon--red">📦</div>
-        <div>
-          <div class="imp-source-name">API Coordinadora / Interrapidísimo</div>
-          <div class="imp-source-desc">Datos de entrega directo del carrier. Elimina dependencia del Excel intermediario.</div>
-        </div>
-        <span class="imp-source-badge" class="exp-badge--danger">Próximamente</span>
-      </div>
-    </div>
-    <!-- Hidden CSV input -->
     <input type="file" id="fi-csv" aria-label="Importar CSV" accept=".csv" class="hidden" onchange="handleCSVImport(this)">
-    <input type="file" id="fi-json-imp" aria-label="Importar configuración JSON" accept=".json" class="hidden" onchange="handleJSONImport(this)">
+    <input type="file" id="fi-json-imp" aria-label="Importar configuracion JSON" accept=".json" class="hidden" onchange="handleJSONImport(this)">
   </div>
 </div>
 

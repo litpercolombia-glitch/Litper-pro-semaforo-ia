@@ -277,6 +277,7 @@ function sortExpCarriers(th,cityName,tbl,col){
 // ─── CIUDADES ────────────────────────────────────────────────────────────────
 window.pagCiu=n=>{PG.ciu=n;rCiu();};
 function rCiu(){
+  if(!C||!C.length){document.getElementById('tb-ciu').innerHTML='<tr><td colspan="8" style="text-align:center;padding:40px;color:rgba(240,246,252,.4);font-size:14px"><div style="font-size:32px;margin-bottom:12px">📊</div><strong style="color:rgba(240,246,252,.7)">Sin datos de ciudades</strong><br>Sube tu primer Excel de Dropi para ver el semaforo de ciudades con desglose por transportadora.<br><br><button class="btn-inst" onclick="document.getElementById(\'fi\').click()" style="cursor:pointer">📁 Subir Excel ahora</button></td></tr>';document.getElementById('pag-ciu').innerHTML='';return;}
   const q=document.getElementById('cc-q').value.toLowerCase(),
         ft=document.getElementById('cc-t').value,
         sk=document.getElementById('cc-s').value,
@@ -299,6 +300,7 @@ function rCiu(){
 // ─── TRANSPORTADORAS ─────────────────────────────────────────────────────────
 function calcSc(t){const mx=Math.max(...T.map(x=>x.total));return Math.round(t.tasa_entrega*.7+(t.total/mx*100)*.3);}
 function rTrans(){
+  if(!T||!T.length){document.getElementById('scards').innerHTML='';document.getElementById('tb-trans').innerHTML='<tr><td colspan="6" style="text-align:center;padding:40px;color:rgba(240,246,252,.4);font-size:14px"><div style="font-size:32px;margin-bottom:12px">🚚</div><strong style="color:rgba(240,246,252,.7)">Sin datos de transportadoras</strong><br>Sube un Excel con datos de envios para ver el scorecard de carriers.<br><br><button class="btn-inst" onclick="document.getElementById(\'fi\').click()" style="cursor:pointer">📁 Subir Excel ahora</button></td></tr>';return;}
   const tarifa=parseInt(document.getElementById('tarifa').value)||15000;
   rMetrics();
   document.getElementById('scards').innerHTML=T.filter(t=>t.total>=10).map(t=>{
@@ -358,8 +360,10 @@ function rBloq(){
 
 // ─── MATRIZ ──────────────────────────────────────────────────────────────────
 function rMatriz(){
+  if(!C||!C.length){var mc=document.getElementById('mz-chart');if(mc)mc.innerHTML='<div style="text-align:center;padding:60px 20px;color:rgba(240,246,252,.4)"><div style="font-size:32px;margin-bottom:12px">📊</div><strong style="color:rgba(240,246,252,.7)">Matriz Volumen × Tasa</strong><br>Sube un Excel para ver la distribucion de ciudades por volumen y tasa de entrega.<br><br><button class="btn-inst" onclick="document.getElementById(\'fi\').click()" style="cursor:pointer">📁 Subir Excel</button></div>';return;}
   const minv=parseInt(document.getElementById('mz-min').value)||50;
   const data=C.filter(c=>c[1]>=minv);
+  if(!data.length){var mc2=document.getElementById('mz-chart');if(mc2)mc2.innerHTML='<div style="text-align:center;padding:40px;color:rgba(240,246,252,.4)">Sin ciudades con ese volumen minimo.</div>';return;}
   const maxV=Math.max(...data.map(c=>c[1]));
   const medV=data.reduce((s,c)=>s+c[1],0)/data.length;
   const ctx=document.getElementById('ch-mz').getContext('2d');
@@ -381,6 +385,7 @@ function rMatriz(){
 
 // ─── PARETO ───────────────────────────────────────────────────────────────────
 function rPareto(){
+  if(!P||!P.length||!G||!G.total){var pi=document.getElementById('pi-info');if(pi)pi.innerHTML='<div style="text-align:center;padding:40px;color:rgba(240,246,252,.4)"><div style="font-size:32px;margin-bottom:12px">📈</div><strong style="color:rgba(240,246,252,.7)">Analisis Pareto</strong><br>Muestra que ciudades concentran el 80% de tu volumen. Sube un Excel para activar.</div>';return;}
   const total=G.total;
   const i50=P.findIndex(p=>p[3]>=50),i80=P.findIndex(p=>p[3]>=80);
   document.getElementById('pi-info').innerHTML=`
