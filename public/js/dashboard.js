@@ -542,11 +542,11 @@ function switchTab(name){
   else if(name==='alertas')rAlertas();
   else if(name==='ciudades')rCiu();
   else if(name==='bloqueo')rBloq();
-  else if(name==='matriz')rMatriz();
+  else if(name==='matriz'){rMatriz();rPareto();var pp=document.getElementById('panel-pareto');if(pp){pp.classList.add('active');pp.style.display='';}}
   else if(name==='benchmark'){renderBenchmark();}
   else if(name==='predictor'){calcularPredictor();}
   else if(name==='score'){renderScore();}
-  else if(name==='pareto')rPareto();
+  else if(name==='pareto'){rPareto();rMatriz();}
 }
 
 // ─── SIDEBAR ─────────────────────────────────────────────────────────────────
@@ -2272,9 +2272,9 @@ document.addEventListener('DOMContentLoaded', function(){
     const expPanel = document.getElementById('panel-expImp');
     if(name === 'expImp'){
       document.querySelectorAll('.panel').forEach(p=>{p.classList.remove('active');p.style.display='';});
-      document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+      document.querySelectorAll('.sidebar-link').forEach(t=>t.classList.remove('active'));
       if(expPanel){ expPanel.style.display='block'; expPanel.classList.add('active'); }
-      document.querySelectorAll('.tab').forEach(t=>{ if(t.textContent.includes('Export')||t.textContent.includes('Import')) t.classList.add('active'); });
+      document.querySelectorAll('.sidebar-link').forEach(t=>{ if(t.textContent.includes('Export')||t.textContent.includes('Import')) t.classList.add('active'); });
     }else{
       if(expPanel){ expPanel.style.display='none'; expPanel.classList.remove('active'); }
       origST(name);
@@ -2742,14 +2742,16 @@ function lpShowToast(msg){
 var _onbFile = null;
 (async function checkOnboarding(){
   try {
+    if(localStorage.getItem('litper_onb_done')==='1') return;
     var profile = await getProfile();
     if(!profile) return;
-    if(profile.onboarding_completed) return;
-    // Show onboarding
-    document.getElementById('onb-overlay').style.display = 'flex';
-    // Pre-fill store name if org has one
+    if(profile.onboarding_completed){ localStorage.setItem('litper_onb_done','1'); return; }
+    var overlay = document.getElementById('onb-overlay');
+    if(!overlay) return;
+    overlay.style.display = 'flex';
     if(profile.organizations && profile.organizations.name){
-      document.getElementById('onb-store').value = profile.organizations.name;
+      var storeInput = document.getElementById('onb-store');
+      if(storeInput) storeInput.value = profile.organizations.name;
     }
   } catch(e){ console.warn('Onboarding check:', e); }
 })();
@@ -2804,6 +2806,7 @@ function onbHandleFile(file){
 
 async function onbFinish(){
   document.getElementById('onb-overlay').style.display = 'none';
+  localStorage.setItem('litper_onb_done','1');
   try { await updateProfile({ onboarding_completed: true }); } catch(e){}
 }
 

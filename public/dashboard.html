@@ -54,24 +54,27 @@
 <!-- SIDEBAR -->
 <nav class="app-sidebar" id="sidebar" aria-label="Navegación principal">
 <button class="sb-collapse" onclick="toggleSidebar()" aria-label="Cerrar barra lateral">☰</button>
-  <div class="sidebar-label">Herramientas</div>
+  <div class="sidebar-label">Principal</div>
   <button class="sidebar-link active" onclick="goTab('ciudades',this)"><span class="sl-icon">🚦</span>Semáforo Pro</button>
-  <button class="sidebar-link" onclick="goTab('transportadoras',this)"><span class="sl-icon">🚚</span>Scorecard</button>
-  <button class="sidebar-link" onclick="goTab('bloqueo',this)"><span class="sl-icon">🚫</span>Bloqueo</button>
-  <button class="sidebar-link" onclick="goTab('matriz',this)"><span class="sl-icon">📊</span>Matriz</button>
-  <button class="sidebar-link" onclick="goTab('pareto',this)"><span class="sl-icon">📈</span>Pareto</button>
-  <button class="sidebar-link" onclick="goTab('recuperacion',this)"><span class="sl-icon">💰</span>Recuperación</button>
-  <button class="sidebar-link" onclick="goTab('asignacion',this)"><span class="sl-icon">⚖️</span>Asignación</button>
+  <button class="sidebar-link" onclick="goTab('transportadoras',this)"><span class="sl-icon">🚚</span>Carriers</button>
   <button class="sidebar-link" onclick="goTab('alertas',this)"><span class="sl-icon">⚠️</span>Alertas</button>
-  <button class="sidebar-link" onclick="goTab('ia',this)"><span class="sl-icon">✦</span>IA</button>
-  <button class="sidebar-link" onclick="goTab('benchmark',this)"><span class="sl-icon">📊</span>Benchmark</button>
+  <div class="sidebar-divider"></div>
+  <div class="sidebar-label">Optimizar</div>
+  <button class="sidebar-link" onclick="goTab('bloqueo',this)"><span class="sl-icon">🚫</span>Bloqueo</button>
+  <button class="sidebar-link" onclick="goTab('asignacion',this)"><span class="sl-icon">⚖️</span>Asignación</button>
+  <button class="sidebar-link" onclick="goTab('recuperacion',this)"><span class="sl-icon">💰</span>Recuperación</button>
+  <div class="sidebar-divider"></div>
+  <div class="sidebar-label">Análisis</div>
+  <button class="sidebar-link" onclick="goTab('ia',this)"><span class="sl-icon">✦</span>IA Claude</button>
+  <button class="sidebar-link" onclick="goTab('matriz',this)"><span class="sl-icon">📊</span>Matriz · Pareto</button>
+  <button class="sidebar-link" onclick="goTab('benchmark',this)"><span class="sl-icon">🏆</span>Benchmark</button>
   <button class="sidebar-link" onclick="goTab('predictor',this)"><span class="sl-icon">🔮</span>Predictor</button>
-  <button class="sidebar-link" onclick="goTab('score',this)"><span class="sl-icon">⭐</span>Score</button>
+  <div class="sidebar-divider"></div>
+  <div class="sidebar-label">Datos</div>
   <button class="sidebar-link" onclick="goTab('expImp',this)"><span class="sl-icon">📤</span>Export · Import</button>
   <div class="sidebar-divider"></div>
-  <div class="sidebar-label">Cuenta</div>
   <a class="sidebar-link" href="/profile"><span class="sl-icon">👤</span>Mi Cuenta</a>
-  <a class="sidebar-link" href="/pricing"><span class="sl-icon">💎</span>Precios</a>
+  <a class="sidebar-link" href="/pricing"><span class="sl-icon">💎</span>Plan</a>
 </nav>
   <main class="app-main" id="main-content" role="main" aria-label="Contenido del dashboard">
 <button class="sb-expand" onclick="toggleSidebar()" aria-label="Abrir barra lateral">&#9776;</button>
