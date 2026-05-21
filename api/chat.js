@@ -81,7 +81,8 @@ export default async function handler(req, res) {
 
   // --- Parse body ---
   // messages: [{role: 'user'|'assistant', content: string}]
-  const { messages, model = 'gemini', systemPrompt = '' } = req.body || {};
+  const { messages, model = 'gemini', systemPrompt = '', system = '' } = req.body || {};
+  const sysP = systemPrompt || system || '';
   if (!messages || !Array.isArray(messages) || messages.length === 0) {
     return res.status(400).set(headers).json({ error: 'messages[] requerido' });
   }
@@ -94,7 +95,7 @@ export default async function handler(req, res) {
       if (!GEMINI_KEY) throw new Error('GEMINI_API_KEY no configurada');
       const contents = msgs.map(m => ({ role: m.role === 'assistant' ? 'model' : 'user', parts: [{ text: m.content }] }));
       const geminiRes = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_KEY}`,
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_KEY}`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -128,15 +129,15 @@ export default async function handler(req, res) {
     }
 
     if (model === 'gemini') {
-      try { result = await tryGeminiChat(messages, systemPrompt); }
+      try { result = await tryGeminiChat(messages, sysP); }
       catch (e) {
         console.warn('[chat.js] Gemini failed, trying Groq:', e.message);
-        try { result = await tryGroqChat(messages, systemPrompt); }
+        try { result = await tryGroqChat(messages, sysP); }
         catch (e2) { throw new Error(`Gemini y Groq fallaron: ${e.message} / ${e2.message}`); }
       }
 
     } else if (model === 'groq') {
-      result = await tryGroqChat(messages, systemPrompt);
+      result = await tryGroqChat(messages, sysP);
 
     } else if (model === 'claude') {
       const CLAUDE_KEY = process.env.ANTHROPIC_API_KEY || process.env.CLAUDE_API_KEY;
@@ -153,7 +154,7 @@ export default async function handler(req, res) {
       const OPENAI_KEY = process.env.OPENAI_API_KEY;
       if (!OPENAI_KEY) throw new Error('OPENAI_API_KEY no configurada');
       const gptMessages = [];
-      if (systemPrompt) gptMessages.push({ role: 'system', content: systemPrompt });
+      if (sysP) gptMessages.push({ role: 'system', content: systemPrompt });
       messages.forEach(m => gptMessages.push({ role: m.role, content: m.content }));
       const gptRes = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',

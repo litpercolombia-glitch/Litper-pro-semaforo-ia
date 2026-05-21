@@ -93,7 +93,7 @@ export default async function handler(req, res) {
       const GEMINI_KEY = process.env.GEMINI_API_KEY || Buffer.from('QUl6YVN5Qlo4OXl0cmJuSERsR1VsQy1nMlpnNEhPVkNaNU1uT3Zn','base64').toString();
       if (!GEMINI_KEY) throw new Error('GEMINI_API_KEY no configurada');
       const geminiRes = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_KEY}`,
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_KEY}`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
