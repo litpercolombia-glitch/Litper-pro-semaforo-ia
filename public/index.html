@@ -323,8 +323,44 @@ body.has-urgencia nav{top:40px}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="/js/supabase-client.js"></script>
+
+<style id="ultra-tech-layer">
+/* ══ CURSOR MAGNÉTICO ══ */
+*{cursor:none!important;}
+.cur-d{position:fixed;width:10px;height:10px;background:var(--teal,#00FF88);border-radius:50%;pointer-events:none;z-index:99999;transform:translate(-50%,-50%);transition:width .15s,height .15s,background .15s,opacity .15s;box-shadow:0 0 10px rgba(0,255,136,.8),0 0 20px rgba(0,255,136,.4);}
+.cur-r{position:fixed;width:40px;height:40px;border:1.5px solid rgba(0,255,136,.45);border-radius:50%;pointer-events:none;z-index:99998;transform:translate(-50%,-50%);transition:width .25s,height .25s,border-color .25s;will-change:transform;}
+.cur-d.hovering{width:18px;height:18px;background:rgba(0,255,136,.2);border:1.5px solid var(--teal,#00FF88);}
+.cur-r.hovering{width:55px;height:55px;border-color:rgba(0,255,136,.7);}
+/* ══ CANVAS PARTICLE ══ */
+#particle-canvas{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.55;}
+/* ══ LIVE NOTIFICATIONS ══ */
+#live-notifs{position:fixed;bottom:24px;left:24px;z-index:9000;display:flex;flex-direction:column;gap:10px;pointer-events:none;}
+.lnf{display:flex;align-items:center;gap:10px;background:rgba(10,14,22,.92);border:1px solid rgba(0,255,136,.25);border-radius:12px;padding:11px 16px;min-width:240px;max-width:300px;box-shadow:0 4px 24px rgba(0,0,0,.5),0 0 16px rgba(0,255,136,.08);backdrop-filter:blur(12px);animation:nfIn .4s cubic-bezier(.34,1.56,.64,1) forwards;font-size:12.5px;color:rgba(240,246,252,.85);line-height:1.4;}
+.lnf-dot{width:8px;height:8px;border-radius:50%;background:var(--teal,#00FF88);flex-shrink:0;box-shadow:0 0 8px rgba(0,255,136,.7);animation:blink 1.5s ease-in-out infinite;}
+.lnf.hiding{animation:nfOut .35s ease forwards;}
+@keyframes nfIn{from{opacity:0;transform:translateX(-20px);}to{opacity:1;transform:translateX(0);}}
+@keyframes nfOut{from{opacity:1;transform:translateX(0);}to{opacity:0;transform:translateX(-20px);}}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.35;}}
+/* ══ HERO GLOW ORB LAYER ══ */
+.hero-orb-layer{position:absolute;inset:0;pointer-events:none;z-index:1;}
+.hero-orb-1{position:absolute;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(0,255,136,.08) 0%,transparent 65%);top:-100px;left:-100px;animation:orbFloat1 8s ease-in-out infinite;}
+.hero-orb-2{position:absolute;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(0,212,255,.06) 0%,transparent 65%);top:50px;right:-80px;animation:orbFloat2 10s ease-in-out infinite;}
+.hero-orb-3{position:absolute;width:350px;height:350px;border-radius:50%;background:radial-gradient(circle,rgba(168,85,247,.07) 0%,transparent 65%);bottom:-50px;left:40%;animation:orbFloat3 7s ease-in-out infinite;}
+@keyframes orbFloat1{0%,100%{transform:translate(0,0) scale(1);}50%{transform:translate(30px,-20px) scale(1.05);}}
+@keyframes orbFloat2{0%,100%{transform:translate(0,0) scale(1);}50%{transform:translate(-20px,30px) scale(1.08);}}
+@keyframes orbFloat3{0%,100%{transform:translate(0,0) scale(1);}50%{transform:translate(15px,-15px) scale(1.03);}}
+/* ══ TYPEWRITER cursor ══ */
+.tw-cursor{display:inline-block;width:3px;height:.85em;background:var(--teal,#00FF88);margin-left:2px;vertical-align:middle;animation:twBlink .7s step-end infinite;border-radius:2px;}
+@keyframes twBlink{0%,100%{opacity:1;}50%{opacity:0;}}
+</style>
 </head>
 <body>
+<!-- ULTRA-TECH LAYER -->
+<canvas id="particle-canvas"></canvas>
+<div class="cur-d" id="cur-d"></div>
+<div class="cur-r" id="cur-r"></div>
+<div id="live-notifs"></div>
+
 <!-- URGENCIA TOP BAR -->
 <div class="urgencia-top" id="urgencia-top">
   <span>🔥 Precio de lanzamiento cierra en: </span>
@@ -956,6 +992,67 @@ document.addEventListener('click',e=>{
       btn.style.boxShadow = '0 0 16px rgba(0,212,245,.3)';
     }
   } catch(e){ console.warn('Auth check:', e); }
+})();
+</script>
+
+<script id="ultra-tech-js">
+(function(){
+// ── CANVAS PARTICLES ──────────────────────────────────────────────────────
+const cv=document.getElementById('particle-canvas');
+const cx=cv.getContext('2d');
+let W,H,nodes=[];
+function resize(){W=cv.width=window.innerWidth;H=cv.height=window.innerHeight;}
+resize();window.addEventListener('resize',resize,{passive:true});
+class Node{constructor(){this.reset();}reset(){this.x=Math.random()*W;this.y=Math.random()*H;this.vx=(Math.random()-.5)*.4;this.vy=(Math.random()-.5)*.4;this.r=Math.random()*1.8+.6;this.a=Math.random();this.ta=Math.random()*.7+.2;}tick(){this.x+=this.vx;this.y+=this.vy;if(this.x<0||this.x>W)this.vx*=-1;if(this.y<0||this.y>H)this.vy*=-1;this.a+=(this.ta-this.a)*.02;}}
+for(let i=0;i<75;i++)nodes.push(new Node());
+const CONN=160;
+function frame(){
+  cx.clearRect(0,0,W,H);
+  for(let i=0;i<nodes.length;i++){
+    const a=nodes[i];a.tick();
+    cx.beginPath();cx.arc(a.x,a.y,a.r,0,Math.PI*2);
+    cx.fillStyle=`rgba(0,255,136,${a.a*.8})`;cx.fill();
+    for(let j=i+1;j<nodes.length;j++){
+      const b=nodes[j],dx=a.x-b.x,dy=a.y-b.y,d=Math.sqrt(dx*dx+dy*dy);
+      if(d<CONN){const op=(1-d/CONN)*.25;cx.beginPath();cx.moveTo(a.x,a.y);cx.lineTo(b.x,b.y);cx.strokeStyle=`rgba(0,255,136,${op})`;cx.lineWidth=.6;cx.stroke();}
+    }
+  }
+  requestAnimationFrame(frame);
+}
+frame();
+
+// ── CURSOR MAGNÉTICO ─────────────────────────────────────────────────────
+const dot=document.getElementById('cur-d'),ring=document.getElementById('cur-r');
+let mx=0,my=0,rx=0,ry=0;
+window.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;dot.style.left=mx+'px';dot.style.top=my+'px';},{passive:true});
+(function lag(){rx+=(mx-rx)*.14;ry+=(my-ry)*.14;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(lag);})();
+document.querySelectorAll('a,button,.btn,.plan-cta,.opt,.faq,.bc,.tilt,[onclick]').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{dot.classList.add('hovering');ring.classList.add('hovering');});
+  el.addEventListener('mouseleave',()=>{dot.classList.remove('hovering');ring.classList.remove('hovering');});
+});
+
+// ── LIVE NOTIFICATIONS ────────────────────────────────────────────────────
+const nb=document.getElementById('live-notifs');
+const NOTIFS=[
+  {e:'🇨🇴',t:'<b>Barranquilla</b> — Tasa subió al 93%'},
+  {e:'⚡',t:'<b>Carlos M.</b> activó Plan Pro · hace 2 min'},
+  {e:'🚨',t:'<b>Tumaco</b> en rojo · 58% entrega'},
+  {e:'🔄',t:'Carrier swap detectado · Bogotá'},
+  {e:'✅',t:'<b>+18%</b> tasa entrega en 30 días · Litper'},
+  {e:'🇨🇱',t:'<b>Santiago</b> · semáforo actualizado'},
+  {e:'🤖',t:'IA generó plan de lunes en <b>14s</b>'},
+  {e:'💰',t:'<b>$4.2M COP</b> recuperados esta semana'},
+];
+let ni=0;
+function showNotif(){
+  const n=NOTIFS[ni%NOTIFS.length];ni++;
+  const d=document.createElement('div');d.className='lnf';
+  d.innerHTML=`<div class="lnf-dot"></div><span style="font-size:15px">${n.e}</span><span>${n.t}</span>`;
+  nb.appendChild(d);
+  setTimeout(()=>{d.classList.add('hiding');setTimeout(()=>d.remove(),400);},5000);
+}
+setTimeout(()=>{showNotif();setInterval(showNotif,8000);},3000);
+
 })();
 </script>
 </body>
