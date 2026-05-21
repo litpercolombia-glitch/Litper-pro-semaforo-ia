@@ -543,15 +543,22 @@ function switchTab(name){
   if(panelEl)panelEl.classList.add('active');
   if(name==='semaforo'){rSem();name='ciudades';}
   if(name==='ciudades')rCiu();
-  else if(name==='transportadoras')rTrans();
+  else if(name==='transportadoras'){setTimeout(function(){rTrans();},50);}
   else if(name==='alertas')rAlertas();
-  else if(name==='ciudades')rCiu();
   else if(name==='bloqueo')rBloq();
-  else if(name==='matriz'){rMatriz();rPareto();var pp=document.getElementById('panel-pareto');if(pp){pp.classList.add('active');pp.style.display='';}}
-  else if(name==='benchmark'){renderBenchmark();}
-  else if(name==='predictor'){calcularPredictor();}
+  else if(name==='matriz'){
+    var pp=document.getElementById('panel-pareto');
+    if(pp){pp.classList.add('active');pp.style.display='block';}
+    setTimeout(function(){rMatriz();rPareto();},80);
+  }
+  else if(name==='benchmark'){setTimeout(function(){renderBenchmark();},50);}
+  else if(name==='predictor'){setTimeout(function(){calcularPredictor();},50);}
   else if(name==='score'){renderScore();}
-  else if(name==='pareto'){rPareto();rMatriz();}
+  else if(name==='pareto'){
+    var pm=document.getElementById('panel-matriz');
+    if(pm){pm.classList.add('active');pm.style.display='block';}
+    setTimeout(function(){rPareto();rMatriz();},80);
+  }
 }
 
 // ─── SIDEBAR ─────────────────────────────────────────────────────────────────
