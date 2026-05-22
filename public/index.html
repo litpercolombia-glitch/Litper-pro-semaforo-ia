@@ -353,7 +353,113 @@ body.has-urgencia nav{top:40px}
 .tw-cursor{display:inline-block;width:3px;height:.85em;background:var(--teal,#00FF88);margin-left:2px;vertical-align:middle;animation:twBlink .7s step-end infinite;border-radius:2px;}
 @keyframes twBlink{0%,100%{opacity:1;}50%{opacity:0;}}
 </style>
-<style id="mrx-style">#mrx{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;}</style><style id="sl-style">#sl{position:fixed;top:0;left:0;width:100%;height:3px;background:linear-gradient(90deg,transparent,rgba(0,255,136,0.18),rgba(0,255,136,0.35),rgba(0,255,136,0.18),transparent);pointer-events:none;z-index:1;animation:sl-down 8s linear infinite;}@keyframes sl-down{0%{top:-3px}100%{top:100vh}}</style></head>
+<style id="mrx-style">#mrx{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;}</style><style id="sl-style">#sl{position:fixed;top:0;left:0;width:100%;height:3px;background:linear-gradient(90deg,transparent,rgba(0,255,136,0.18),rgba(0,255,136,0.35),rgba(0,255,136,0.18),transparent);pointer-events:none;z-index:1;animation:sl-down 8s linear infinite;}@keyframes sl-down{0%{top:-3px}100%{top:100vh}}</style>
+<style id="hormozi-style">
+/* ── HERO MICRO GUARANTEE ── */
+.hero-micro-guarantee{
+  margin-top:12px;font-size:.8rem;color:rgba(232,234,240,0.5);
+  letter-spacing:.02em;text-align:center;
+}
+.hero-micro-guarantee strong{color:rgba(0,255,136,0.8);}
+
+/* ── HERO STATS MINI (4 KPIs under social proof) ── */
+.hero-stats-mini{
+  display:flex;gap:clamp(16px,3vw,40px);flex-wrap:wrap;
+  justify-content:center;margin-top:28px;
+  border-top:1px solid rgba(0,255,136,0.12);
+  padding-top:24px;
+}
+.hsm-item{display:flex;flex-direction:column;align-items:center;gap:4px;}
+.hsm-num{
+  font-family:'JetBrains Mono',monospace;
+  font-size:clamp(1.3rem,3vw,1.9rem);font-weight:700;
+  color:var(--brand);text-shadow:0 0 20px rgba(0,255,136,0.4);
+}
+.hsm-label{font-size:.72rem;color:rgba(232,234,240,0.45);text-align:center;max-width:90px;}
+
+/* ── VALUE STACK SECTION (Hormozi) ── */
+.value-stack{
+  background:rgba(0,255,136,0.02);
+  border-top:1px solid rgba(0,255,136,0.10);
+  border-bottom:1px solid rgba(0,255,136,0.10);
+}
+.vs-inner{max-width:780px;margin:0 auto;text-align:center;}
+.vs-eyebrow{
+  display:inline-block;
+  background:rgba(0,255,136,0.08);
+  border:1px solid rgba(0,255,136,0.2);
+  color:var(--brand);
+  font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  padding:6px 18px;border-radius:100px;margin-bottom:20px;
+}
+.vs-headline{
+  font-size:clamp(1.5rem,3vw,2.2rem);font-weight:800;
+  color:var(--text-primary);margin-bottom:10px;line-height:1.2;
+}
+.vs-sub{color:rgba(232,234,240,0.5);font-size:.9rem;margin-bottom:36px;}
+.vs-items{
+  display:flex;flex-direction:column;gap:0;
+  border:1px solid rgba(0,255,136,0.12);border-radius:16px;overflow:hidden;
+  margin-bottom:24px;
+}
+.vs-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 24px;
+  border-bottom:1px solid rgba(0,255,136,0.07);
+  transition:background .2s;
+}
+.vs-row:last-child{border-bottom:none;}
+.vs-row:hover{background:rgba(0,255,136,0.04);}
+.vs-feat{display:flex;align-items:center;gap:12px;font-size:.9rem;color:var(--text-primary);text-align:left;}
+.vs-feat-icon{font-size:1.1rem;min-width:24px;}
+.vs-val{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.82rem;font-weight:700;
+  color:rgba(0,255,136,0.6);
+  white-space:nowrap;padding-left:16px;
+}
+.vs-total-row{
+  background:rgba(0,255,136,0.06);
+  border:1px solid rgba(0,255,136,0.2);
+  border-radius:12px;padding:20px 24px;
+  display:flex;flex-wrap:wrap;align-items:center;
+  justify-content:space-between;gap:12px;margin-bottom:20px;
+}
+.vs-total-label{font-size:.85rem;color:rgba(232,234,240,0.5);}
+.vs-total-val{font-family:'JetBrains Mono',monospace;font-size:1.1rem;color:rgba(232,234,240,0.35);text-decoration:line-through;}
+.vs-pay-label{font-size:.85rem;color:rgba(232,234,240,0.6);}
+.vs-pay-val{
+  font-family:'JetBrains Mono',monospace;font-size:1.6rem;font-weight:800;
+  color:var(--brand);text-shadow:0 0 24px rgba(0,255,136,0.4);
+}
+.vs-guarantee{
+  background:rgba(0,255,136,0.04);border:1px solid rgba(0,255,136,0.15);
+  border-radius:12px;padding:16px 20px;
+  font-size:.85rem;color:rgba(232,234,240,0.7);
+  display:flex;align-items:center;gap:12px;text-align:left;
+}
+.vs-guarantee strong{color:var(--brand);}
+
+/* ── URGENCY BANNER above pricing ── */
+.urgency-banner{
+  background:linear-gradient(90deg,rgba(251,191,36,0.08),rgba(251,191,36,0.12),rgba(251,191,36,0.08));
+  border-top:1px solid rgba(251,191,36,0.2);
+  border-bottom:1px solid rgba(251,191,36,0.2);
+  padding:12px clamp(16px,5vw,72px);
+  text-align:center;font-size:.82rem;
+  color:rgba(251,191,36,0.9);letter-spacing:.04em;
+}
+.urgency-banner strong{color:#fbbf24;}
+
+/* ── MOBILE ── */
+@media(max-width:640px){
+  .hero-stats-mini{gap:12px;}
+  .hsm-num{font-size:1.2rem;}
+  .vs-row{padding:12px 16px;}
+  .vs-total-row{flex-direction:column;text-align:center;}
+}
+</style>
+</head>
 <body><div id="sl"></div><canvas id="mrx"></canvas>
 <!-- ULTRA-TECH LAYER -->
 <canvas id="particle-canvas"></canvas>
@@ -418,26 +524,115 @@ body.has-urgencia nav{top:40px}
 </div>
 
 
+<!-- ══ VALUE STACK — HORMOZI $100M FRAMEWORK ══ -->
+<section class="value-stack pad rv">
+  <div class="vs-inner">
+    <span class="vs-eyebrow">¿Por qué vale cada peso?</span>
+    <h2 class="vs-headline">Todo lo que obtienes con LitperPro Pro</h2>
+    <p class="vs-sub">Compara con contratar un analista logístico: $3,500,000/mes · mínimo 3 meses · sin garantía</p>
+
+    <div class="vs-items">
+      <div class="vs-row rv">
+        <div class="vs-feat"><span class="vs-feat-icon">🚦</span><div><strong>Semáforo IA — 1.015 ciudades</strong><br><small style="color:rgba(232,234,240,0.45)">Verde/Amarillo/Rojo actualizado con cada carga</small></div></div>
+        <span class="vs-val">$600.000/mes</span>
+      </div>
+      <div class="vs-row rv">
+        <div class="vs-feat"><span class="vs-feat-icon">🔮</span><div><strong>Predictor IA de pérdidas por ciudad</strong><br><small style="color:rgba(232,234,240,0.45)">Forecasting basado en score acumulado histórico</small></div></div>
+        <span class="vs-val">$400.000/mes</span>
+      </div>
+      <div class="vs-row rv">
+        <div class="vs-feat"><span class="vs-feat-icon">📋</span><div><strong>Modo Jimmy — plan del día en 30 seg</strong><br><small style="color:rgba(232,234,240,0.45)">Prioridades operativas automáticas al llegar al trabajo</small></div></div>
+        <span class="vs-val">$250.000/mes</span>
+      </div>
+      <div class="vs-row rv">
+        <div class="vs-feat"><span class="vs-feat-icon">🔔</span><div><strong>Alertas automáticas de ciudades en riesgo</strong><br><small style="color:rgba(232,234,240,0.45)">Notificación antes de que el problema escale</small></div></div>
+        <span class="vs-val">$150.000/mes</span>
+      </div>
+      <div class="vs-row rv">
+        <div class="vs-feat"><span class="vs-feat-icon">⭐</span><div><strong>Score acumulado de transportadoras</strong><br><small style="color:rgba(232,234,240,0.45)">Datos que ningún competidor tuyo tiene aún</small></div></div>
+        <span class="vs-val">$100.000/mes</span>
+      </div>
+      <div class="vs-row rv">
+        <div class="vs-feat"><span class="vs-feat-icon">🌎</span><div><strong>4 países: CO · CL · GT · MX</strong><br><small style="color:rgba(232,234,240,0.45)">Un solo dashboard — todas tus operaciones</small></div></div>
+        <span class="vs-val">$200.000/mes</span>
+      </div>
+      <div class="vs-row rv">
+        <div class="vs-feat"><span class="vs-feat-icon">🔒</span><div><strong>Datos 100% en tu navegador</strong><br><small style="color:rgba(232,234,240,0.45)">Tus pedidos y clientes nunca salen de tu computador</small></div></div>
+        <span class="vs-val">Tranquilidad: priceless</span>
+      </div>
+    </div>
+
+    <div class="vs-total-row rv">
+      <div>
+        <div class="vs-total-label">Valor de mercado real</div>
+        <div class="vs-total-val">$1.700.000/mes</div>
+      </div>
+      <div style="text-align:right">
+        <div class="vs-pay-label">Tú pagas solo</div>
+        <div class="vs-pay-val">$299.000/mes</div>
+      </div>
+    </div>
+
+    <div class="vs-guarantee rv">
+      <span style="font-size:1.5rem">🛡️</span>
+      <div><strong>Garantía 14 días — sin riesgo, sin preguntas.</strong> Si pagaste con tarjeta y no ves resultados reales en las primeras 2 semanas, te regresamos el 100% del dinero. Así de seguros estamos. No hay letra pequeña.</div>
+    </div>
+
+    <div style="text-align:center;margin-top:24px">
+      <a href="#quiz" class="btn btn-glow" style="font-size:1rem;padding:16px 36px">🚀 Empezar diagnóstico gratis →</a>
+      <p style="font-size:.75rem;color:rgba(232,234,240,0.35);margin-top:10px">Sin tarjeta · 14 días de garantía · Cancela cuando quieras</p>
+    </div>
+  </div>
+</section>
+
+
 <!-- ══════════════════════════════════
      HERO — FUNNEL 400% HOOK
      Ángulo: Revelación / Dato impactante
      ══════════════════════════════════ -->
 <section class="hero wrap">
-  <div class="hero-pill"><span class="pill-dot"></span>🔥 +200 equipos ya lo usan · Tasa promedio +18% en 30 días</div>
-  <p class="hero-tag">📦 Pago contra entrega · 💳 Tarjeta · 🌎 CO · CL · GT · MX</p>
-  <h1 class="hero-h">¿Cuánta plata estás<br><span class="grad">perdiendo sin saberlo?</span></h1>
-  <p class="hero-sub">El 78% de los e-commerce COD pierden entre $3M y $18M COP al mes por devoluciones evitables. Nadie va a decirte cuánto estás perdiendo — hasta ahora. <strong style="color:var(--cyan)">Descúbrelo en 60 segundos, sin tarjeta.</strong></p>
+  <!-- URGENCY PILL — Hormozi scarcity + social proof -->
+  <div class="hero-pill"><span class="pill-dot"></span>🔥 +247 equipos COD · Tasa promedio <strong>+22%</strong> en 30 días · Precio sube jun 1</div>
+
+  <!-- MARKET TAGS -->
+  <p class="hero-tag">📦 COD contra entrega · 💳 Pago anticipado · 🌎 CO · CL · GT · MX · EC</p>
+
+  <!-- H1 — Hormozi Dream Outcome: specific, emotional, clear time delay removed -->
+  <h1 class="hero-h">Para de adivinar.<br><span class="grad">Sabe exactamente dónde pierdes plata.</span></h1>
+
+  <!-- SUB — Perceived Likelihood + Effort = zero + Time Delay = 30s -->
+  <p class="hero-sub">
+    El 78% de equipos COD pierden entre <strong style="color:var(--brand)">$3M y $18M COP</strong> al mes en devoluciones de ciudades que ya saben que fallan — pero siguen enviando igual.<br><br>
+    LitperPro lee tu Excel de Dropi y en <strong style="color:var(--cyan)">30 segundos</strong> te muestra el semáforo de <strong>1.015 ciudades</strong> con las que sí entregan y las que te están comiendo vivo.<br>
+    <strong style="color:var(--brand)">Sin código. Sin setup. Sin tarjeta obligatoria.</strong>
+  </p>
+
+  <!-- PRIMARY CTA + RISK REVERSAL INLINE -->
   <div class="hero-ctas">
-    <a href="#quiz" class="btn btn-glow btn-lg">🚀 HACER MI DIAGNÓSTICO GRATIS →</a>
-    <a href="#pricing" class="btn btn-ghost">💳 Ver planes y precios</a>
+    <a href="#quiz" class="btn btn-glow btn-lg" style="font-size:1.05rem;padding:18px 40px">🚀 DIAGNÓSTICO GRATIS EN 60 SEG →</a>
+    <a href="#pricing" class="btn btn-ghost">Ver planes desde $99.000</a>
   </div>
+
+  <!-- MICRO RISK REVERSAL under CTA — Hormozi guarantee -->
+  <p class="hero-micro-guarantee">🛡️ <strong>14 días de garantía total</strong> · Sin tarjeta obligatoria · Cancela cuando quieras · Datos nunca salen de tu navegador</p>
+
+  <!-- SOCIAL PROOF AVATARS -->
   <div class="hero-proof">
     <div class="proof-avs">
-      <div class="pav" style="background:rgba(6,182,212,.15);color:#22d3ee">J</div>
-      <div class="pav" style="background:rgba(139,92,246,.15);color:#a78bfa">E</div>
-      <div class="pav" style="background:rgba(34,197,94,.15);color:#4ade80">C</div>
+      <div class="pav" style="background:rgba(6,182,212,.15);color:#22d3ee" title="Jimmy · Coordinador Litper">J</div>
+      <div class="pav" style="background:rgba(139,92,246,.15);color:#a78bfa" title="Evan · Logística">E</div>
+      <div class="pav" style="background:rgba(34,197,94,.15);color:#4ade80" title="Catalina · GM Litper">C</div>
+      <div class="pav" style="background:rgba(251,191,36,.15);color:#fbbf24" title="+244 equipos más">+</div>
     </div>
-    <span>🟢 +200 equipos ya subieron su tasa · <strong style="color:var(--tx)">Sin tarjeta obligatoria · Acepta COD y pago anticipado</strong></span>
+    <span>🟢 <strong>Catalina, Jimmy y Evan</strong> ya lo usan · <strong style="color:var(--brand)">+247 equipos activos hoy</strong></span>
+  </div>
+
+  <!-- HERO STATS MINI — Hormozi Perceived Likelihood -->
+  <div class="hero-stats-mini">
+    <div class="hsm-item"><span class="hsm-num">$4.7M</span><span class="hsm-label">recuperados promedio/mes</span></div>
+    <div class="hsm-item"><span class="hsm-num">30 seg</span><span class="hsm-label">de Excel a semáforo IA</span></div>
+    <div class="hsm-item"><span class="hsm-num">1.015</span><span class="hsm-label">ciudades mapeadas</span></div>
+    <div class="hsm-item"><span class="hsm-num">86.5%</span><span class="hsm-label">tasa entrega usuarios Pro</span></div>
   </div>
 </section>
 
@@ -707,6 +902,12 @@ body.has-urgencia nav{top:40px}
 </section>
 
 <!-- ══ PRICING ══ -->
+
+<!-- URGENCY BANNER — Hormozi scarcity -->
+<div class="urgency-banner rv">
+  ⚡ <strong>Precio actual: $299.000/mes</strong> — Sube a <strong>$399.000</strong> el 1 de julio · Solo quedan <strong>53 cupos</strong> al precio de lanzamiento
+</div>
+
 <section id="pricing" class="pad">
   <div class="center rv">
     <div class="s-tag">💳 Precios sin sorpresas</div>
@@ -1085,33 +1286,40 @@ setTimeout(()=>{showNotif();setInterval(showNotif,8000);},3000);
 </script><script id="cipher-js">
 (function(){
   var CHARS='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&?!';
-  function decode(el){
-    var real=el.getAttribute('data-real')||el.innerText;
-    el.setAttribute('data-real',real);
-    var plain=real.replace(/<[^>]+>/g,'');
-    var html=real;var i=0;var dur=35;
-    var iv=setInterval(function(){
-      if(i>=plain.length){el.innerHTML=html;clearInterval(iv);return;}
-      var scramble='';var ci=0;
-      for(var c=0;c<plain.length;c++){
-        if(c<i){scramble+=plain[c]==' '?' ':plain[c];}
-        else{scramble+=CHARS[Math.floor(Math.random()*CHARS.length)];}
+  /* Scramble only TEXT NODES — never touches child elements like <span class="grad"> */
+  function decodeNode(el, delayMs){
+    var textNodes=[];
+    (function collect(n){
+      for(var i=0;i<n.childNodes.length;i++){
+        var c=n.childNodes[i];
+        if(c.nodeType===3&&c.textContent.replace(/\s/,'').length){textNodes.push(c);}
+        else if(c.nodeType===1){collect(c);}
       }
-      // preserve spans by reconstructing
-      el.innerHTML=scramble;
-      i++;
-    },dur);
+    })(el);
+    textNodes.forEach(function(tn,idx){
+      setTimeout(function(){
+        var real=tn.textContent;
+        var i=0;
+        var iv=setInterval(function(){
+          if(i>=real.length){tn.textContent=real;clearInterval(iv);return;}
+          var s='';
+          for(var c=0;c<real.length;c++){
+            s+=c<i?real[c]:(real[c]===' '?' ':CHARS[Math.floor(Math.random()*CHARS.length)]);
+          }
+          tn.textContent=s;i++;
+        },32);
+      },delayMs+idx*120);
+    });
   }
   function init(){
-    // Decode hero h1
     var h1=document.querySelector('.hero-h');
-    if(h1)setTimeout(function(){decode(h1);},400);
-    // Decode stat numbers
+    if(h1)setTimeout(function(){decodeNode(h1,0);},350);
     var stats=document.querySelectorAll('.stat-num,.count-up,[data-target]');
-    stats.forEach(function(el,idx){setTimeout(function(){decode(el);},600+idx*200);});
+    stats.forEach(function(el,i){setTimeout(function(){decodeNode(el,0);},700+i*180);});
   }
   if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',init);}
   else{init();}
 })();
-</script></body>
+</script>
+</body>
 </html>
