@@ -146,8 +146,8 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:32
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="/js/supabase-client.js"></script>
-</head>
-<body>
+<style id="mrx-style">#mrx{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;}</style></head>
+<body><canvas id="mrx"></canvas>
 <div style="position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.55;background:radial-gradient(ellipse at 30% 40%,rgba(0,255,136,.07) 0%,transparent 50%),radial-gradient(ellipse at 70% 60%,rgba(168,85,247,.05) 0%,transparent 50%),radial-gradient(ellipse at 50% 80%,rgba(0,255,136,.03) 0%,transparent 40%)"></div>
 <div class="gv"></div>
 <div class="nv"></div>
@@ -410,5 +410,5 @@ document.querySelectorAll('.plan-card,.faq-item,.cta-bottom').forEach(function(e
   } catch(e){ console.warn('Auth check:', e); }
 })();
 </script>
-</body>
+<script id="mrx-js">(function(){var c=document.getElementById("mrx");if(!c)return;var x=c.getContext("2d"),H="0123456789ABCDEF",fs=14,cols,drops,paused=false,lt=0,IV=40;function rsz(){c.width=innerWidth;c.height=innerHeight;cols=Math.floor(c.width/fs);drops=Array.from({length:cols},function(){return Math.random()*-60|0;});}function draw(t){if(!paused&&t-lt>=IV){lt=t;x.fillStyle="rgba(7,8,10,0.08)";x.fillRect(0,0,c.width,c.height);x.font=fs+"px monospace";x.fillStyle="rgba(0,255,136,0.55)";for(var i=0;i<drops.length;i++){x.fillText(H[Math.random()*16|0],i*fs,drops[i]*fs);if(drops[i]*fs>c.height&&Math.random()>.975)drops[i]=0;drops[i]++;}}requestAnimationFrame(draw);}document.addEventListener("visibilitychange",function(){paused=document.hidden;if(!paused)lt=0;});window.addEventListener("resize",rsz);rsz();requestAnimationFrame(draw);})();</script></body>
 </html>

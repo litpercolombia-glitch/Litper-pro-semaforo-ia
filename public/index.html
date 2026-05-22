@@ -326,11 +326,11 @@ body.has-urgencia nav{top:40px}
 
 <style id="ultra-tech-layer">
 /* ══ CURSOR MAGNÉTICO ══ */
-*{cursor:none!important;}
-.cur-d{position:fixed;width:10px;height:10px;background:var(--teal,#00FF88);border-radius:50%;pointer-events:none;z-index:99999;transform:translate(-50%,-50%);transition:width .15s,height .15s,background .15s,opacity .15s;box-shadow:0 0 10px rgba(0,255,136,.8),0 0 20px rgba(0,255,136,.4);}
-.cur-r{position:fixed;width:40px;height:40px;border:1.5px solid rgba(0,255,136,.45);border-radius:50%;pointer-events:none;z-index:99998;transform:translate(-50%,-50%);transition:width .25s,height .25s,border-color .25s;will-change:transform;}
-.cur-d.hovering{width:18px;height:18px;background:rgba(0,255,136,.2);border:1.5px solid var(--teal,#00FF88);}
-.cur-r.hovering{width:55px;height:55px;border-color:rgba(0,255,136,.7);}
+*{!important;}
+
+
+
+
 /* ══ CANVAS PARTICLE ══ */
 #particle-canvas{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.55;}
 /* ══ LIVE NOTIFICATIONS ══ */
@@ -353,12 +353,12 @@ body.has-urgencia nav{top:40px}
 .tw-cursor{display:inline-block;width:3px;height:.85em;background:var(--teal,#00FF88);margin-left:2px;vertical-align:middle;animation:twBlink .7s step-end infinite;border-radius:2px;}
 @keyframes twBlink{0%,100%{opacity:1;}50%{opacity:0;}}
 </style>
-</head>
-<body>
+<style id="mrx-style">#mrx{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;}</style></head>
+<body><canvas id="mrx"></canvas>
 <!-- ULTRA-TECH LAYER -->
 <canvas id="particle-canvas"></canvas>
-<div class="cur-d" id="cur-d"></div>
-<div class="cur-r" id="cur-r"></div>
+
+
 <div id="live-notifs"></div>
 
 <!-- URGENCIA TOP BAR -->
@@ -1022,7 +1022,6 @@ function frame(){
 frame();
 
 // ── CURSOR MAGNÉTICO ─────────────────────────────────────────────────────
-const dot=document.getElementById('cur-d'),ring=document.getElementById('cur-r');
 let mx=0,my=0,rx=0,ry=0;
 window.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;dot.style.left=mx+'px';dot.style.top=my+'px';},{passive:true});
 (function lag(){rx+=(mx-rx)*.14;ry+=(my-ry)*.14;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(lag);})();
@@ -1055,5 +1054,5 @@ setTimeout(()=>{showNotif();setInterval(showNotif,8000);},3000);
 
 })();
 </script>
-</body>
+<script id="mrx-js">(function(){var c=document.getElementById("mrx");if(!c)return;var x=c.getContext("2d"),H="0123456789ABCDEF",fs=14,cols,drops,paused=false,lt=0,IV=40;function rsz(){c.width=innerWidth;c.height=innerHeight;cols=Math.floor(c.width/fs);drops=Array.from({length:cols},function(){return Math.random()*-60|0;});}function draw(t){if(!paused&&t-lt>=IV){lt=t;x.fillStyle="rgba(7,8,10,0.08)";x.fillRect(0,0,c.width,c.height);x.font=fs+"px monospace";x.fillStyle="rgba(0,255,136,0.55)";for(var i=0;i<drops.length;i++){x.fillText(H[Math.random()*16|0],i*fs,drops[i]*fs);if(drops[i]*fs>c.height&&Math.random()>.975)drops[i]=0;drops[i]++;}}requestAnimationFrame(draw);}document.addEventListener("visibilitychange",function(){paused=document.hidden;if(!paused)lt=0;});window.addEventListener("resize",rsz);rsz();requestAnimationFrame(draw);})();</script></body>
 </html>
