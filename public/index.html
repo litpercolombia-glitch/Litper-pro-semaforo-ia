@@ -1654,40 +1654,70 @@ setTimeout(()=>{showNotif();setInterval(showNotif,8000);},3000);
 })();
 </script><script id="cipher-js">
 (function(){
-  var CHARS='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&?!';
-  /* Scramble only TEXT NODES — never touches child elements like <span class="grad"> */
-  function decodeNode(el, delayMs){
-    var textNodes=[];
-    (function collect(n){
-      for(var i=0;i<n.childNodes.length;i++){
-        var c=n.childNodes[i];
-        if(c.nodeType===3&&c.textContent.replace(/\s/,'').length){textNodes.push(c);}
-        else if(c.nodeType===1){collect(c);}
+  var CHARS='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%';
+  /* Cipher decode: solo text nodes DIRECTOS de cada elemento.
+     NO recursion — nunca entra en <span> hijos como .grad */
+  function scrambleEl(el, delay){
+    // Recolectar SOLO childNodes directos que sean texto (nodeType 3)
+    var directTextNodes = [];
+    for(var i=0; i<el.childNodes.length; i++){
+      var n = el.childNodes[i];
+      if(n.nodeType===3 && n.textContent.replace(/\s+/g,'').length){
+        directTextNodes.push(n);
       }
-    })(el);
-    textNodes.forEach(function(tn,idx){
+    }
+    directTextNodes.forEach(function(tn, idx){
       setTimeout(function(){
-        var real=tn.textContent;
-        var i=0;
-        var iv=setInterval(function(){
-          if(i>=real.length){tn.textContent=real;clearInterval(iv);return;}
-          var s='';
-          for(var c=0;c<real.length;c++){
-            s+=c<i?real[c]:(real[c]===' '?' ':CHARS[Math.floor(Math.random()*CHARS.length)]);
+        var real = tn.textContent;
+        var pos = 0;
+        var iv = setInterval(function(){
+          if(pos >= real.length){ tn.textContent=real; clearInterval(iv); return; }
+          var s = '';
+          for(var c=0; c<real.length; c++){
+            s += c<pos ? real[c] : (real[c]===' '||real[c]==='\n' ? real[c] : CHARS[Math.floor(Math.random()*CHARS.length)]);
           }
-          tn.textContent=s;i++;
-        },32);
-      },delayMs+idx*120);
+          tn.textContent = s;
+          pos++;
+        }, 35);
+      }, delay + idx*100);
     });
+    // Para cada HIJO elemento (span, strong, etc): scramble sus text nodes directos también
+    for(var i=0; i<el.childNodes.length; i++){
+      var child = el.childNodes[i];
+      if(child.nodeType===1){ // es un elemento
+        scrambleEl(child, delay + 80);
+      }
+    }
   }
   function init(){
-    var h1=document.querySelector('.hero-h');
-    if(h1)setTimeout(function(){decodeNode(h1,0);},350);
-    var stats=document.querySelectorAll('.stat-num,.count-up,[data-target]');
-    stats.forEach(function(el,i){setTimeout(function(){decodeNode(el,0);},700+i*180);});
+    var h1 = document.querySelector('.hero-h');
+    if(h1) setTimeout(function(){ scrambleEl(h1, 0); }, 400);
+    // Stats — solo el texto directo de cada stat-num
+    var stats = document.querySelectorAll('.stat-num');
+    stats.forEach(function(el,i){
+      setTimeout(function(){
+        var directNodes = [];
+        for(var j=0;j<el.childNodes.length;j++){
+          if(el.childNodes[j].nodeType===3 && el.childNodes[j].textContent.trim().length){
+            directNodes.push(el.childNodes[j]);
+          }
+        }
+        directNodes.forEach(function(tn){
+          var real=tn.textContent, pos=0;
+          var iv=setInterval(function(){
+            if(pos>=real.length){tn.textContent=real;clearInterval(iv);return;}
+            var s='';
+            for(var c=0;c<real.length;c++){
+              s+=c<pos?real[c]:(real[c]===' '?real[c]:CHARS[Math.floor(Math.random()*CHARS.length)]);
+            }
+            tn.textContent=s; pos++;
+          },40);
+        });
+      }, 700 + i*200);
+    });
   }
   if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',init);}
-  else{init();}
+  else{ setTimeout(init, 50); }
 })();
 </script>
 <script id="glitch-js">
