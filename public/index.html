@@ -459,6 +459,195 @@ body.has-urgencia nav{top:40px}
   .vs-total-row{flex-direction:column;text-align:center;}
 }
 </style>
+
+<style id="quiz-progress-style">
+/* ── QUIZ PROGRESS BAR VISUAL ── */
+.quiz-progress-wrap{
+  margin-bottom:20px;
+}
+.quiz-progress-label{
+  display:flex;justify-content:space-between;
+  font-size:.72rem;color:rgba(232,234,240,0.4);
+  margin-bottom:8px;font-family:'JetBrains Mono',monospace;
+  letter-spacing:.08em;
+}
+.quiz-progress-bar{
+  height:3px;background:rgba(0,255,136,0.1);border-radius:100px;overflow:hidden;
+  position:relative;
+}
+.quiz-progress-fill{
+  height:100%;border-radius:100px;
+  background:linear-gradient(90deg,#00FF88,#22d3ee);
+  box-shadow:0 0 8px rgba(0,255,136,0.5);
+  transition:width .4s cubic-bezier(.4,0,.2,1);
+}
+.quiz-progress-dots{
+  display:flex;gap:8px;margin-top:10px;justify-content:center;
+}
+.quiz-dot{
+  width:6px;height:6px;border-radius:50%;
+  background:rgba(0,255,136,0.15);
+  border:1px solid rgba(0,255,136,0.2);
+  transition:all .3s;
+}
+.quiz-dot.active{
+  background:var(--brand);
+  box-shadow:0 0 6px rgba(0,255,136,0.6);
+  transform:scale(1.3);
+}
+.quiz-dot.done{
+  background:rgba(0,255,136,0.5);
+}
+</style>
+
+<style id="how-style">
+/* ── CÓMO FUNCIONA ── */
+.how-inner{max-width:860px;margin:0 auto;text-align:center;}
+.how-eyebrow{
+  display:inline-block;
+  background:rgba(0,255,136,0.06);
+  border:1px solid rgba(0,255,136,0.18);
+  color:var(--brand);font-size:.7rem;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;
+  padding:5px 16px;border-radius:100px;margin-bottom:18px;
+}
+.how-headline{font-size:clamp(1.6rem,3.5vw,2.4rem);font-weight:800;margin-bottom:10px;line-height:1.2;}
+.how-sub{color:rgba(232,234,240,0.5);font-size:.9rem;margin-bottom:48px;}
+
+/* Steps */
+.how-steps{display:flex;flex-direction:column;gap:0;text-align:left;position:relative;max-width:640px;margin:0 auto 48px;}
+.how-step{
+  display:grid;grid-template-columns:56px 24px 1fr;
+  gap:0 0;align-items:start;position:relative;padding-bottom:32px;
+}
+.how-step-num{
+  font-family:'JetBrains Mono',monospace;font-size:1.8rem;font-weight:700;
+  color:rgba(0,255,136,0.15);line-height:1;padding-top:2px;
+  transition:color .3s;
+}
+.how-step:hover .how-step-num{color:var(--brand);}
+.how-step-connector{
+  width:1px;background:linear-gradient(180deg,rgba(0,255,136,0.3),rgba(0,255,136,0.05));
+  margin:8px auto 0;align-self:stretch;
+}
+.how-step-connector.last{background:transparent;}
+.how-step-body{padding-left:20px;}
+.how-step-icon{font-size:1.5rem;margin-bottom:8px;}
+.how-step-title{font-size:1.05rem;font-weight:700;color:var(--text-primary);margin-bottom:8px;}
+.how-step-desc{font-size:.85rem;color:rgba(232,234,240,0.55);line-height:1.6;margin-bottom:10px;}
+.how-step-badge{
+  display:inline-block;
+  background:rgba(0,255,136,0.05);
+  border:1px solid rgba(0,255,136,0.12);
+  color:rgba(0,255,136,0.6);
+  font-size:.68rem;font-weight:600;letter-spacing:.06em;
+  padding:3px 10px;border-radius:100px;
+}
+
+/* Before/After compare */
+.how-compare{
+  display:grid;grid-template-columns:1fr auto 1fr;gap:24px;
+  align-items:center;
+  background:rgba(255,255,255,0.02);
+  border:1px solid rgba(0,255,136,0.08);
+  border-radius:16px;padding:28px;text-align:left;
+}
+.how-compare-label{font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:12px;}
+.how-before .how-compare-label{color:rgba(239,68,68,0.7);}
+.how-after  .how-compare-label{color:rgba(0,255,136,0.8);}
+.how-compare-list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px;}
+.how-compare-list li{font-size:.82rem;color:rgba(232,234,240,0.55);padding-left:16px;position:relative;}
+.how-before .how-compare-list li::before{content:"–";position:absolute;left:0;color:rgba(239,68,68,0.5);}
+.how-after  .how-compare-list li::before{content:"✓";position:absolute;left:0;color:rgba(0,255,136,0.7);}
+.how-after  .how-compare-list li{color:rgba(232,234,240,0.75);}
+.how-arrow{font-size:1.5rem;color:rgba(0,255,136,0.3);flex-shrink:0;}
+
+@media(max-width:640px){
+  .how-compare{grid-template-columns:1fr;gap:16px;}
+  .how-arrow{display:none;}
+  .how-step{grid-template-columns:40px 20px 1fr;}
+  .how-step-num{font-size:1.3rem;}
+}
+</style>
+
+<style id="glitch-style">
+/* ── GLITCH RGB SPLIT #15 — solo en .hero-h ── */
+@keyframes glitch-clip1{
+  0%,100%{clip-path:inset(0 0 95% 0);}
+  20%{clip-path:inset(15% 0 75% 0);}
+  40%{clip-path:inset(50% 0 30% 0);}
+  60%{clip-path:inset(80% 0 5% 0);}
+}
+@keyframes glitch-clip2{
+  0%,100%{clip-path:inset(80% 0 5% 0);}
+  20%{clip-path:inset(50% 0 30% 0);}
+  40%{clip-path:inset(15% 0 75% 0);}
+  60%{clip-path:inset(0 0 95% 0);}
+}
+.hero-h{position:relative;}
+.hero-h.glitching::before,
+.hero-h.glitching::after{
+  content:attr(data-text);
+  position:absolute;inset:0;
+  font-size:inherit;font-weight:inherit;line-height:inherit;
+  pointer-events:none;
+}
+.hero-h.glitching::before{
+  color:#ff003c;
+  animation:glitch-clip1 .15s steps(1) forwards;
+  transform:translateX(-2px);
+  opacity:.7;
+}
+.hero-h.glitching::after{
+  color:#00fff9;
+  animation:glitch-clip2 .15s steps(1) forwards;
+  transform:translateX(2px);
+  opacity:.7;
+}
+</style>
+
+<style id="orb-style">
+/* ── GRADIENT ORBS — ambient background per section ── */
+.how-section{position:relative;overflow:hidden;}
+.how-section::before{
+  content:'';position:absolute;
+  width:600px;height:600px;border-radius:50%;
+  background:radial-gradient(circle,rgba(0,255,136,0.04) 0%,transparent 70%);
+  top:-200px;right:-200px;
+  pointer-events:none;z-index:0;
+  animation:orb-drift1 18s ease-in-out infinite alternate;
+}
+.how-section::after{
+  content:'';position:absolute;
+  width:500px;height:500px;border-radius:50%;
+  background:radial-gradient(circle,rgba(139,92,246,0.04) 0%,transparent 70%);
+  bottom:-200px;left:-100px;
+  pointer-events:none;z-index:0;
+  animation:orb-drift2 22s ease-in-out infinite alternate;
+}
+.how-inner{position:relative;z-index:1;}
+
+/* Orbs en value stack también */
+.value-stack{position:relative;overflow:hidden;}
+.value-stack::before{
+  content:'';position:absolute;
+  width:700px;height:700px;border-radius:50%;
+  background:radial-gradient(circle,rgba(0,255,136,0.03) 0%,transparent 70%);
+  top:-300px;left:50%;transform:translateX(-50%);
+  pointer-events:none;z-index:0;
+  animation:orb-drift1 24s ease-in-out infinite alternate;
+}
+.vs-inner{position:relative;z-index:1;}
+
+@keyframes orb-drift1{
+  0%{transform:translate(0,0);}
+  100%{transform:translate(40px,-60px);}
+}
+@keyframes orb-drift2{
+  0%{transform:translate(0,0);}
+  100%{transform:translate(-50px,40px);}
+}
+</style>
 </head>
 <body><div id="sl"></div><canvas id="mrx"></canvas>
 <!-- ULTRA-TECH LAYER -->
@@ -548,11 +737,11 @@ body.has-urgencia nav{top:40px}
   <!-- PRIMARY CTA + RISK REVERSAL INLINE -->
   <div class="hero-ctas">
     <a href="#quiz" class="btn btn-glow btn-lg" style="font-size:1.05rem;padding:18px 40px">🚀 DIAGNÓSTICO GRATIS EN 60 SEG →</a>
-    <a href="#pricing" class="btn btn-ghost">Ver planes desde $99.000</a>
+    <a href="#pricing" class="btn btn-ghost">Ver plan Pro desde $79.000</a>
   </div>
 
   <!-- MICRO RISK REVERSAL under CTA — Hormozi guarantee -->
-  <p class="hero-micro-guarantee">🛡️ <strong>14 días de garantía total</strong> · Sin tarjeta obligatoria · Cancela cuando quieras · Datos nunca salen de tu navegador</p>
+  <p class="hero-micro-guarantee">🛡️ <strong>30 días de garantía total</strong> · Sin tarjeta obligatoria · Cancela cuando quieras · Datos nunca salen de tu navegador</p>
 
   <!-- SOCIAL PROOF AVATARS -->
   <div class="hero-proof">
@@ -560,7 +749,7 @@ body.has-urgencia nav{top:40px}
       <div class="pav" style="background:rgba(6,182,212,.15);color:#22d3ee" title="Jimmy · Coordinador Litper">J</div>
       <div class="pav" style="background:rgba(139,92,246,.15);color:#a78bfa" title="Evan · Logística">E</div>
       <div class="pav" style="background:rgba(34,197,94,.15);color:#4ade80" title="Catalina · GM Litper">C</div>
-      <div class="pav" style="background:rgba(251,191,36,.15);color:#fbbf24" title="+244 equipos más">+</div>
+      <div class="pav" style="background:rgba(251,191,36,.15);color:#fbbf24" title="+247 equipos más">+</div>
     </div>
     <span>🟢 <strong>Catalina, Jimmy y Evan</strong> ya lo usan · <strong style="color:var(--brand)">+247 equipos activos hoy</strong></span>
   </div>
@@ -622,6 +811,91 @@ body.has-urgencia nav{top:40px}
      FUNNEL 400% — QUIZ DE DIAGNÓSTICO
      Pilar 3: Curiosidad Progresiva
      ══════════════════════════════════ -->
+
+<!-- ══ CÓMO FUNCIONA — 3 pasos ══ -->
+<section class="how-section pad rv">
+  <div class="how-inner">
+    <div class="how-eyebrow">Sin código · Sin setup · Sin reuniones</div>
+    <h2 class="how-headline">Del Excel al semáforo en <span class="grad">3 pasos</span></h2>
+    <p class="how-sub">Lo que antes tomaba 3 horas de equipo, ahora lo hace LitperPro en 30 segundos.</p>
+
+    <div class="how-steps">
+
+      <!-- PASO 1 -->
+      <div class="how-step rv" data-hover>
+        <div class="how-step-num">01</div>
+        <div class="how-step-connector"></div>
+        <div class="how-step-body">
+          <div class="how-step-icon">📂</div>
+          <h3 class="how-step-title">Sube tu Excel de Dropi</h3>
+          <p class="how-step-desc">Arrastra el reporte de envíos directo al dashboard. Compatible con Dropi RAW, cualquier período, múltiples archivos a la vez. <strong>El Excel nunca sale de tu navegador.</strong></p>
+          <div class="how-step-badge">Dropi · Shopify · Vtex · Cualquier CSV</div>
+        </div>
+      </div>
+
+      <!-- PASO 2 -->
+      <div class="how-step rv" data-hover>
+        <div class="how-step-num">02</div>
+        <div class="how-step-connector"></div>
+        <div class="how-step-body">
+          <div class="how-step-icon">🧠</div>
+          <h3 class="how-step-title">La IA analiza 1.015 ciudades</h3>
+          <p class="how-step-desc">En 30 segundos LitperPro calcula la tasa de entrega por ciudad, por carrier y por período. El Predictor IA proyecta la tendencia de la próxima semana. <strong>Sin que toques una tabla dinámica.</strong></p>
+          <div class="how-step-badge">IA · Claude Sonnet · Regresión lineal</div>
+        </div>
+      </div>
+
+      <!-- PASO 3 -->
+      <div class="how-step rv" data-hover>
+        <div class="how-step-num">03</div>
+        <div class="how-step-connector last"></div>
+        <div class="how-step-body">
+          <div class="how-step-icon">🚦</div>
+          <h3 class="how-step-title">Ves el semáforo · Actúas en 12 min</h3>
+          <p class="how-step-desc">Verde = envía seguro. Amarillo = monitorea. Rojo = bloquea ya. El Modo Jimmy te da las 5 tareas concretas del día. Tu equipo llega el lunes sabiendo exactamente qué hacer. <strong>Sin adivinar.</strong></p>
+          <div class="how-step-badge">Semáforo · Modo Jimmy · Carrier swap</div>
+        </div>
+      </div>
+
+    </div><!-- /how-steps -->
+
+    <!-- MINI BEFORE/AFTER -->
+    <div class="how-compare rv">
+      <div class="how-before">
+        <div class="how-compare-label">❌ Antes de LitperPro</div>
+        <ul class="how-compare-list">
+          <li>3+ horas de Excel cada lunes</li>
+          <li>Decisiones a ojo sin números</li>
+          <li>Te enteras tarde cuando una ciudad ya falló</li>
+          <li>El mismo carrier para todo — aunque falle</li>
+          <li>Reuniones largas para decidir poco</li>
+        </ul>
+      </div>
+      <div class="how-arrow">→</div>
+      <div class="how-after">
+        <div class="how-compare-label">✅ Con LitperPro</div>
+        <ul class="how-compare-list">
+          <li><strong>30 segundos</strong> — Excel a semáforo</li>
+          <li>Decisiones con datos de 1.015 ciudades</li>
+          <li>Predictor IA alerta <em>antes</em> que falle</li>
+          <li>Carrier swap automático por ciudad</li>
+          <li>Modo Jimmy: 5 tareas listas al llegar</li>
+        </ul>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-top:32px">
+      <a href="#quiz" class="btn btn-glow" style="padding:16px 40px;font-size:1rem">
+        🚀 Ver mi diagnóstico gratis →
+      </a>
+      <p style="font-size:.72rem;color:rgba(232,234,240,0.3);margin-top:10px">
+        Sin tarjeta · 4 preguntas · 60 segundos
+      </p>
+    </div>
+  </div>
+</section>
+
+
 <section id="quiz" class="funnel-section pad">
   <div class="quiz-wrap">
     <div class="center rv" style="margin-bottom:44px">
@@ -875,8 +1149,8 @@ body.has-urgencia nav{top:40px}
     </div>
     <div class="plan pro rv d2 tilt" data-hover>
       <div class="plan-badge">MÁS POPULAR</div>
-      <div class="plan-name">Pro</div><div class="plan-tagline">⚡ El más elegido · IA incluida · 14 días garantía</div>
-      <div class="plan-price pro-p" id="p-p">$79.000</div><div class="plan-period" id="pp-s">COP / mes · Tarjeta o transferencia · 14 días garantía</div>
+      <div class="plan-name">Pro</div><div class="plan-tagline">⚡ El más elegido · IA incluida · 30 días garantía</div>
+      <div class="plan-price pro-p" id="p-p">$79.000</div><div class="plan-period" id="pp-s">COP / mes · Tarjeta o transferencia · 30 días garantía</div>
       <hr class="plan-div">
       <ul class="feats">
         <li class="feat"><div class="fy">✓</div>Todo lo de Starter</li>
@@ -891,7 +1165,7 @@ body.has-urgencia nav{top:40px}
     </div>
     <div class="plan rv d3 tilt" data-hover>
       <div class="plan-name">Enterprise</div><div class="plan-tagline">🚀 IA ilimitada · Todos los países · API incluida</div>
-      <div class="plan-price" id="p-e">$299.000</div><div class="plan-period" id="pe-s">COP / mes · Tarjeta o transferencia · 14 días garantía</div>
+      <div class="plan-price" id="p-e">$299.000</div><div class="plan-period" id="pe-s">COP / mes · Tarjeta o transferencia · 30 días garantía</div>
       <hr class="plan-div">
       <ul class="feats">
         <li class="feat"><div class="fy">✓</div>Todo lo de Pro</li>
@@ -936,7 +1210,7 @@ body.has-urgencia nav{top:40px}
     <div class="faq rv d1" onclick="toggleFaq(this)" data-hover><div class="faq-q">¿Funciona para Chile, Guatemala y México además de Colombia?<div class="faq-ic">+</div></div><div class="faq-a"><div class="faq-body">✅ Sí, los 4 países. El dashboard procesa cualquier Excel de transportadoras automáticamente. Detecta los carriers de cada país y calcula recuperaciones en COP, CLP, MXN y GTQ. <strong>Tanto para operaciones COD (contra entrega) como para prepagos con tarjeta.</strong> ¿En cuál de los 4 países necesitas empezar?</div></div></div>
     <div class="faq rv d1" onclick="toggleFaq(this)" data-hover><div class="faq-q">¿Necesito conocimientos técnicos para usarlo?<div class="faq-ic">+</div></div><div class="faq-a"><div class="faq-body">🙅 Ninguno. Arrastras el Excel de Dropi al dashboard y en 3 segundos tienes el semáforo de 1.015 ciudades. Catalina, Jimmy y Evan lo usan desde el día 1 sin capacitación. Si sabes abrir un archivo Excel, ya sabes usarlo. ¿Qué esperas para probarlo?</div></div></div>
     <div class="faq rv d2" onclick="toggleFaq(this)" data-hover><div class="faq-q">¿Mis datos de pedidos y clientes están seguros?<div class="faq-ic">+</div></div><div class="faq-a"><div class="faq-body">🔒 100% seguro. Todo procesa en tu navegador — el Excel nunca llega a ningún servidor. Solo cuando usas la IA se envían estadísticas resumidas (sin datos de clientes ni pedidos individuales). Los datos de pago usan Stripe con cifrado SSL. <strong>Tus datos son tuyos, siempre.</strong></div></div></div>
-    <div class="faq rv d2" onclick="toggleFaq(this)" data-hover><div class="faq-q">¿Puedo cancelar si no me funciona?<div class="faq-ic">+</div></div><div class="faq-a"><div class="faq-body">✅ Sí, sin preguntas, sin penalizaciones, sin llamadas incómodas. Cancelas desde tu perfil en 30 segundos. El plan sigue activo hasta el final del período. <strong>Además tienes 14 días de garantía</strong> — si pagaste con tarjeta y no ves resultados, te reintegramos el 100%. Sin letra pequeña. ¿Eso no quita el riesgo por completo?</div></div></div>
+    <div class="faq rv d2" onclick="toggleFaq(this)" data-hover><div class="faq-q">¿Puedo cancelar si no me funciona?<div class="faq-ic">+</div></div><div class="faq-a"><div class="faq-body">✅ Sí, sin preguntas, sin penalizaciones, sin llamadas incómodas. Cancelas desde tu perfil en 30 segundos. El plan sigue activo hasta el final del período. <strong>Además tienes 30 días de garantía</strong> — si pagaste con tarjeta y no ves resultados, te reintegramos el 100%. Sin letra pequeña. ¿Eso no quita el riesgo por completo?</div></div></div>
     <div class="faq rv d3" onclick="toggleFaq(this)" data-hover><div class="faq-q">¿Funciona para COD (pago contra entrega) y para pago con tarjeta?<div class="faq-ic">+</div></div><div class="faq-a"><div class="faq-body">💳 + 💚 Ambos. LitperPro está diseñado específicamente para e-commerce COD — todas las métricas son de entrega física contra entrega de dinero. Pero también aceptamos pago con tarjeta Visa/MC/Amex para el plan mensual o anual. <strong>COD para tu operación, tarjeta para tu suscripción.</strong> ¿Con qué prefieres empezar?</div></div></div>
   </div>
 </section>
@@ -987,13 +1261,13 @@ body.has-urgencia nav{top:40px}
       </div>
       <div style="text-align:right">
         <div class="vs-pay-label">Tú pagas solo</div>
-        <div class="vs-pay-val">$299.000/mes</div>
+        <div class="vs-pay-val">$79.000<span style="font-size:.9rem;opacity:.6">/mes · Plan Pro</span></div>
       </div>
     </div>
 
     <div class="vs-guarantee rv">
       <span style="font-size:1.5rem">🛡️</span>
-      <div><strong>Garantía 14 días — sin riesgo, sin preguntas.</strong> Si pagaste con tarjeta y no ves resultados reales en las primeras 2 semanas, te regresamos el 100% del dinero. Así de seguros estamos. No hay letra pequeña.</div>
+      <div><strong>Garantía 14 días — sin riesgo, sin preguntas.</strong> Si pagaste con tarjeta y no ves resultados reales en los primeros 30 días, te regresamos el 100% del dinero. Así de seguros estamos. No hay letra pequeña.</div>
     </div>
 
     <div style="text-align:center;margin-top:24px">
@@ -1009,7 +1283,7 @@ body.has-urgencia nav{top:40px}
 <section class="pad rv-s">
   <div class="cta-final">
     <h2 class="cta-h">Oye — el próximo lunes<br><span class="grad">ya podrías tener el plan listo</span></h2>
-    <p class="cta-sub">Starter gratis · Plan Pro desde $79K COP/mes · 💳 Tarjeta o transferencia · 💚 14 días garantía completa · Sin contrato</p>
+    <p class="cta-sub">Starter gratis · Plan Pro desde $79K COP/mes · 💳 Tarjeta o transferencia · 💚 30 días garantía completa · Sin contrato</p>
     <div class="cta-btns">
       <a href="#quiz" class="btn btn-glow btn-lg">🚀 HACER MI DIAGNÓSTICO GRATIS →</a>
       <a href="/login?mode=register" class="btn btn-ghost">✅ CREAR CUENTA GRATIS →</a>
@@ -1321,6 +1595,25 @@ setTimeout(()=>{showNotif();setInterval(showNotif,8000);},3000);
   }
   if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',init);}
   else{init();}
+})();
+</script>
+<script id="glitch-js">
+(function(){
+  function doGlitch(){
+    var el=document.querySelector('.hero-h');
+    if(!el)return;
+    // Set data-text to plain text (for ::before/::after pseudo)
+    el.setAttribute('data-text', el.innerText);
+    el.classList.add('glitching');
+    // Glitch for 200ms then stop
+    setTimeout(function(){el.classList.remove('glitching');},200);
+  }
+  // Wait for cipher decode to finish (cipher takes ~350ms + text length * 32ms)
+  // Then trigger glitch every 6 seconds
+  setTimeout(function(){
+    doGlitch();
+    setInterval(doGlitch, 6000);
+  }, 3500);
 })();
 </script>
 </body>
