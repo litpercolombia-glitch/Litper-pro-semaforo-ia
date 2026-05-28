@@ -58,7 +58,8 @@ body{background:var(--ink);color:var(--tx);font-family:var(--font);-webkit-font-
 nav{position:fixed;top:0;left:0;right:0;z-index:200;height:58px;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(16px,5vw,72px);background:rgba(5,6,10,.92);border-bottom:1px solid rgba(255,255,255,.05);transition:background .3s;}
 nav.scrolled{background:rgba(5,6,10,.88);}
 .logo-wrap{display:flex;align-items:center;gap:10px;text-decoration:none;}
-.logo-mark{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--teal),var(--violet));display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:11px;font-weight:600;color:#fff;box-shadow:var(--tglow);animation:logoPulse 4s ease-in-out infinite;filter:drop-shadow(0 0 12px rgba(0,212,245,.6));}
+.logo-mark{width:36px;height:36px;border-radius:9px;overflow:hidden;flex-shrink:0;box-shadow:0 0 20px rgba(0,255,136,.35);animation:logoPulse 4s ease-in-out infinite;}
+.logo-mark img{width:100%;height:100%;object-fit:contain;}
 @keyframes logoPulse{0%,100%{box-shadow:0 0 20px rgba(0,212,245,.5),0 0 40px rgba(0,212,245,.2);}50%{box-shadow:0 0 35px rgba(0,212,245,.75),0 0 70px rgba(0,212,245,.3);}}
 .logo-name{font-family:var(--mono);font-size:13px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--tx);}
 .logo-dot{color:var(--teal);}
@@ -320,6 +321,16 @@ body.has-urgencia nav{top:40px}
 @keyframes scroll-trust{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
 .trust-item{display:flex;align-items:center;gap:8px;font-size:12px;color:rgba(255,255,255,.5);font-family:var(--mono);flex-shrink:0}
 .trust-item strong{color:rgba(255,255,255,.8)}
+
+/* ═══ BRAND LOGOS / INTEGRATIONS BAR ═══ */
+.logos-section{padding:20px clamp(16px,5vw,72px) 40px;text-align:center;}
+.logos-label{font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:rgba(255,255,255,.3);text-transform:uppercase;margin-bottom:24px;}
+.logos-row{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:32px;}
+.logo-pill{display:flex;align-items:center;gap:9px;padding:10px 20px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:12px;transition:all .25s;cursor:default;}
+.logo-pill:hover{background:rgba(0,255,136,.05);border-color:rgba(0,255,136,.2);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,255,136,.08);}
+.logo-pill-icon{width:22px;height:22px;flex-shrink:0;}
+.logo-pill-name{font-family:var(--mono);font-size:12px;font-weight:600;color:rgba(255,255,255,.55);letter-spacing:.04em;}
+.logo-pill:hover .logo-pill-name{color:rgba(255,255,255,.85);}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="/js/supabase-client.js"></script>
@@ -711,6 +722,72 @@ body.has-urgencia nav{top:40px}
     <div class="trust-item">⭐ Score acumulado <strong>irreplicable</strong></div>
   </div>
 </div>
+
+<!-- ══ BRAND LOGOS / INTEGRACIONES ══ -->
+<section class="logos-section">
+  <p class="logos-label">Se conecta con las herramientas que ya usas</p>
+  <div class="logos-row">
+    <!-- Dropi -->
+    <div class="logo-pill">
+      <svg class="logo-pill-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="40" height="40" rx="8" fill="#1a1a2e"/>
+        <circle cx="20" cy="20" r="10" fill="none" stroke="#00c2ff" stroke-width="2.5"/>
+        <path d="M14 20 Q20 12 26 20 Q20 28 14 20Z" fill="#00c2ff" opacity=".85"/>
+      </svg>
+      <span class="logo-pill-name">DROPI</span>
+    </div>
+    <!-- Meta Ads -->
+    <div class="logo-pill">
+      <svg class="logo-pill-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="40" height="40" rx="8" fill="#1a1a2e"/>
+        <path d="M8 22c0-3.5 2-7 5-7 2 0 3.5 1.5 5 4 1.5-2.5 3-4 5-4 3 0 5 3.5 5 7 0 4-2.5 6-5 6-2 0-3.5-1.5-5-4-1.5 2.5-3 4-5 4-2.5 0-5-2-5-6z" fill="url(#metaG)"/>
+        <defs><linearGradient id="metaG" x1="8" y1="15" x2="28" y2="28" gradientUnits="userSpaceOnUse"><stop stop-color="#0081FB"/><stop offset="1" stop-color="#FF56A0"/></linearGradient></defs>
+      </svg>
+      <span class="logo-pill-name">META ADS</span>
+    </div>
+    <!-- Shopify -->
+    <div class="logo-pill">
+      <svg class="logo-pill-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="40" height="40" rx="8" fill="#1a1a2e"/>
+        <path d="M26 11c0 0-1.5-.2-4 .5C20.5 8 19 7 17 7c0 0-1 1.5-1.5 4-1.2.5-2 1-2 1L12 31l14 2.5L30 12c0 0-2.5-.7-4-1zM20 9c.8.7 1.5 2 1.8 3.5-1.2.3-2.5.6-3.5.8C18.5 11 19.2 9.8 20 9z" fill="#96BF48"/>
+        <path d="M26 11c-.5 0-1.5-.1-2.5.1L22 26l8-2-4-13z" fill="#5E8E3E"/>
+      </svg>
+      <span class="logo-pill-name">SHOPIFY</span>
+    </div>
+    <!-- WhatsApp -->
+    <div class="logo-pill">
+      <svg class="logo-pill-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="40" height="40" rx="8" fill="#1a1a2e"/>
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M20 8C13.4 8 8 13.4 8 20c0 2.2.6 4.2 1.7 6L8 32l6.3-1.7C16 31.4 18 32 20 32c6.6 0 12-5.4 12-12S26.6 8 20 8z" fill="#25D366"/>
+        <path d="M15 17c.2-.5.8-2 1.5-2 .5 0 1 .2 1.3.6l.8 1.8c.2.4 0 .9-.3 1.2l-.5.5c.4.8 1.5 2 2.5 2.5l.5-.5c.3-.3.8-.5 1.2-.3l1.8.8c.4.2.6.7.6 1.2 0 .8-1.5 1.5-2 1.5-3 0-6.5-3.5-7.4-7.3z" fill="white"/>
+      </svg>
+      <span class="logo-pill-name">WHATSAPP</span>
+    </div>
+    <!-- Excel / CSV -->
+    <div class="logo-pill">
+      <svg class="logo-pill-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="40" height="40" rx="8" fill="#1a1a2e"/>
+        <rect x="8" y="8" width="24" height="24" rx="3" fill="#217346"/>
+        <path d="M14 13l3.5 7L14 27h2.5l2.5-5.5L21.5 27H24l-3.5-7 3.5-7H21.5L19 18.5 16.5 13H14z" fill="white"/>
+      </svg>
+      <span class="logo-pill-name">EXCEL / CSV</span>
+    </div>
+    <!-- n8n -->
+    <div class="logo-pill">
+      <svg class="logo-pill-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="40" height="40" rx="8" fill="#1a1a2e"/>
+        <circle cx="12" cy="20" r="4" fill="#EA4B71"/>
+        <circle cx="28" cy="20" r="4" fill="#EA4B71"/>
+        <circle cx="20" cy="20" r="4" fill="#FF6D8B"/>
+        <line x1="16" y1="20" x2="24" y2="20" stroke="#EA4B71" stroke-width="2"/>
+        <line x1="8" y1="20" x2="16" y2="20" stroke="#EA4B71" stroke-width="2" stroke-dasharray="2 1"/>
+        <line x1="24" y1="20" x2="32" y2="20" stroke="#EA4B71" stroke-width="2" stroke-dasharray="2 1"/>
+      </svg>
+      <span class="logo-pill-name">N8N</span>
+    </div>
+  </div>
+</section>
+
 
 
 <!-- ══════════════════════════════════
@@ -1188,17 +1265,33 @@ body.has-urgencia nav{top:40px}
     <div class="proof-c rv d1 tilt" data-hover>
       <div class="proof-stars">★★★★★</div>
       <p class="proof-q">"Oye, antes perdíamos 2 horas cada lunes con el Excel de Dropi. Ahora en 12 minutos el equipo sabe qué bloquear, qué escalar y qué carrier cambiar. La tasa subió del 74% al 81% en 5 semanas."</p>
-      <div class="proof-who"><div class="proof-av" style="background:rgba(6,182,212,.12);color:#22d3ee">JM</div><div><div class="proof-name">Jimmy</div><div class="proof-role">Director Logística · Litper Colombia</div></div></div>
+      <div class="proof-who"><div class="proof-av" style="background:rgba(6,182,212,.12);border:1.5px solid rgba(6,182,212,.3);padding:0;overflow:hidden">
+<svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" width="40" height="40">
+<rect width="48" height="48" fill="rgba(6,182,212,.15)"/>
+<circle cx="24" cy="18" r="8" fill="#22d3ee" opacity=".8"/>
+<ellipse cx="24" cy="38" rx="13" ry="9" fill="#22d3ee" opacity=".6"/>
+</svg></div><div><div class="proof-name">Jimmy</div><div class="proof-role">Director Logística · Litper Colombia</div></div></div>
     </div>
     <div class="proof-c rv d2 tilt" data-hover>
       <div class="proof-stars">★★★★★</div>
       <p class="proof-q">"El carrier swap que recomendó la IA ahorró ~$8.4M COP en el primer mes. La calculadora de recuperación demostró que el plan Pro se paga solo en la primera semana. ¿Increíble, verdad?!"</p>
-      <div class="proof-who"><div class="proof-av" style="background:rgba(139,92,246,.12);color:#a78bfa">EA</div><div><div class="proof-name">Evan</div><div class="proof-role">Director Marketing · Litper Colombia</div></div></div>
+      <div class="proof-who"><div class="proof-av" style="background:rgba(139,92,246,.12);border:1.5px solid rgba(139,92,246,.3);padding:0;overflow:hidden">
+<svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" width="40" height="40">
+<rect width="48" height="48" fill="rgba(139,92,246,.15)"/>
+<circle cx="24" cy="18" r="8" fill="#a78bfa" opacity=".8"/>
+<ellipse cx="24" cy="38" rx="13" ry="9" fill="#a78bfa" opacity=".6"/>
+</svg></div><div><div class="proof-name">Evan</div><div class="proof-role">Director Marketing · Litper Colombia</div></div></div>
     </div>
     <div class="proof-c rv d3 tilt" data-hover>
       <div class="proof-stars">★★★★★</div>
       <p class="proof-q">"Mira, subimos la tasa de entrega del 74% al 80.5% en 6 semanas. Solo bloqueamos 18 ciudades rojas y cambiamos el carrier en 5. El equipo ahora llega los lunes con energía porque ya saben exactamente qué hacer."</p>
-      <div class="proof-who"><div class="proof-av" style="background:rgba(34,197,94,.12);color:#4ade80">CR</div><div><div class="proof-name">Catalina</div><div class="proof-role">Gerente General · Litper Colombia</div></div></div>
+      <div class="proof-who"><div class="proof-av" style="background:rgba(34,197,94,.12);border:1.5px solid rgba(34,197,94,.3);padding:0;overflow:hidden">
+<svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" width="40" height="40">
+<rect width="48" height="48" fill="rgba(34,197,94,.15)"/>
+<circle cx="24" cy="17" r="8" fill="#4ade80" opacity=".8"/>
+<path d="M11 38 Q11 30 17 28 Q24 32 31 28 Q37 30 37 38Z" fill="#4ade80" opacity=".6"/>
+<path d="M19 14 Q22 10 26 12 Q30 10 32 14 Q28 10 24 11 Q20 10 19 14Z" fill="#4ade80" opacity=".5"/>
+</svg></div><div><div class="proof-name">Catalina</div><div class="proof-role">Gerente General · Litper Colombia</div></div></div>
     </div>
   </div>
 </section>
