@@ -26,7 +26,66 @@
 <script src="/js/supabase-client.js"></script>
 <link rel="stylesheet" href="/css/dashboard.css">
 <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAJdElEQVR42j2XXY8cx3WGn3OqunumZ2e/uNwlRVGiIsqWlUSwosSGL4wogRA4SAIE8B/Kv8g/yF2QILmKLxzEEIwosWUTiRXRoih+k7vkzuzO7Ez3dFedk4te+aqARgNV9Z56n/cciUe33VVRFQgRl0BUxVHEHUk9okoZClKcUKU10RNGwZUwg+y0TaYUo5ZEtITiBJxSjD3t6TPkDCpOJLM2YeNKYxBdAiKKxRLKCo0RM8O7jhAiEgo8JzQWxBDJPqLwDqh5/UbDwW7gzq9h5BeMXSiD42aoOwWZncLIQWh6MIdajFLgwhxzIbpliAWESBAFEbQs8LLC25Zc1AQzznUHiRW78hLzgsOq5yTtAGOuHGY280ilK5plSaWJSdGSkwGCoVTRmYbEWIxCnccrx0xQUo/3HRj4aBsvR1gokXoC0x0QgaLih3v3uBZmHE07Prr+mN/MrnAtPWX8/AE/f7LDR9895/VD4cqNmh9/vEZCicmIM6sJQdipjP1R5qh2rtZOIY6LELEMDuSEuaLjGsxQcVI1wtOKTYp8tdziqrzk/nKXD/05b4TEtZNjvn0D5jtLrjRzPjl5jx9++5z7j8ccN9vslCuSCNtly36Z2AqGZlhsIImQgSgiuCh4BgOVgG5vk8MIW10grFBPPF1Fro7OuD5/xuy05W8PHlDkive3lA8Ojnl0V/nzw6/RVcEv7x8xqQPRlIPYs1/BrYlzODEWLTx8GlhlZeOCAoglIOA5EdYLLI6xYgy9kWSMSE+5eMaDpmArrOlKZeER/9Ye6aM99v+oZuu7FZO8pF00vD19RUVi4zUbmbJbCtcmiRsHQqFCECjUAIjAcPvUQnuGhgmp3eABrGkZ9wve7j/nSj3n7uaAtVZMvGflEE5WtC8C7U5mEwKrMGZLOn5w+yUP5w2fvrgJ64qcS+pKwKCQwQ0AdTAinnEKxAyxTCMVsmnxAN437CzusV6ecn0nMU0LzntosvJ86UxO1tx/YIwDzDrhoBbe23ceHcOL4wW39s/57fIqUSOrVcl21dEnWCVhFJyXXSC6AzioghukDroebAOuJAvMNsq0r3hnsubZquRHHyg3p5k7d416JPzV9yMbDfzbz3vePDJ+dj+wmDvXEVR6Vl1EVEjJmV8o26XxpAk0pkQxgzzQTnKHZcNygtRDWTCXKVeuXePm9pyTE+f3r5d8eK3h/fcnqCw5O3e+8wcTrNmwpSP+/Rcrfvynxi/vCLPzY27WmYvOEetIvbO0QUEcCnGCVpO/QwMKOA7lBLIjUSEoQTpu725oT2ZsZMRp63jb8ehFz/YIKjXufZ354qHxcBU4KnoePoa/+BNlfZ6oNVF6IqSeZSM8bwPPmsgyKWdJUcdxBw8FhAq6BrEOyhGaW96pF2wff02fhXHo+L0D49OXI37yubPYONVU+fK453/mNV6Uw3vuoF0Z772mHNQN02nm5UXk+EJ51QSSCb0pBkQcRBTXEi9qyD0aFboLxt0pe37MYW08fqXUCNfrnujKB0fOKDqbDfz194RFuyL18NPfwMkKDp/DjYlz/6Xw1s6GtSgPViWETG+CuJMHDgjEEvo1tOdIDOCJsJ4zGpf88c6SKgrLztng3F2O+fC1xNOmYhn3Obp1xBftAd95R+k08KwraXrokzCdCDf34dXSWBBpPdImBRcurMCGAzhYhlgilvF2TdxcIJ45Wj/jeNbz25lSqtH3mWXrbHpnsl3xj586f//PPTfff4NudIVHr5SyUrLD07nw6kxYbQJdglkTedFPmXUVixwxN1RsICFpM+RBMYY4IneJcnnMZjZng/LWTqbWTJecl0vns2cFWlQcHgj1vjCxjjv34JO7xsuznpu7cPvQOL8wnp7DnUXJuOzZjT2JSCJiOMkFCduvOTiiAqFEplcp2hnazDkse26NGnbKzN2ZctIXiAQkFrw5askmZFMmVc+iV8rckRP82S3n4z8U7n7l/MeXSgiCeqSzGjPh3OFFL3S+QfEhszHDEdgswBK402Z4vhKiwFYJbg4YCaGQyNnCWS8To1jhIXDaBa5PYb+GX/+f82gGxzlw2g82N4wVsPQCJQFOxBISIkGc1DcYTlYlmNH2UAd4caF0WdiNmYUJnhNtFt6fVlydBB6rgydG6jQbKIAnS5ivwGXgS4tylofmBAQXx1yJLgqhJOGQE25DShEiXe5Z5cjDVWavyKgIIqAOWhh70xFFAdJuGAdodAibn34ljCKcd8JpCmwFGHtGJGFZ6bync8UxIu6Xmw4R5ThdnzETxqKsPaImiAiCYQaj0nm4CCz7jtEIiizcupr57B5YdDoXjtfKqhcShphx4pG1GZENF1YQPJDNEZ1cdVRBFbGE9c4PbjQ0Fvjfk4Lgib+83fDlqVKK8e6RURZC2yq3jpx33kzsTZR/+s+Ipczr+8bDl/D5k8DffG8o42wGv/pCmEuFuVJ6JHvJyjaouw8pCIgG3GBbExPNJIM2B65WzlZ07jwP0MNyBT+5GxhH5+kz4ZPP4GgrcW3LMYT/ehA53whvbjm/uB/5/lvOnJLkUODUDDDKrgOIHIb0cwMNNAkuUsC9AFEuOqG1QLbAOgnJhFmj3H+lHOwKr1rlX38V6BOIQYzCsg+8OBM+frvnX+5UnHYFglB4oHNovSOThjcgZiCCO6Ag7uyPMt+6uuH5UknZB4tKwBzCgC9w5/NHwj/896CGZTieC1sVZJTZQvjZw5J39xJlUdBlZSLKyhMtjmOI1gfDG/DB44iyHTZMoiEqHLcVu0VPiMrpOnC9bsHhvIErE2dcwvkis/FAWQh7YyOq8OgsMi2MkyYwjYY55F6YXHbDLUZyvwSR2SC/gwBnacTTpua4qYgqVGXk5jTzxnbPm3sZE7h9kHlt15i1wusHwmSsvHuYOV0PKq1TYJ0DdYQ2BSwrI3V6HJVMEMNwouPgGYHLMhiC4AomRm/CRXLmnTPbQO+B+UZAlIk5pvDkItC782oNsXBycKoy02a/dLfggLnTAo7gOFlAZLx32aNeLqLUbkzcQQZgjs1wGdRZIUwYhpkLhIk66orizFzZFaNwR8TJCBuEEc4aWAAigiGYOz6gOA9ZMAiAYRRmbFumEqEBxjjhsjyiSm1GiSMaqLNRY8MkHZTanMqdhQg7bjQIY5wG6FUJDoYPFzZDpNzyy/1/dxCXyw/frAi/++eSGd+oJj7MeLgTL8U2ho4nOeilzdWHkf0brd0HAPw/yzV5ygxrdKAAAAAASUVORK5CYII=">
-<style id="mrx-style">#mrx{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;}</style><style id="sl-style">#sl{position:fixed;top:0;left:0;width:100%;height:2px;background:linear-gradient(90deg,transparent,rgba(0,255,136,0.08),rgba(0,255,136,0.15),rgba(0,255,136,0.08),transparent);pointer-events:none;z-index:1;animation:sl-down 12s linear infinite;}@keyframes sl-down{0%{top:-2px}100%{top:100vh}}</style></head>
+<style id="mrx-style">#mrx{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;}</style><style id="sl-style">#sl{position:fixed;top:0;left:0;width:100%;height:2px;background:linear-gradient(90deg,transparent,rgba(0,255,136,0.08),rgba(0,255,136,0.15),rgba(0,255,136,0.08),transparent);pointer-events:none;z-index:1;animation:sl-down 12s linear infinite;}@keyframes sl-down{0%{top:-2px}100%{top:100vh}}</style>
+<style id="dashboard-upgrade-css">
+/* ─── CARRIERS DRILL-DOWN ──────────────────────────────────────────── */
+#tb-trans tr.carrier-row { cursor:pointer; transition:background .15s; }
+#tb-trans tr.carrier-row:hover { background:rgba(0,255,136,.06); }
+#tb-trans tr.carrier-row td:first-child { text-align:center; color:var(--t3); font-size:11px; }
+#tb-trans tr.carrier-row.expanded { background:rgba(0,255,136,.08); border-left:3px solid var(--brand); }
+.expand-arrow { display:inline-block; transition:transform .2s; font-size:10px; }
+.expanded .expand-arrow { transform:rotate(90deg); }
+
+.trans-drill-header {
+  display:flex;justify-content:space-between;align-items:center;
+  background:var(--s1);border:1px solid rgba(0,255,136,.25);border-radius:10px;
+  padding:12px 16px;margin-bottom:12px;
+  animation:fadeInDown .25s ease;
+}
+.drill-kpis {
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;
+  margin-bottom:12px;
+}
+.drill-kpi-card {
+  background:var(--s1);border:1px solid var(--b1);border-radius:8px;
+  padding:10px 12px;text-align:center;
+}
+.drill-kpi-val { font-family:var(--mono);font-size:18px;font-weight:700;color:var(--brand); }
+.drill-kpi-lbl { font-size:10px;color:var(--t3);margin-top:2px; }
+
+@keyframes fadeInDown {
+  from{opacity:0;transform:translateY(-8px)} to{opacity:1;transform:translateY(0)}
+}
+
+/* ─── BLOQUEO INNER TABS ───────────────────────────────────────────── */
+.bloq-inner-tab {
+  padding:8px 16px;background:transparent;border:none;
+  border-bottom:2px solid transparent;color:var(--t3);
+  font-size:12px;font-weight:500;cursor:pointer;transition:all .2s;
+  white-space:nowrap;
+}
+.bloq-inner-tab:hover { color:var(--t1); }
+.bloq-inner-tab.active { color:var(--brand);border-bottom-color:var(--brand); }
+.bloq-sub { animation:fadeInDown .2s ease; }
+
+/* ─── BLOQUEO SLIDERS MEJORADOS ─────────────────────────────────────── */
+.bloq-sliders {
+  display:grid;grid-template-columns:1fr 1fr;gap:12px;
+  background:var(--s1);border:1px solid var(--b1);border-radius:10px;
+  padding:14px 16px;margin-bottom:12px;backdrop-filter:blur(8px);
+}
+@media(max-width:600px){.bloq-sliders{grid-template-columns:1fr;}}
+.bloq-slider-box { display:flex;flex-direction:column; }
+.slval.rd { color:#ff4757; }
+
+/* ─── DEPARTAMENTOS ──────────────────────────────────────────────────── */
+#tb-deptos tr { cursor:pointer; transition:background .15s; }
+#tb-deptos tr:hover { background:rgba(0,255,136,.04); }
+#tb-deptos tr.depto-expanded { background:rgba(0,255,136,.07);font-weight:600; }
+.depto-expand { font-size:10px;color:var(--t3);transition:transform .2s; }
+.depto-expanded .depto-expand { transform:rotate(90deg);color:var(--brand); }
+</style>
+</head>
 <body><div id="sl"></div><canvas id="mrx"></canvas>
 <a href="#main-content" class="skip-link">Ir al contenido principal</a>
 <div class="bg-grad" aria-hidden="true"></div>
@@ -57,7 +116,7 @@
   <div class="sidebar-label">Principal</div>
   <button class="sidebar-link active" onclick="goTab('ciudades',this)"><span class="sl-icon">🚦</span>Semáforo Pro</button>
   <button class="sidebar-link" onclick="goTab('transportadoras',this)"><span class="sl-icon">🚚</span>Carriers</button>
-  <button class="sidebar-link" onclick="goTab('alertas',this)"><span class="sl-icon">⚠️</span>Alertas</button>
+  
   <div class="sidebar-divider"></div>
   <div class="sidebar-label">Optimizar</div>
   <button class="sidebar-link" onclick="goTab('bloqueo',this)"><span class="sl-icon">🚫</span>Bloqueo</button>
@@ -153,42 +212,280 @@
   </div>
 </div>
 
-<!-- SCORECARD -->
+<!-- SCORECARD TRANSPORTADORAS — DRILL-DOWN -->
 <div class="panel" id="panel-transportadoras" aria-label="Panel Scorecard Transportadoras">
-  <div class="phdr"><div class="phdr-l"><h2>Scorecard de Transportadoras</h2><p>Score = 70% entrega + 30% participación · CPA real por entrega exitosa</p></div>
-    <div class="phdr-r"><span style="font-size:10px;color:var(--t3)">Tarifa $</span><input class="ti" id="tarifa" type="number" aria-label="Tarifa logística en pesos COP" value="15000" oninput="rTrans()"><button class="btn-inst" onclick="showInst('transportadoras')">❓ Cómo usar</button></div>
+  <div class="phdr">
+    <div class="phdr-l">
+      <h2>Carriers</h2>
+      <p>Click en una transportadora para ver su desglose por departamento</p>
+    </div>
+    <div class="phdr-r">
+      <span style="font-size:10px;color:var(--t3)">Tarifa $</span>
+      <input class="ti" id="tarifa" type="number" aria-label="Tarifa logística en pesos COP" value="15000" oninput="rTrans()">
+      <button class="btn-inst" onclick="showInst('transportadoras')">❓</button>
+    </div>
   </div>
   <div class="pb">
+    <!-- SCORE CARDS -->
     <div class="sgrid" id="scards"></div>
-    <div class="chbox"><div class="chlbl">Volumen por transportadora — entregados vs devoluciones</div><div class="chw"><canvas id="ch-trans"></canvas></div><div class="lgnd"><div class="li"><span class="lsq" style="background:#00ff88"></span>Entregados</div><div class="li"><span class="lsq" style="background:#FF4757"></span>Devoluciones</div></div></div>
-    <div class="tw"><table><thead><tr><th>Transportadora</th><th class="text-right">Pedidos</th><th class="text-right">Entregados</th><th class="text-right">Devol.</th><th>% Entrega</th><th>CPA logístico</th><th>Score</th><th>Estado</th></tr></thead><tbody id="tb-trans"></tbody></table></div>
+    <!-- CHART -->
+    <div class="chbox">
+      <div class="chlbl">Volumen por transportadora — entregados vs devoluciones</div>
+      <div class="chw"><canvas id="ch-trans"></canvas></div>
+      <div class="lgnd">
+        <div class="li"><span class="lsq" style="background:#00ff88"></span>Entregados</div>
+        <div class="li"><span class="lsq" style="background:#FF4757"></span>Devoluciones</div>
+      </div>
+    </div>
+    <!-- TABLA CARRIERS CLICKEABLE -->
+    <div style="font-size:11px;color:var(--cn);background:var(--cndim);border:1px solid rgba(0,255,136,.15);border-radius:8px;padding:9px 13px;margin-bottom:12px;display:flex;align-items:center;gap:8px">
+      <span style="font-size:14px">👆</span>
+      <span>Haz click en cualquier transportadora para ver el desglose por <strong style="color:var(--brand)">departamento y ciudad</strong></span>
+    </div>
+    <div class="tw" id="trans-table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:18px"></th>
+            <th>Transportadora</th>
+            <th class="text-right">Pedidos</th>
+            <th class="text-right">Entregados</th>
+            <th class="text-right">Devol.</th>
+            <th>% Entrega</th>
+            <th>CPA logístico</th>
+            <th>Score</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+        <tbody id="tb-trans"></tbody>
+      </table>
+    </div>
+    <!-- PANEL DETALLE DRILL-DOWN — aparece al clickear una transportadora -->
+    <div id="trans-drill-panel" style="display:none;margin-top:16px">
+      <div class="trans-drill-header">
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="font-size:18px">🏢</span>
+          <div>
+            <div id="drill-carrier-name" style="font-weight:700;font-size:15px;color:var(--brand)">INTERRAPIDISIMO</div>
+            <div id="drill-carrier-stats" style="font-size:11px;color:var(--t3)">Cargando datos...</div>
+          </div>
+        </div>
+        <button onclick="closeDrill()" style="background:rgba(255,71,87,.1);border:1px solid rgba(255,71,87,.3);color:#ff4757;border-radius:8px;padding:5px 12px;cursor:pointer;font-size:12px">✕ Cerrar</button>
+      </div>
+      <!-- KPI mini-cards del carrier -->
+      <div class="drill-kpis" id="drill-kpis"></div>
+      <!-- Filtros departamento -->
+      <div class="ctrls" style="margin-bottom:10px">
+        <input class="ci search" id="drill-q-dept" type="text" placeholder="Buscar departamento o ciudad..." oninput="filterDrill()" style="flex:1;min-width:180px">
+        <select class="ci" id="drill-sort" onchange="filterDrill()">
+          <option value="vol">Mayor volumen</option>
+          <option value="te_asc">Menor entrega (crítico)</option>
+          <option value="te_desc">Mayor entrega (mejor)</option>
+          <option value="dev">Más devoluciones</option>
+        </select>
+        <select class="ci" id="drill-filter-status" onchange="filterDrill()">
+          <option value="">Todos los estados</option>
+          <option value="red">🔴 Crítico (&lt;60%)</option>
+          <option value="yellow">🟡 Alerta (60-75%)</option>
+          <option value="green">🟢 OK (&gt;75%)</option>
+        </select>
+      </div>
+      <!-- Tabla depto-ciudad -->
+      <div class="tw">
+        <table>
+          <thead>
+            <tr>
+              <th>Ciudad / Departamento</th>
+              <th class="text-right">Pedidos</th>
+              <th class="text-right">Entregados</th>
+              <th class="text-right">Devol.</th>
+              <th>% Entrega</th>
+              <th>vs Promedio</th>
+              <th>Estado</th>
+              <th>Acción</th>
+            </tr>
+          </thead>
+          <tbody id="tb-drill"></tbody>
+        </table>
+      </div>
+      <div class="pag" id="pag-drill"></div>
+    </div>
   </div>
 </div>
 
-<!-- BLOQUEO -->
-<div class="panel" id="panel-bloqueo" aria-label="Panel Lista de Bloqueo">
-  <div class="phdr"><div class="phdr-l"><h2>🚫 Reglas de bloqueo</h2><p>Amazon Carrier Suspension — define umbral, obtén lista de rutas a bloquear</p></div><button class="btn-inst" onclick="showInst('bloqueo')">❓ Cómo usar</button></div>
-  <div class="pb">
-    <div style="background:var(--s1);border:1px solid var(--b1);border-radius:var(--r);padding:13px;margin-bottom:11px;backdrop-filter:blur(8px)">
-      <div class="slrow"><span class="sllbl">Umbral de bloqueo</span><input type="range" min="10" max="80" value="50" id="sl-u" aria-label="Umbral de bloqueo %" oninput="rBloq()" class="flex-1"><span class="slval" id="sl-uv">50%</span></div>
-      <div class="slrow"><span class="sllbl">Mínimo de pedidos</span><input type="range" min="1" max="50" value="5" id="sl-m" aria-label="Mínimo de pedidos para bloqueo" oninput="rBloq()" class="flex-1"><span class="slval" id="sl-mv">5 ped</span></div>
+<!-- BLOQUEO + ALERTAS FUSIONADO -->
+<div class="panel" id="panel-bloqueo" aria-label="Panel Bloqueo y Alertas">
+  <!-- TABS internos: Bloqueo | Alertas -->
+  <div style="display:flex;gap:0;border-bottom:1px solid var(--b1);margin-bottom:16px">
+    <button class="bloq-inner-tab active" id="biTab-bloqueo" onclick="setBloqTab('bloqueo')">
+      🚫 Bloqueo de rutas
+    </button>
+    <button class="bloq-inner-tab" id="biTab-alertas" onclick="setBloqTab('alertas')">
+      ⚠️ Alertas
+      <span id="alertas-badge" style="display:none;background:#ff4757;color:#fff;border-radius:99px;font-size:9px;padding:1px 6px;margin-left:4px">0</span>
+    </button>
+    <button class="bloq-inner-tab" id="biTab-deptos" onclick="setBloqTab('deptos')">
+      🗺 Por departamento
+    </button>
+  </div>
+
+  <!-- SUB-PANEL: BLOQUEO -->
+  <div id="bloq-sub-bloqueo" class="bloq-sub active">
+    <div class="phdr" style="padding:0;margin-bottom:12px">
+      <div class="phdr-l">
+        <h2 style="font-size:16px">🚫 Reglas de bloqueo</h2>
+        <p>Amazon Carrier Suspension — define umbral, obtén lista de rutas a bloquear</p>
+      </div>
+      <button class="btn-inst" onclick="showInst('bloqueo')">❓</button>
     </div>
-    <div class="ctrls">
-      <input class="ci search" id="bl-q-ciudad" type="text" aria-label="Filtrar ciudades en bloqueo" placeholder="Filtrar por ciudad..." oninput="rBloq()" style="flex:1;min-width:140px">
-      <select class="ci" id="bl-trans" aria-label="Filtrar transportadora en bloqueo" onchange="rBloq()"><option value="">Todas las transportadoras</option></select>
+    <!-- Sliders top -->
+    <div class="bloq-sliders">
+      <div class="bloq-slider-box">
+        <div class="sllbl">Umbral de bloqueo</div>
+        <div style="display:flex;align-items:center;gap:8px;margin-top:6px">
+          <input type="range" min="10" max="80" value="50" id="sl-u" aria-label="Umbral de bloqueo %" oninput="rBloq()" class="flex-1">
+          <span class="slval rd" id="sl-uv">50%</span>
+        </div>
+      </div>
+      <div class="bloq-slider-box">
+        <div class="sllbl">Mínimo de pedidos</div>
+        <div style="display:flex;align-items:center;gap:8px;margin-top:6px">
+          <input type="range" min="1" max="50" value="5" id="sl-m" aria-label="Mínimo de pedidos para bloqueo" oninput="rBloq()" class="flex-1">
+          <span class="slval" id="sl-mv">5 ped</span>
+        </div>
+      </div>
+    </div>
+    <!-- Filtros top en línea -->
+    <div class="ctrls" style="flex-wrap:wrap">
+      <input class="ci search" id="bl-q-ciudad" type="text" aria-label="Filtrar ciudades en bloqueo" placeholder="🔍 Ciudad o ruta..." oninput="rBloq()" style="flex:1;min-width:140px">
+      <select class="ci" id="bl-trans" aria-label="Filtrar transportadora en bloqueo" onchange="rBloq()">
+        <option value="">Todas las transportadoras</option>
+      </select>
+      <select class="ci" id="bl-depto" aria-label="Filtrar departamento en bloqueo" onchange="rBloq()">
+        <option value="">Todos los departamentos</option>
+      </select>
       <select class="ci" id="bl-modo" aria-label="Modo de bloqueo" onchange="rBloq()">
-        <option value="ambos">Ciudad + Transportadora</option>
-        <option value="ciudad">Solo por ciudad</option>
-        <option value="trans">Solo por transportadora</option>
+        <option value="ambos">Ciudad + Carrier</option>
+        <option value="ciudad">Solo ciudad</option>
+        <option value="trans">Solo carrier</option>
+      </select>
+      <select class="ci" id="bl-orden" aria-label="Ordenar bloqueo" onchange="rBloq()">
+        <option value="te">Menor entrega primero</option>
+        <option value="vol">Mayor volumen</option>
+        <option value="dev">Más devoluciones</option>
       </select>
     </div>
-    <div class="bg3">
+    <!-- KPI bar -->
+    <div class="bg3" style="margin:12px 0">
       <div class="bs"><div class="bsl">Rutas a bloquear</div><div class="bsn rd" id="bl-c">—</div></div>
       <div class="bs"><div class="bsl">Pedidos afectados</div><div class="bsn am" id="bl-p">—</div></div>
       <div class="bs"><div class="bsl">% del total</div><div class="bsn cn" id="bl-pct">—</div></div>
+      <div class="bs"><div class="bsl">CPA devolución</div><div class="bsn am" id="bl-cpa-dev">—</div></div>
     </div>
-    <div class="tw"><table><thead><tr><th>Ciudad</th><th>Transportadora</th><th class="text-right">Pedidos</th><th class="text-right">Entregados</th><th class="text-right">Devol.</th><th>% Entrega</th><th>Acción</th></tr></thead><tbody id="tb-bl"></tbody></table></div>
+    <!-- Tabla -->
+    <div class="tw">
+      <table>
+        <thead>
+          <tr>
+            <th>Ciudad</th>
+            <th>Departamento</th>
+            <th>Transportadora</th>
+            <th class="text-right">Pedidos</th>
+            <th class="text-right">Devol.</th>
+            <th>% Entrega</th>
+            <th>Impacto $</th>
+            <th>Acción</th>
+          </tr>
+        </thead>
+        <tbody id="tb-bl"></tbody>
+      </table>
+    </div>
     <div class="pag" id="pag-bl"></div>
+  </div>
+
+  <!-- SUB-PANEL: ALERTAS -->
+  <div id="bloq-sub-alertas" class="bloq-sub" style="display:none">
+    <div class="phdr" style="padding:0;margin-bottom:12px">
+      <div class="phdr-l">
+        <h2 style="font-size:16px">⚠️ Centro de alertas</h2>
+        <p>Anomalías y oportunidades detectadas automáticamente</p>
+      </div>
+      <select class="ci" id="al-t" onchange="rAlertas()">
+        <option value="">Todos</option>
+        <option value="c">🔴 Críticas</option>
+        <option value="w">🟡 Warnings</option>
+        <option value="o">🔵 Oportunidades</option>
+      </select>
+    </div>
+    <div id="al-list"></div>
+  </div>
+
+  <!-- SUB-PANEL: POR DEPARTAMENTO -->
+  <div id="bloq-sub-deptos" class="bloq-sub" style="display:none">
+    <div class="phdr" style="padding:0;margin-bottom:12px">
+      <div class="phdr-l">
+        <h2 style="font-size:16px">🗺 Métricas por departamento</h2>
+        <p>Rendimiento logístico agrupado por región geográfica</p>
+      </div>
+    </div>
+    <!-- Filtros departamento -->
+    <div class="ctrls" style="flex-wrap:wrap;margin-bottom:12px">
+      <input class="ci search" id="dep-q" type="text" placeholder="🔍 Buscar departamento..." oninput="rDeptos()" style="flex:1;min-width:160px">
+      <select class="ci" id="dep-carrier" onchange="rDeptos()">
+        <option value="">Todos los carriers</option>
+      </select>
+      <select class="ci" id="dep-sort" onchange="rDeptos()">
+        <option value="vol">Mayor volumen</option>
+        <option value="te_asc">Menor entrega (crítico primero)</option>
+        <option value="te_desc">Mayor entrega (mejor primero)</option>
+        <option value="dev">Más devoluciones</option>
+      </select>
+      <select class="ci" id="dep-status" onchange="rDeptos()">
+        <option value="">Todos los estados</option>
+        <option value="red">🔴 Crítico</option>
+        <option value="yellow">🟡 Alerta</option>
+        <option value="green">🟢 OK</option>
+      </select>
+    </div>
+    <!-- KPI bar deptos -->
+    <div id="dep-kpis" class="bg3" style="margin-bottom:12px"></div>
+    <!-- Tabla departamentos clickeable -->
+    <div class="tw">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:18px"></th>
+            <th>Departamento</th>
+            <th class="text-right">Ciudades</th>
+            <th class="text-right">Pedidos</th>
+            <th class="text-right">Entregados</th>
+            <th class="text-right">Devol.</th>
+            <th>% Entrega</th>
+            <th>Mejor carrier</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+        <tbody id="tb-deptos"></tbody>
+      </table>
+    </div>
+    <!-- Sub-tabla ciudades de un depto -->
+    <div id="depto-ciudades-panel" style="display:none;margin-top:14px;border:1px solid var(--brand);border-radius:10px;padding:14px;background:rgba(0,255,136,.03)">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <div>
+          <span style="font-size:13px;font-weight:700;color:var(--brand)" id="depto-drill-name">—</span>
+          <span style="font-size:11px;color:var(--t3);margin-left:8px" id="depto-drill-meta"></span>
+        </div>
+        <button onclick="closeDeptoDrill()" style="background:rgba(255,71,87,.1);border:1px solid rgba(255,71,87,.3);color:#ff4757;border-radius:8px;padding:4px 10px;cursor:pointer;font-size:11px">✕ Cerrar</button>
+      </div>
+      <div class="tw">
+        <table>
+          <thead>
+            <tr><th>Ciudad</th><th class="text-right">Pedidos</th><th class="text-right">Entregados</th><th class="text-right">Devol.</th><th>% Entrega</th><th>Mejor carrier</th><th>Estado</th></tr>
+          </thead>
+          <tbody id="tb-depto-ciudades"></tbody>
+        </table>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -256,13 +553,7 @@
   </div>
 </div>
 
-<!-- ALERTAS -->
-<div class="panel" id="panel-alertas" aria-label="Panel Alertas Automáticas">
-  <div class="phdr"><div class="phdr-l"><h2>⚠️ Centro de alertas</h2><p>Anomalías y oportunidades detectadas automáticamente</p></div>
-    <div class="phdr-r"><select class="ci" id="al-t" onchange="rAlertas()"><option value="">Todos</option><option value="c">Críticas</option><option value="w">Warnings</option><option value="o">Oportunidades</option></select><button class="btn-inst" onclick="showInst('alertas')">❓ Cómo usar</button></div>
-  </div>
-  <div class="pb"><div id="al-list"></div></div>
-</div>
+<!-- Panel alertas fusionado en panel-bloqueo -->
 
 <!-- IA -->
 <div class="panel" id="panel-ia" aria-label="Panel Inteligencia Artificial">

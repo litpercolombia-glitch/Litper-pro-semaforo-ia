@@ -300,25 +300,159 @@ function rCiu(){
 // ─── TRANSPORTADORAS ─────────────────────────────────────────────────────────
 function calcSc(t){const mx=Math.max(...T.map(x=>x.total));return Math.round(t.tasa_entrega*.7+(t.total/mx*100)*.3);}
 function rTrans(){
-  if(!T||!T.length){document.getElementById('scards').innerHTML='';document.getElementById('tb-trans').innerHTML='<tr><td colspan="6" style="text-align:center;padding:40px;color:rgba(240,246,252,.4);font-size:14px"><div style="font-size:32px;margin-bottom:12px">🚚</div><strong style="color:rgba(240,246,252,.7)">Sin datos de transportadoras</strong><br>Sube un Excel con datos de envios para ver el scorecard de carriers.<br><br><button class="btn-inst" onclick="document.getElementById(\'fi\').click()" style="cursor:pointer">📁 Subir Excel ahora</button></td></tr>';return;}
+  if(!T||!T.length){
+    document.getElementById('scards').innerHTML='';
+    document.getElementById('tb-trans').innerHTML='<tr><td colspan="9" style="text-align:center;padding:40px;color:rgba(240,246,252,.4);font-size:14px"><div style="font-size:32px;margin-bottom:12px">🚚</div><strong style="color:rgba(240,246,252,.7)">Sin datos de transportadoras</strong><br>Sube un Excel para ver el scorecard de carriers.</td></tr>';
+    return;
+  }
   const tarifa=parseInt(document.getElementById('tarifa').value)||15000;
   rMetrics();
+
+  // SCORE CARDS
   document.getElementById('scards').innerHTML=T.filter(t=>t.total>=10).map(t=>{
     const s=calcSc(t),si2=si(t.tasa_entrega),cpa=Math.round(tarifa/(t.tasa_entrega/100)/1000);
-    return`<div class="scc"><div class="scn2">${t.transportadora}</div><div class="scring"><div class="scbig" style="color:${si2.x};text-shadow:0 0 12px ${si2.x}44">${s}</div><div><div class="scrow"><span>Entrega</span><span style="color:${si2.x}">${t.tasa_entrega}%</span></div><div class="scrow"><span>CPA</span><span style="color:var(--am)">${cpa}K</span></div><div class="scrow"><span>Pedidos</span><span>${fn(t.total)}</span></div></div></div></div>`;
+    return`<div class="scc" onclick="openDrill('${t.transportadora}')" style="cursor:pointer">
+      <div class="scn2">${t.transportadora}</div>
+      <div class="scring">
+        <div class="scbig" style="color:${si2.x};text-shadow:0 0 12px ${si2.x}44">${s}</div>
+        <div>
+          <div class="scrow"><span>Entrega</span><span style="color:${si2.x}">${t.tasa_entrega}%</span></div>
+          <div class="scrow"><span>CPA</span><span style="color:var(--am)">${cpa}K</span></div>
+          <div class="scrow"><span>Pedidos</span><span>${fn(t.total)}</span></div>
+        </div>
+      </div>
+      <div style="text-align:center;font-size:10px;color:var(--t3);margin-top:6px">👆 Ver desglose</div>
+    </div>`;
   }).join('');
+
+  // TABLA CARRIERS
+  const avgTE = T.length ? T.reduce((s,t)=>s+t.tasa_entrega,0)/T.length : 75;
   document.getElementById('tb-trans').innerHTML=T.filter(t=>t.total>0).map(t=>{
     const s=calcSc(t),cpa=Math.round(tarifa/(t.tasa_entrega/100)/1000);
-    return`<tr><td><strong>${t.transportadora}</strong></td><td class="nc">${fn(t.total)}</td><td class="nc">${fn(t.entregados)}</td><td class="nc">${fn(t.devoluciones)}</td><td>${bar(t.tasa_entrega,si(t.tasa_entrega).x)}</td><td style="font-family:var(--mono);font-size:10px;color:var(--am)">${cpa}K COP</td><td><span class="pill pc" style="font-family:var(--mono)">${s}/100</span></td><td>${pill(t.tasa_entrega)}</td></tr>`;
+    const diff = t.tasa_entrega - avgTE;
+    const diffStr = diff>=0?`<span style="color:#00ff88">+${diff.toFixed(1)}%</span>`:`<span style="color:#ff4757">${diff.toFixed(1)}%</span>`;
+    return`<tr class="carrier-row" onclick="openDrill('${t.transportadora}')" id="crow-${t.transportadora.replace(/[^A-Z0-9]/g,'_')}">
+      <td><span class="expand-arrow">▶</span></td>
+      <td><strong>${t.transportadora}</strong></td>
+      <td class="nc">${fn(t.total)}</td>
+      <td class="nc">${fn(t.entregados)}</td>
+      <td class="nc">${fn(t.devoluciones)}</td>
+      <td>${bar(t.tasa_entrega,si(t.tasa_entrega).x)}</td>
+      <td style="font-family:var(--mono);font-size:10px;color:var(--am)">${cpa}K</td>
+      <td><span class="pill pc" style="font-family:var(--mono)">${s}/100</span></td>
+      <td>${pill(t.tasa_entrega)}</td>
+    </tr>`;
   }).join('');
+
+  // CHART
   const ctx=document.getElementById('ch-trans').getContext('2d');
   if(window._ct)window._ct.destroy();
   const d=T.filter(t=>t.total>=10);
-  window._ct=new Chart(ctx,{type:'bar',data:{labels:d.map(t=>t.transportadora),datasets:[{data:d.map(t=>t.entregados),backgroundColor:'rgba(0,255,136,.65)',borderRadius:4},{data:d.map(t=>t.devoluciones),backgroundColor:'rgba(255,71,87,.55)',borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{color:'#555',font:{size:10}}},y:{grid:{color:'rgba(0,255,136,.04)'},ticks:{color:'#555',font:{size:10},callback:v=>v>=1000?v/1000+'K':v}}}}});
+  window._ct=new Chart(ctx,{type:'bar',data:{labels:d.map(t=>t.transportadora),datasets:[{data:d.map(t=>t.entregados),backgroundColor:'rgba(0,255,136,.65)',borderRadius:4},{data:d.map(t=>t.devoluciones),backgroundColor:'rgba(255,71,87,.55)',borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>ctx.dataset.data[ctx.dataIndex].toLocaleString()}}},scales:{x:{grid:{display:false},ticks:{color:'#555',font:{size:10}}},y:{grid:{color:'rgba(0,255,136,.04)'},ticks:{color:'#555',font:{size:10},callback:v=>v>=1000?v/1000+'K':v}}}}});
 }
 
+// ─── DRILL-DOWN DE TRANSPORTADORA ────────────────────────────────────────────
+window._drillData = []; // datos de ciudades del carrier seleccionado
+window._drillCarrier = '';
+window._drillPage = 1;
+const DRILL_PER = 20;
+
+function openDrill(carrierName){
+  window._drillCarrier = carrierName;
+  window._drillPage = 1;
+  // Marcar fila expandida
+  document.querySelectorAll('.carrier-row').forEach(r=>r.classList.remove('expanded'));
+  const row = document.getElementById('crow-'+carrierName.replace(/[^A-Z0-9]/g,'_'));
+  if(row) row.classList.add('expanded');
+  // Extraer ciudades donde opera este carrier
+  const cities = [];
+  (C||[]).forEach(city=>{
+    // city = [nombre, total, entregados, devoluciones, tasa, [mejorCarrier,score], [[carrier,tot,ent,te],...]]
+    const cityName = city[0];
+    const carriers = city[6]||[];
+    const match = carriers.find(cr=>cr[0]===carrierName);
+    if(match){
+      cities.push({
+        ciudad: cityName,
+        total: match[1],
+        entregados: match[2],
+        devoluciones: match[1]-match[2],
+        te: match[3],
+        esMejor: city[5] && city[5][0]===carrierName
+      });
+    }
+  });
+  window._drillData = cities;
+  // Mostrar panel
+  const panel = document.getElementById('trans-drill-panel');
+  panel.style.display='block';
+  panel.scrollIntoView({behavior:'smooth',block:'nearest'});
+  // Header
+  const carrier = T.find(t=>t.transportadora===carrierName)||{};
+  document.getElementById('drill-carrier-name').textContent=carrierName;
+  document.getElementById('drill-carrier-stats').textContent=`${fn(carrier.total||0)} pedidos · ${carrier.tasa_entrega||0}% entrega global · ${cities.length} ciudades activas`;
+  // KPIs
+  const tarifa=parseInt(document.getElementById('tarifa').value)||15000;
+  const cpa=carrier.tasa_entrega?Math.round(tarifa/(carrier.tasa_entrega/100)/1000):0;
+  const ciudadesCrit=cities.filter(c=>c.te<60).length;
+  const ciudadesOK=cities.filter(c=>c.te>=75).length;
+  document.getElementById('drill-kpis').innerHTML=`
+    <div class="drill-kpi-card"><div class="drill-kpi-val" style="color:var(--brand)">${carrier.tasa_entrega||0}%</div><div class="drill-kpi-lbl">Entrega global</div></div>
+    <div class="drill-kpi-card"><div class="drill-kpi-val" style="color:var(--am)">${cpa}K</div><div class="drill-kpi-lbl">CPA logístico</div></div>
+    <div class="drill-kpi-card"><div class="drill-kpi-val">${cities.length}</div><div class="drill-kpi-lbl">Ciudades activas</div></div>
+    <div class="drill-kpi-card"><div class="drill-kpi-val" style="color:#ff4757">${ciudadesCrit}</div><div class="drill-kpi-lbl">Críticas (&lt;60%)</div></div>
+    <div class="drill-kpi-card"><div class="drill-kpi-val" style="color:#00ff88">${ciudadesOK}</div><div class="drill-kpi-lbl">OK (&gt;75%)</div></div>
+  `;
+  filterDrill();
+}
+
+function closeDrill(){
+  document.getElementById('trans-drill-panel').style.display='none';
+  document.querySelectorAll('.carrier-row').forEach(r=>r.classList.remove('expanded'));
+}
+
+function filterDrill(){
+  const q=(document.getElementById('drill-q-dept')||{}).value||'';
+  const sort=(document.getElementById('drill-sort')||{}).value||'vol';
+  const status=(document.getElementById('drill-filter-status')||{}).value||'';
+  let data=[...window._drillData];
+  if(q) data=data.filter(c=>c.ciudad.toLowerCase().includes(q.toLowerCase()));
+  if(status==='red') data=data.filter(c=>c.te<60);
+  else if(status==='yellow') data=data.filter(c=>c.te>=60&&c.te<75);
+  else if(status==='green') data=data.filter(c=>c.te>=75);
+  if(sort==='vol') data.sort((a,b)=>b.total-a.total);
+  else if(sort==='te_asc') data.sort((a,b)=>a.te-b.te);
+  else if(sort==='te_desc') data.sort((a,b)=>b.te-a.te);
+  else if(sort==='dev') data.sort((a,b)=>b.devoluciones-a.devoluciones);
+  // Promedio del carrier
+  const avg=window._drillData.reduce((s,c)=>s+c.te,0)/Math.max(window._drillData.length,1);
+  const pages=Math.ceil(data.length/DRILL_PER);
+  if(window._drillPage>pages)window._drillPage=1;
+  const sl=data.slice((window._drillPage-1)*DRILL_PER,window._drillPage*DRILL_PER);
+  document.getElementById('tb-drill').innerHTML=sl.length===0
+    ?'<tr><td colspan="8" style="text-align:center;color:var(--t3);padding:16px">Sin ciudades para este filtro.</td></tr>'
+    :sl.map(c=>{
+      const diff=c.te-avg;
+      const diffStr=diff>=0?`<span style="color:#00ff88">+${diff.toFixed(1)}%</span>`:`<span style="color:#ff4757">${diff.toFixed(1)}%</span>`;
+      const accion=c.te<60?'<span class="pill pr">🚫 Bloquear</span>':c.te<75?'<span class="pill" style="background:rgba(255,165,0,.1);border-color:rgba(255,165,0,.4);color:#ffa500">⚠️ Monitorear</span>':'<span class="pill pg">✅ OK</span>';
+      const mejor=c.esMejor?'<span style="color:var(--brand);font-size:10px">⭐ Mejor</span>':'';
+      return`<tr>
+        <td><strong>${c.ciudad}</strong> ${mejor}</td>
+        <td class="nc">${fn(c.total)}</td>
+        <td class="nc">${fn(c.entregados)}</td>
+        <td class="nc">${fn(c.devoluciones)}</td>
+        <td>${bar(c.te,si(c.te).x)}</td>
+        <td style="font-family:var(--mono);font-size:11px">${diffStr}</td>
+        <td>${pill(c.te)}</td>
+        <td>${accion}</td>
+      </tr>`;
+    }).join('');
+  rp('pag-drill',window._drillPage,pages,n=>{window._drillPage=n;filterDrill();},data.length);
+}
+
+
 // ─── BLOQUEO ─────────────────────────────────────────────────────────────────
-window.pagBl=n=>{PG.bl=n;rBloq();};
+
 function rBloq(){
   const u=parseInt(document.getElementById('sl-u').value)||50,
         m=parseInt(document.getElementById('sl-m').value)||5;
@@ -326,37 +460,226 @@ function rBloq(){
   document.getElementById('sl-mv').textContent=m+' ped';
   const qCiudad=(document.getElementById('bl-q-ciudad')||{}).value||'';
   const qTrans=(document.getElementById('bl-trans')||{}).value||'';
+  const qDepto=(document.getElementById('bl-depto')||{}).value||'';
   const modo=(document.getElementById('bl-modo')||{}).value||'ambos';
-  // Generar todas las rutas bajo el umbral
+  const orden=(document.getElementById('bl-orden')||{}).value||'te';
+  // Generar rutas bajo umbral
   let rutas=[];
-  C.forEach(c=>c[6].forEach(r=>{if(r[3]<u&&r[1]>=m)rutas.push({n:c[0],t:r[0],tot:r[1],ent:r[2],dev:r[1]-r[2],te:r[3]});}));
-  // Aplicar filtros según modo
-  if(modo==='ciudad'||modo==='ambos'){
-    if(qCiudad)rutas=rutas.filter(r=>r.n.toLowerCase().includes(qCiudad.toLowerCase()));
-  }
-  if(modo==='trans'||modo==='ambos'){
-    if(qTrans)rutas=rutas.filter(r=>r.t===qTrans);
-  }
-  rutas.sort((a,b)=>a.te-b.te);
+  C.forEach(c=>c[6].forEach(r=>{
+    if(r[3]<u&&r[1]>=m){
+      const depto=getCityDepto(c[0]);
+      rutas.push({n:c[0],depto,t:r[0],tot:r[1],ent:r[2],dev:r[1]-r[2],te:r[3]});
+    }
+  }));
+  // Filtros
+  if(qCiudad) rutas=rutas.filter(r=>r.n.toLowerCase().includes(qCiudad.toLowerCase()));
+  if(qTrans) rutas=rutas.filter(r=>r.t===qTrans);
+  if(qDepto) rutas=rutas.filter(r=>r.depto===qDepto);
+  if(modo==='ciudad') rutas=rutas.filter(r=>!qTrans||r.t===qTrans);
+  else if(modo==='trans') rutas=rutas.filter(r=>!qCiudad||r.n.toLowerCase().includes(qCiudad.toLowerCase()));
+  // Ordenar
+  if(orden==='te') rutas.sort((a,b)=>a.te-b.te);
+  else if(orden==='vol') rutas.sort((a,b)=>b.tot-a.tot);
+  else if(orden==='dev') rutas.sort((a,b)=>b.dev-a.dev);
+
   const totP=rutas.reduce((s,r)=>s+r.tot,0);
+  const costoDev=parseInt((document.getElementById('costo-dev')||{}).value)||18000;
+  const cpaDevTotal=Math.round(rutas.reduce((s,r)=>s+r.dev,0)*costoDev/1000);
+
   document.getElementById('bl-c').textContent=rutas.length;
   document.getElementById('bl-p').textContent=fn(totP);
   document.getElementById('bl-pct').textContent=Math.round(totP/Math.max(G.total,1)*100)+'%';
+  if(document.getElementById('bl-cpa-dev')) document.getElementById('bl-cpa-dev').textContent=cpaDevTotal+'K';
+
   const pages=Math.ceil(rutas.length/PER);if(PG.bl>pages)PG.bl=1;
   const sl=rutas.slice((PG.bl-1)*PER,PG.bl*PER);
   document.getElementById('tb-bl').innerHTML=sl.length===0
-    ?'<tr><td colspan="7" style="text-align:center;color:var(--t3);padding:16px">Sin rutas para este filtro.</td></tr>'
-    :sl.map(r=>`<tr>
-      <td><strong>${r.n}</strong></td>
-      <td style="font-family:var(--mono);font-size:10px;color:var(--t2)">${r.t}</td>
-      <td class="nc">${fn(r.tot)}</td>
-      <td class="nc">${fn(r.ent)}</td>
-      <td class="nc">${fn(r.dev)}</td>
-      <td>${bar(r.te,si(r.te).x)}</td>
-      <td><span class="pill pr">🚫 Bloquear</span></td>
-    </tr>`).join('');
+    ?'<tr><td colspan="8" style="text-align:center;color:var(--t3);padding:16px">Sin rutas para este filtro.</td></tr>'
+    :sl.map(r=>{
+      const impacto=Math.round(r.dev*costoDev/1000);
+      return`<tr>
+        <td><strong>${r.n}</strong></td>
+        <td style="font-size:10px;color:var(--t3)">${r.depto}</td>
+        <td style="font-family:var(--mono);font-size:10px;color:var(--t2)">${r.t}</td>
+        <td class="nc">${fn(r.tot)}</td>
+        <td class="nc" style="color:#ff4757">${fn(r.dev)}</td>
+        <td>${bar(r.te,si(r.te).x)}</td>
+        <td style="font-family:var(--mono);font-size:10px;color:var(--am)">${impacto}K COP</td>
+        <td><span class="pill pr">🚫 Bloquear</span></td>
+      </tr>`;
+    }).join('');
   rp('pag-bl',PG.bl,pages,'pagBl',rutas.length);
+
+  // Poblar filtro departamentos si está vacío
+  const selDepto=document.getElementById('bl-depto');
+  if(selDepto&&selDepto.options.length<=1){
+    const deptos=[...new Set(C.map(c=>getCityDepto(c[0])))].sort();
+    deptos.forEach(d=>{const o=document.createElement('option');o.value=d;o.textContent=d;selDepto.appendChild(o);});
+  }
 }
+
+// ─── BLOQUEO INNER TABS ──────────────────────────────────────────────────────
+function setBloqTab(tab){
+  document.querySelectorAll('.bloq-inner-tab').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.bloq-sub').forEach(s=>s.style.display='none');
+  const btn=document.getElementById('biTab-'+tab);
+  const sub=document.getElementById('bloq-sub-'+tab);
+  if(btn)btn.classList.add('active');
+  if(sub)sub.style.display='block';
+  if(tab==='alertas') rAlertas();
+  else if(tab==='bloqueo') rBloq();
+  else if(tab==='deptos') rDeptos();
+}
+
+// ─── HELPER: DEPARTAMENTO POR CIUDAD ─────────────────────────────────────────
+const CITY_DEPTO={
+  'BOGOTA':'Cundinamarca','MEDELLIN':'Antioquia','CALI':'Valle del Cauca',
+  'CARTAGENA':'Bolívar','BARRANQUILLA':'Atlántico','BUCARAMANGA':'Santander',
+  'CUCUTA':'Norte de Santander','MANIZALES':'Caldas','PEREIRA':'Risaralda',
+  'ARMENIA':'Quindío','IBAGUE':'Tolima','NEIVA':'Huila','VILLAVICENCIO':'Meta',
+  'PASTO':'Nariño','MONTERIA':'Córdoba','VALLEDUPAR':'Cesar','SINCELEJO':'Sucre',
+  'SANTA MARTA':'Magdalena','TUNJA':'Boyacá','POPAYAN':'Cauca','FLORENCIA':'Caquetá',
+  'QUIBDO':'Chocó','RIOHACHA':'La Guajira','ARAUCA':'Arauca','YOPAL':'Casanare',
+  'SAN GIL':'Santander','GIRON':'Santander','FLORIDABLANCA':'Santander',
+  'PIEDECUESTA':'Santander','BARRANCABERMEJA':'Santander',
+  'BELLO':'Antioquia','ITAGUI':'Antioquia','ENVIGADO':'Antioquia',
+  'APARTADO':'Antioquia','RIONEGRO':'Antioquia','TURBO':'Antioquia',
+  'PALMIRA':'Valle del Cauca','BUENAVENTURA':'Valle del Cauca','TULUA':'Valle del Cauca',
+  'BUGA':'Valle del Cauca','CARTAGO':'Valle del Cauca',
+  'SOACHA':'Cundinamarca','FUSAGASUGA':'Cundinamarca','ZIPAQUIRA':'Cundinamarca',
+  'GIRARDOT':'Cundinamarca','FACATATIVA':'Cundinamarca','CHIA':'Cundinamarca',
+  'SOLEDAD':'Atlántico','MALAMBO':'Atlántico',
+  'BARANOA':'Atlántico','GALAPA':'Atlántico',
+};
+function getCityDepto(city){
+  return CITY_DEPTO[city]||'Otros';
+}
+
+// ─── PANEL POR DEPARTAMENTOS ─────────────────────────────────────────────────
+window._deptoDrillName='';
+function rDeptos(){
+  const q=(document.getElementById('dep-q')||{}).value||'';
+  const carrier=(document.getElementById('dep-carrier')||{}).value||'';
+  const sort=(document.getElementById('dep-sort')||{}).value||'vol';
+  const status=(document.getElementById('dep-status')||{}).value||'';
+
+  // Poblar filtro carrier si vacío
+  const selCarrier=document.getElementById('dep-carrier');
+  if(selCarrier&&selCarrier.options.length<=1){
+    (T||[]).forEach(t=>{const o=document.createElement('option');o.value=t.transportadora;o.textContent=t.transportadora;selCarrier.appendChild(o);});
+  }
+
+  // Agrupar ciudades por departamento
+  const deptoMap={};
+  (C||[]).forEach(city=>{
+    const depto=getCityDepto(city[0]);
+    if(!deptoMap[depto])deptoMap[depto]={depto,ciudades:[],total:0,entregados:0,devoluciones:0,carriers:new Set()};
+    const d=deptoMap[depto];
+    // Filtrar por carrier si aplica
+    if(carrier){
+      const cr=(city[6]||[]).find(r=>r[0]===carrier);
+      if(cr){
+        d.ciudades.push({n:city[0],total:cr[1],entregados:cr[2],te:cr[3],mejorCarrier:city[5]?city[5][0]:'—'});
+        d.total+=cr[1]; d.entregados+=cr[2]; d.devoluciones+=(cr[1]-cr[2]);
+        d.carriers.add(carrier);
+      }
+    } else {
+      d.ciudades.push({n:city[0],total:city[1],entregados:city[2],te:city[4],mejorCarrier:city[5]?city[5][0]:'—'});
+      d.total+=city[1]; d.entregados+=city[2]; d.devoluciones+=city[3];
+      (city[6]||[]).forEach(cr=>d.carriers.add(cr[0]));
+    }
+  });
+
+  let deptos=Object.values(deptoMap).map(d=>{
+    d.te=d.total>0?Math.round(d.entregados/d.total*1000)/10:0;
+    d.carriers=[...d.carriers];
+    return d;
+  }).filter(d=>d.total>0);
+
+  // Filtros
+  if(q) deptos=deptos.filter(d=>d.depto.toLowerCase().includes(q.toLowerCase()));
+  if(status==='red') deptos=deptos.filter(d=>d.te<60);
+  else if(status==='yellow') deptos=deptos.filter(d=>d.te>=60&&d.te<75);
+  else if(status==='green') deptos=deptos.filter(d=>d.te>=75);
+
+  // Ordenar
+  if(sort==='vol') deptos.sort((a,b)=>b.total-a.total);
+  else if(sort==='te_asc') deptos.sort((a,b)=>a.te-b.te);
+  else if(sort==='te_desc') deptos.sort((a,b)=>b.te-a.te);
+  else if(sort==='dev') deptos.sort((a,b)=>b.devoluciones-a.devoluciones);
+
+  // KPIs
+  const totDep=deptos.reduce((s,d)=>s+d.total,0);
+  const totEnt=deptos.reduce((s,d)=>s+d.entregados,0);
+  const avgTe=totDep>0?Math.round(totEnt/totDep*100):0;
+  const depCrit=deptos.filter(d=>d.te<60).length;
+  document.getElementById('dep-kpis').innerHTML=`
+    <div class="bs"><div class="bsl">Departamentos</div><div class="bsn">${deptos.length}</div></div>
+    <div class="bs"><div class="bsl">Pedidos</div><div class="bsn">${fn(totDep)}</div></div>
+    <div class="bs"><div class="bsl">Entrega promedio</div><div class="bsn cn">${avgTe}%</div></div>
+    <div class="bs"><div class="bsl">Deptos críticos</div><div class="bsn rd">${depCrit}</div></div>
+  `;
+
+  document.getElementById('tb-deptos').innerHTML=deptos.length===0
+    ?'<tr><td colspan="9" style="text-align:center;color:var(--t3);padding:16px">Sin datos para este filtro.</td></tr>'
+    :deptos.map(d=>{
+      const bestCarrier=d.ciudades.length>0? (d.ciudades.reduce((bc,c)=>{
+        // simplify: just show first carrier
+        return bc;
+      },'—') || d.ciudades[0]?.mejorCarrier||'—') : '—';
+      return`<tr onclick="openDeptoDrill('${d.depto.replace(/'/g,"\'")}',${JSON.stringify(d.ciudades).replace(/</g,'\u003c')})" id="depto-row-${d.depto.replace(/[^A-Z]/gi,'_')}">
+        <td><span class="depto-expand">▶</span></td>
+        <td><strong>${d.depto}</strong></td>
+        <td class="nc">${d.ciudades.length}</td>
+        <td class="nc">${fn(d.total)}</td>
+        <td class="nc">${fn(d.entregados)}</td>
+        <td class="nc" style="color:#ff4757">${fn(d.devoluciones)}</td>
+        <td>${bar(d.te,si(d.te).x)}</td>
+        <td style="font-size:10px;color:var(--t3)">${d.carriers.slice(0,2).join(', ')}${d.carriers.length>2?' +'+( d.carriers.length-2):''}</td>
+        <td>${pill(d.te)}</td>
+      </tr>`;
+    }).join('');
+}
+
+function openDeptoDrill(deptoName, ciudadesData){
+  window._deptoDrillName=deptoName;
+  // Mark row
+  document.querySelectorAll('[id^="depto-row-"]').forEach(r=>r.classList.remove('depto-expanded'));
+  const row=document.getElementById('depto-row-'+deptoName.replace(/[^A-Z]/gi,'_'));
+  if(row)row.classList.add('depto-expanded');
+  // Parse ciudades (already passed as array)
+  const ciudades=typeof ciudadesData==='string'?JSON.parse(ciudadesData):ciudadesData;
+  ciudades.sort((a,b)=>b.total-a.total);
+  document.getElementById('depto-drill-name').textContent=deptoName;
+  document.getElementById('depto-drill-meta').textContent=`${ciudades.length} ciudades · ${fn(ciudades.reduce((s,c)=>s+c.total,0))} pedidos`;
+  document.getElementById('tb-depto-ciudades').innerHTML=ciudades.map(c=>`<tr>
+    <td><strong>${c.n}</strong></td>
+    <td class="nc">${fn(c.total)}</td>
+    <td class="nc">${fn(c.entregados)}</td>
+    <td class="nc" style="color:#ff4757">${fn(c.total-c.entregados)}</td>
+    <td>${bar(c.te,si(c.te).x)}</td>
+    <td style="font-size:10px;color:var(--t3)">${c.mejorCarrier||'—'}</td>
+    <td>${pill(c.te)}</td>
+  </tr>`).join('');
+  const panel=document.getElementById('depto-ciudades-panel');
+  panel.style.display='block';
+  panel.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+function closeDeptoDrill(){
+  document.getElementById('depto-ciudades-panel').style.display='none';
+  document.querySelectorAll('[id^="depto-row-"]').forEach(r=>r.classList.remove('depto-expanded'));
+}
+
+function updateAlertasBadge(){
+  const badge=document.getElementById('alertas-badge');
+  if(!badge)return;
+  const crit=(window.A||[]).filter(a=>a[0]===0).length;
+  if(crit>0){badge.textContent=crit;badge.style.display='inline';}
+  else badge.style.display='none';
+}
+
+window.pagBl=n=>{PG.bl=n;rBloq();};
 
 // ─── MATRIZ ──────────────────────────────────────────────────────────────────
 function rMatriz(){
@@ -544,8 +867,13 @@ function switchTab(name){
   if(name==='semaforo'){rSem();name='ciudades';}
   if(name==='ciudades')rCiu();
   else if(name==='transportadoras'){setTimeout(function(){rTrans();},50);}
-  else if(name==='alertas')rAlertas();
-  else if(name==='bloqueo')rBloq();
+  else if(name==='alertas'){
+    // alertas ahora está dentro del panel bloqueo
+    switchTab('bloqueo');
+    setTimeout(()=>setBloqTab('alertas'),80);
+    return;
+  }
+  else if(name==='bloqueo'){rBloq();rAlertas();updateAlertasBadge();}
   else if(name==='matriz'){
     var pp=document.getElementById('panel-pareto');
     if(pp){pp.classList.add('active');pp.style.display='block';}
