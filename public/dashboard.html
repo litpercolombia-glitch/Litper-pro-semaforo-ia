@@ -131,6 +131,7 @@
   <div class="sidebar-divider"></div>
   <div class="sidebar-label">Datos</div>
   <button class="sidebar-link" onclick="goTab('expImp',this)"><span class="sl-icon">📤</span>Export · Import</button>
+  <button class="sidebar-link" onclick="goTab('agentes',this)" id="sb-agentes"><span class="sl-icon">🤖</span>Agentes IA <span id="agent-badge" style="display:none;background:rgba(0,255,136,.2);color:var(--brand);border-radius:4px;padding:1px 5px;font-size:10px;font-weight:700;margin-left:4px">0</span></button>
   <div class="sidebar-divider"></div>
   <a class="sidebar-link" href="/profile"><span class="sl-icon">👤</span>Mi Cuenta</a>
   <a class="sidebar-link" href="/pricing"><span class="sl-icon">💎</span>Plan</a>
@@ -767,6 +768,100 @@
 
 
 <!-- ══════════════════════════════════════════════════════
+     PANEL AGENTES IA — COD Confirmation Agent
+     ══════════════════════════════════════════════════════ -->
+<div class="panel" id="panel-agentes" aria-label="Panel Agentes IA">
+  <div class="phdr">
+    <div class="phdr-l">
+      <h2>🤖 Agentes IA</h2>
+      <p>Automatización que ejecuta — no solo recomienda</p>
+    </div>
+  </div>
+  <div class="pb">
+
+    <!-- KPIs del agente -->
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px" id="agent-kpis">
+      <div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:16px;text-align:center">
+        <div style="font-size:24px;font-weight:800;color:var(--brand)" id="akpi-pending">—</div>
+        <div style="font-size:11px;color:rgba(240,246,252,.5);margin-top:4px">Pendientes</div>
+      </div>
+      <div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:16px;text-align:center">
+        <div style="font-size:24px;font-weight:800;color:#22c55e" id="akpi-confirmed">—</div>
+        <div style="font-size:11px;color:rgba(240,246,252,.5);margin-top:4px">Confirmados</div>
+      </div>
+      <div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:16px;text-align:center">
+        <div style="font-size:24px;font-weight:800;color:#f59e0b" id="akpi-blocked">—</div>
+        <div style="font-size:11px;color:rgba(240,246,252,.5);margin-top:4px">Bloqueados</div>
+      </div>
+      <div style="background:rgba(0,255,136,.04);border:1px solid rgba(0,255,136,.15);border-radius:12px;padding:16px;text-align:center">
+        <div style="font-size:24px;font-weight:800;color:var(--brand)" id="akpi-savings">—</div>
+        <div style="font-size:11px;color:rgba(240,246,252,.5);margin-top:4px">Flete ahorrado</div>
+      </div>
+    </div>
+
+    <!-- Agente COD Confirmación -->
+    <div style="background:rgba(255,255,255,.02);border:1px solid rgba(0,255,136,.1);border-radius:14px;padding:20px;margin-bottom:16px">
+      <div style="display:flex;align-items:flex-start;gap:14px;margin-bottom:16px">
+        <div style="width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,rgba(0,255,136,.2),rgba(0,212,255,.1));display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">💬</div>
+        <div style="flex:1">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+            <strong style="font-size:15px">Agente Confirmación COD</strong>
+            <span id="agent-cod-status" style="font-size:10px;padding:2px 8px;border-radius:4px;background:rgba(100,116,139,.2);color:rgba(240,246,252,.5)">Inactivo</span>
+          </div>
+          <p style="font-size:12px;color:rgba(240,246,252,.5);margin:0;line-height:1.5">Antes de despachar, confirma dirección y disponibilidad con el cliente por WhatsApp. Bloquea automáticamente los pedidos de alto riesgo de devolución. Cada devolución evitada = $15.000 COP de flete + producto ida/vuelta.</p>
+        </div>
+      </div>
+
+      <!-- Input de pedidos (JSON/CSV manual o pegar) -->
+      <div style="margin-bottom:12px">
+        <label style="font-size:12px;color:rgba(240,246,252,.6);display:block;margin-bottom:6px">Pega los pedidos a confirmar (JSON array) — o deja vacío para procesar pendientes</label>
+        <textarea id="agent-orders-input" placeholder='[{"ref":"001","name":"Juan","phone":"3001234567","city":"Bogotá","carrier":"Coordinadora","product":"Protector de colchón","amount":85000}]' style="width:100%;height:80px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:8px;color:var(--text-primary);font-family:var(--mono);font-size:11px;padding:10px;resize:vertical;box-sizing:border-box" spellcheck="false"></textarea>
+      </div>
+
+      <div style="display:flex;gap:8px;align-items:center">
+        <button onclick="runCodAgent()" id="btn-run-cod" style="display:flex;align-items:center;gap:8px;padding:10px 18px;background:linear-gradient(135deg,var(--brand),#00d4ff);border:none;border-radius:8px;color:#0a0f1e;font-weight:700;font-size:13px;cursor:pointer;transition:all .2s">
+          <span>▶</span> Ejecutar agente
+        </button>
+        <button onclick="loadAgentStatus()" style="padding:10px 14px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:8px;color:var(--text-primary);font-size:12px;cursor:pointer">
+          ↻ Actualizar
+        </button>
+        <span id="agent-run-msg" style="font-size:12px;color:rgba(240,246,252,.5)"></span>
+      </div>
+    </div>
+
+    <!-- Próximos agentes (roadmap visible) -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div style="background:rgba(255,255,255,.015);border:1px solid rgba(255,255,255,.04);border-radius:12px;padding:16px;opacity:.7">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+          <span style="font-size:20px">🚦</span>
+          <div>
+            <div style="font-weight:700;font-size:13px">Agente Semáforo/Ruteo</div>
+            <div style="font-size:10px;color:rgba(240,246,252,.4)">Re-rutea pedidos al carrier ganador por zona</div>
+          </div>
+          <span style="margin-left:auto;font-size:10px;padding:2px 8px;background:rgba(255,190,11,.1);border-radius:4px;color:var(--warning)">Q3 2026</span>
+        </div>
+      </div>
+      <div style="background:rgba(255,255,255,.015);border:1px solid rgba(255,255,255,.04);border-radius:12px;padding:16px;opacity:.7">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+          <span style="font-size:20px">📢</span>
+          <div>
+            <div style="font-weight:700;font-size:13px">Agente Pauta Meta</div>
+            <div style="font-size:10px;color:rgba(240,246,252,.4)">Optimiza presupuesto y pausa creativos con mal CPA</div>
+          </div>
+          <span style="margin-left:auto;font-size:10px;padding:2px 8px;background:rgba(255,190,11,.1);border-radius:4px;color:var(--warning)">Q3 2026</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Log de runs recientes -->
+    <div style="margin-top:20px">
+      <div style="font-size:12px;color:rgba(240,246,252,.5);margin-bottom:10px;font-weight:600;text-transform:uppercase;letter-spacing:.05em">Últimas ejecuciones</div>
+      <div id="agent-runs-log" style="font-size:12px;color:rgba(240,246,252,.4);font-family:var(--mono)">Cargando...</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
      LITPERBOT v2 — FAB + PANEL MULTI-MODO
      ══════════════════════════════════════════════════════ -->
 <div id="lp-toast"></div>
@@ -968,4 +1063,134 @@
 
 <script src="/js/dashboard.js" defer></script>
 
-<script id="mrx-js">(function(){var c=document.getElementById("mrx");if(!c)return;var x=c.getContext("2d"),H="0123456789ABCDEF",fs=14,cols,drops,paused=false,lt=0,IV=40;function rsz(){c.width=innerWidth;c.height=innerHeight;cols=Math.floor(c.width/fs);drops=Array.from({length:cols},function(){return Math.random()*-60|0;});}function draw(t){if(!paused&&t-lt>=IV){lt=t;x.fillStyle="rgba(7,8,10,0.06)";x.fillRect(0,0,c.width,c.height);x.font=fs+"px monospace";x.fillStyle="rgba(0,255,136,0.30)";for(var i=0;i<drops.length;i++){x.fillText(H[Math.random()*16|0],i*fs,drops[i]*fs);if(drops[i]*fs>c.height&&Math.random()>.975)drops[i]=0;drops[i]++;}}requestAnimationFrame(draw);}document.addEventListener("visibilitychange",function(){paused=document.hidden;if(!paused)lt=0;});window.addEventListener("resize",rsz);rsz();requestAnimationFrame(draw);})();</script></body>
+<script id="mrx-js">(function(){var c=document.getElementById("mrx");if(!c)return;var x=c.getContext("2d"),H="0123456789ABCDEF",fs=14,cols,drops,paused=false,lt=0,IV=40;function rsz(){c.width=innerWidth;c.height=innerHeight;cols=Math.floor(c.width/fs);drops=Array.from({length:cols},function(){return Math.random()*-60|0;});}function draw(t){if(!paused&&t-lt>=IV){lt=t;x.fillStyle="rgba(7,8,10,0.06)";x.fillRect(0,0,c.width,c.height);x.font=fs+"px monospace";x.fillStyle="rgba(0,255,136,0.30)";for(var i=0;i<drops.length;i++){x.fillText(H[Math.random()*16|0],i*fs,drops[i]*fs);if(drops[i]*fs>c.height&&Math.random()>.975)drops[i]=0;drops[i]++;}}requestAnimationFrame(draw);}document.addEventListener("visibilitychange",function(){paused=document.hidden;if(!paused)lt=0;});window.addEventListener("resize",rsz);rsz();requestAnimationFrame(draw);})();</script>
+
+<script>
+// ── Agentes IA — lógica del panel ───────────────────────────────────────────
+(function(){
+  var agentRunning = false;
+
+  // Carga KPIs y últimas ejecuciones del agente
+  window.loadAgentStatus = async function() {
+    if (!window._orgId) return;
+    try {
+      const r = await fetch('/api/agents/cod-confirmation?action=status&org_id=' + window._orgId);
+      if (!r.ok) return;
+      const data = await r.json();
+
+      // KPIs
+      const pending   = data.stats?.pending?.[0]?.count   || 0;
+      const confirmed = data.stats?.confirmed?.[0]?.count || 0;
+      const blocked   = data.stats?.blocked?.[0]?.count   || 0;
+      const savings   = formatCOP(blocked * 15000);
+
+      document.getElementById('akpi-pending').textContent   = pending;
+      document.getElementById('akpi-confirmed').textContent = confirmed;
+      document.getElementById('akpi-blocked').textContent   = blocked;
+      document.getElementById('akpi-savings').textContent   = savings;
+
+      // Badge sidebar
+      if (pending > 0) {
+        var badge = document.getElementById('agent-badge');
+        badge.style.display = 'inline';
+        badge.textContent = pending;
+      }
+
+      // Log de runs
+      var runs = data.runs || [];
+      var log = document.getElementById('agent-runs-log');
+      if (!runs.length) { log.textContent = 'Sin ejecuciones aún.'; return; }
+      log.innerHTML = runs.map(function(r) {
+        var statusColor = r.status === 'completed' ? '#22c55e' : r.status === 'failed' ? '#ef4444' : '#f59e0b';
+        var ts = new Date(r.created_at).toLocaleString('es-CO', {day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
+        var out = r.output ? JSON.stringify(r.output).slice(0,80) : '';
+        return '<div style="padding:8px 0;border-bottom:1px solid rgba(255,255,255,.04)">' +
+          '<span style="color:' + statusColor + '">' + r.status + '</span>' +
+          ' · ' + ts +
+          ' · <span style="color:rgba(240,246,252,.4)">' + out + '</span>' +
+          '</div>';
+      }).join('');
+    } catch(e) {
+      document.getElementById('agent-runs-log').textContent = 'Error al cargar: ' + e.message;
+    }
+  };
+
+  // Ejecutar el agente COD
+  window.runCodAgent = async function() {
+    if (agentRunning) return;
+    if (!window._orgId) { alert('Inicia sesión primero'); return; }
+
+    var btn = document.getElementById('btn-run-cod');
+    var msg = document.getElementById('agent-run-msg');
+    var statusEl = document.getElementById('agent-cod-status');
+    var raw = document.getElementById('agent-orders-input').value.trim();
+
+    var orders = [];
+    if (raw) {
+      try { orders = JSON.parse(raw); }
+      catch(e) { msg.style.color = '#ef4444'; msg.textContent = 'JSON inválido: ' + e.message; return; }
+    }
+
+    agentRunning = true;
+    btn.disabled = true;
+    btn.style.opacity = '.5';
+    statusEl.style.background = 'rgba(245,158,11,.2)';
+    statusEl.style.color = '#f59e0b';
+    statusEl.textContent = 'Ejecutando...';
+    msg.style.color = 'rgba(240,246,252,.5)';
+    msg.textContent = 'El agente está procesando los pedidos...';
+
+    try {
+      var token = window._sb?.auth?.session?.access_token || '';
+      var r = await fetch('/api/agents/cod-confirmation', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+        body: JSON.stringify({ action: 'run', org_id: window._orgId, orders }),
+      });
+      var result = await r.json();
+
+      if (r.ok) {
+        statusEl.style.background = 'rgba(34,197,94,.2)';
+        statusEl.style.color = '#22c55e';
+        statusEl.textContent = 'Completado';
+        msg.style.color = '#22c55e';
+        msg.textContent = '✓ Enviados: ' + (result.sent||0) + ' · Bloqueados: ' + (result.blocked||0) + ' · Omitidos: ' + (result.skipped||0);
+        document.getElementById('agent-orders-input').value = '';
+        setTimeout(window.loadAgentStatus, 1000);
+      } else {
+        throw new Error(result.error || 'Error desconocido');
+      }
+    } catch(e) {
+      statusEl.style.background = 'rgba(239,68,68,.2)';
+      statusEl.style.color = '#ef4444';
+      statusEl.textContent = 'Error';
+      msg.style.color = '#ef4444';
+      msg.textContent = '✗ ' + e.message;
+    } finally {
+      agentRunning = false;
+      btn.disabled = false;
+      btn.style.opacity = '1';
+    }
+  };
+
+  function formatCOP(n) {
+    if (!n) return '$0';
+    return '$' + Math.round(n).toLocaleString('es-CO');
+  }
+
+  // Cargar estado cuando se abre el panel
+  var origGoTab = window.goTab;
+  if (typeof origGoTab === 'function') {
+    window.goTab = function(tab, el) {
+      origGoTab(tab, el);
+      if (tab === 'agentes') setTimeout(window.loadAgentStatus, 100);
+    };
+  }
+
+  // Guardar org_id cuando el dashboard lo cargue
+  document.addEventListener('litper:org_loaded', function(e) {
+    window._orgId = e.detail?.orgId;
+  });
+})();
+</script>
+</body>
