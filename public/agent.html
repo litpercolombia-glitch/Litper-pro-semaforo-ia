@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LitperOps Agent — Operaciones COD con IA</title>
+<meta name="description" content="Agente de operaciones COD para LATAM. Consulta tu semáforo, gestiona pedidos y optimiza logística por WhatsApp con IA.">
+<style>
+:root{
+  --bg:#080c14;--bg2:#0d1220;--bg3:#111827;
+  --brand:#00ff88;--cyan:#00d4ff;--violet:#a855f7;
+  --red:#ef4444;--yellow:#f59e0b;--green:#22c55e;
+  --text:#f0f6fc;--text2:rgba(240,246,252,.7);--text3:rgba(240,246,252,.4);
+  --border:rgba(255,255,255,.07);--border2:rgba(0,255,136,.15);
+  --font:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono','Fira Code',monospace;
+  --r:12px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--font);font-size:14px;line-height:1.6;overflow:hidden}
+
+/* ── LAYOUT ── */
+.app{display:flex;height:100vh;max-width:1200px;margin:0 auto;padding:0 16px}
+.sidebar{width:240px;flex-shrink:0;padding:20px 0;display:flex;flex-direction:column;gap:8px;border-right:1px solid var(--border)}
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+
+/* ── SIDEBAR ── */
+.logo{display:flex;align-items:center;gap:10px;padding:0 12px 20px;border-bottom:1px solid var(--border);margin-bottom:8px}
+.logo-mark{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,var(--brand),var(--cyan));display:flex;align-items:center;justify-content:center;font-weight:900;font-size:14px;color:#080c14}
+.logo-name{font-weight:700;font-size:14px}
+.logo-sub{font-size:10px;color:var(--text3);font-family:var(--mono)}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:var(--text2);cursor:pointer;font-size:13px;text-decoration:none;transition:all .15s;border:1px solid transparent}
+.nav-item:hover{background:rgba(255,255,255,.04);color:var(--text)}
+.nav-item.active{background:rgba(0,255,136,.08);border-color:var(--border2);color:var(--brand)}
+.nav-icon{font-size:16px;width:20px;text-align:center;flex-shrink:0}
+.nav-spacer{height:1px;background:var(--border);margin:8px 12px}
+.nav-label{font-size:10px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:.08em;padding:4px 12px}
+.sidebar-footer{margin-top:auto;padding-top:16px;border-top:1px solid var(--border)}
+.agent-status{display:flex;align-items:center;gap:8px;padding:8px 12px;font-size:11px;color:var(--text3)}
+.status-dot{width:6px;height:6px;border-radius:50%;background:var(--brand);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+/* ── HEADER ── */
+.header{display:flex;align-items:center;gap:12px;padding:16px 24px;border-bottom:1px solid var(--border);flex-shrink:0}
+.header-info{flex:1}
+.header-title{font-weight:700;font-size:16px;display:flex;align-items:center;gap:8px}
+.header-sub{font-size:11px;color:var(--text3)}
+.header-chip{font-size:10px;padding:2px 8px;border-radius:4px;background:rgba(0,255,136,.1);color:var(--brand);border:1px solid rgba(0,255,136,.2);font-family:var(--mono)}
+.header-actions{display:flex;gap:8px}
+.btn-sm{padding:6px 12px;border-radius:6px;border:1px solid var(--border);background:rgba(255,255,255,.04);color:var(--text2);font-size:12px;cursor:pointer;transition:all .15s;font-family:var(--font)}
+.btn-sm:hover{background:rgba(255,255,255,.08);color:var(--text)}
+
+/* ── MENSAJES ── */
+.messages{flex:1;overflow-y:auto;padding:24px;display:flex;flex-direction:column;gap:20px;scroll-behavior:smooth}
+.messages::-webkit-scrollbar{width:4px}
+.messages::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:2px}
+
+.msg{display:flex;gap:12px;max-width:860px}
+.msg.user{align-self:flex-end;flex-direction:row-reverse;max-width:680px}
+.msg-avatar{width:32px;height:32px;border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700}
+.msg.agent .msg-avatar{background:linear-gradient(135deg,rgba(0,255,136,.2),rgba(0,212,255,.1));border:1px solid rgba(0,255,136,.2);color:var(--brand)}
+.msg.user  .msg-avatar{background:rgba(168,85,247,.15);border:1px solid rgba(168,85,247,.2);color:var(--violet)}
+.msg-body{flex:1;display:flex;flex-direction:column;gap:8px}
+.msg-text{padding:12px 16px;border-radius:12px;line-height:1.65;white-space:pre-wrap;font-size:13.5px}
+.msg.agent .msg-text{background:var(--bg2);border:1px solid var(--border)}
+.msg.user  .msg-text{background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.15);align-self:flex-end}
+.msg-text strong{color:var(--brand)}
+.msg-text em{color:var(--text2)}
+
+/* ── TOOL CARDS ── */
+.tool-card{border-radius:10px;border:1px solid var(--border);overflow:hidden;font-size:12px}
+.tool-header{display:flex;align-items:center;gap:8px;padding:8px 12px;background:rgba(255,255,255,.02);cursor:pointer;user-select:none}
+.tool-name{font-family:var(--mono);color:var(--cyan);flex:1}
+.tool-status{display:flex;align-items:center;gap:4px}
+.tool-spinner{width:10px;height:10px;border:1.5px solid rgba(0,212,255,.3);border-top-color:var(--cyan);border-radius:50%;animation:spin .6s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.tool-check{color:var(--green);font-size:13px}
+.tool-err{color:var(--red);font-size:13px}
+.tool-badge{font-size:10px;padding:1px 6px;border-radius:3px;font-family:var(--mono)}
+.tool-badge.querying{background:rgba(0,212,255,.1);color:var(--cyan)}
+.tool-badge.done{background:rgba(34,197,94,.1);color:var(--green)}
+.tool-badge.error{background:rgba(239,68,68,.1);color:var(--red)}
+.tool-body{padding:12px;border-top:1px solid var(--border);background:rgba(0,0,0,.2);display:none}
+.tool-body.open{display:block}
+.tool-body pre{font-family:var(--mono);font-size:11px;color:var(--text2);white-space:pre-wrap;word-break:break-all;max-height:200px;overflow-y:auto}
+
+/* Semáforo inline en tool results */
+.sema-verde{color:var(--green);font-weight:700}
+.sema-amarillo{color:var(--yellow);font-weight:700}
+.sema-rojo{color:var(--red);font-weight:700}
+.result-table{width:100%;border-collapse:collapse;margin-top:6px}
+.result-table th{text-align:left;color:var(--text3);padding:4px 8px;font-size:10px;text-transform:uppercase;letter-spacing:.05em;border-bottom:1px solid var(--border)}
+.result-table td{padding:5px 8px;border-bottom:1px solid rgba(255,255,255,.03);font-size:11px;font-family:var(--mono)}
+
+/* ── TYPING ── */
+.typing{display:flex;align-items:center;gap:6px;padding:12px 16px;background:var(--bg2);border:1px solid var(--border);border-radius:12px;width:fit-content;font-size:12px;color:var(--text3)}
+.typing-dots{display:flex;gap:3px}
+.typing-dot{width:4px;height:4px;border-radius:50%;background:var(--text3);animation:bounce .8s infinite}
+.typing-dot:nth-child(2){animation-delay:.15s}
+.typing-dot:nth-child(3){animation-delay:.3s}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+
+/* ── WELCOME ── */
+.welcome{text-align:center;padding:40px 24px;max-width:560px;margin:auto}
+.welcome-icon{font-size:48px;margin-bottom:16px}
+.welcome h2{font-size:22px;font-weight:700;margin-bottom:8px}
+.welcome p{color:var(--text2);font-size:14px;line-height:1.6;margin-bottom:24px}
+.quick-prompts{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.quick-btn{padding:8px 14px;border-radius:8px;border:1px solid var(--border);background:rgba(255,255,255,.03);color:var(--text2);font-size:12px;cursor:pointer;transition:all .15s;font-family:var(--font);text-align:left}
+.quick-btn:hover{background:rgba(0,255,136,.05);border-color:var(--border2);color:var(--brand)}
+
+/* ── INPUT ── */
+.input-area{padding:16px 24px;border-top:1px solid var(--border);flex-shrink:0}
+.input-box{display:flex;gap:10px;align-items:flex-end;background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:12px 16px;transition:border-color .2s}
+.input-box:focus-within{border-color:rgba(0,255,136,.3)}
+.input-textarea{flex:1;background:transparent;border:none;color:var(--text);font-family:var(--font);font-size:14px;resize:none;outline:none;max-height:120px;min-height:24px;line-height:1.5}
+.input-textarea::placeholder{color:var(--text3)}
+.send-btn{width:36px;height:36px;border-radius:8px;background:var(--brand);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:all .15s;color:#080c14}
+.send-btn:hover{background:#00e87a;transform:scale(1.05)}
+.send-btn:disabled{background:rgba(255,255,255,.1);cursor:not-allowed;transform:none;color:var(--text3)}
+.input-hint{font-size:10px;color:var(--text3);margin-top:6px;text-align:center}
+
+/* ── MOBILE ── */
+@media(max-width:640px){
+  .app{padding:0}
+  .sidebar{display:none}
+  .header{padding:12px 16px}
+  .messages{padding:16px}
+  .input-area{padding:12px 16px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ── SIDEBAR ── -->
+  <div class="sidebar">
+    <div class="logo">
+      <div class="logo-mark">LP</div>
+      <div>
+        <div class="logo-name">LitperOps</div>
+        <div class="logo-sub">Agent v1.0</div>
+      </div>
+    </div>
+
+    <div class="nav-label">Herramientas activas</div>
+    <div class="nav-item active"><span class="nav-icon">🤖</span>Agente Operaciones</div>
+
+    <div class="nav-spacer"></div>
+    <div class="nav-label">Navegar</div>
+    <a class="nav-item" href="/dashboard"><span class="nav-icon">🚦</span>Semáforo Dashboard</a>
+    <a class="nav-item" href="/dashboard#panel-agentes"><span class="nav-icon">⚡</span>Panel Agentes</a>
+
+    <div class="nav-spacer"></div>
+    <div class="nav-label">Capacidades</div>
+    <div class="nav-item" style="cursor:default;opacity:.7"><span class="nav-icon">📊</span>Semáforo logístico</div>
+    <div class="nav-item" style="cursor:default;opacity:.7"><span class="nav-icon">💬</span>WhatsApp directo</div>
+    <div class="nav-item" style="cursor:default;opacity:.7"><span class="nav-icon">🚫</span>Bloqueo pedidos</div>
+    <div class="nav-item" style="cursor:default;opacity:.7"><span class="nav-icon">📈</span>KPIs y CPA</div>
+
+    <div class="sidebar-footer">
+      <div class="agent-status">
+        <div class="status-dot"></div>
+        <span>Agente activo · Claude Sonnet</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── MAIN ── -->
+  <div class="main">
+    <div class="header">
+      <div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,rgba(0,255,136,.2),rgba(0,212,255,.1));display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">🤖</div>
+      <div class="header-info">
+        <div class="header-title">
+          LitperOps Agent
+          <span class="header-chip">BETA</span>
+        </div>
+        <div class="header-sub" id="header-sub">Conectando...</div>
+      </div>
+      <div class="header-actions">
+        <button class="btn-sm" onclick="clearChat()">Nueva conversación</button>
+        <a class="btn-sm" href="/dashboard" style="text-decoration:none">← Dashboard</a>
+      </div>
+    </div>
+
+    <div class="messages" id="messages">
+      <div class="welcome" id="welcome">
+        <div class="welcome-icon">🤖</div>
+        <h2>Soy tu agente de operaciones COD</h2>
+        <p>Consulto tu semáforo en tiempo real, envío WhatsApp, bloqueo pedidos de riesgo y calculo tu CPA. No solo te digo qué pasa — <strong>actúo</strong>.</p>
+        <div class="quick-prompts">
+          <button class="quick-btn" onclick="sendQuick(this)">¿Cómo estamos hoy en entregas?</button>
+          <button class="quick-btn" onclick="sendQuick(this)">¿Qué ciudades están en rojo?</button>
+          <button class="quick-btn" onclick="sendQuick(this)">¿Cuántos pedidos pendientes de confirmar?</button>
+          <button class="quick-btn" onclick="sendQuick(this)">Si llegamos al 85% ¿cuánto ahorramos en CPA?</button>
+          <button class="quick-btn" onclick="sendQuick(this)">¿Cuál carrier tiene peor tasa?</button>
+          <button class="quick-btn" onclick="sendQuick(this)">Dame un resumen ejecutivo del día</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="input-area">
+      <div class="input-box">
+        <textarea
+          id="msg-input"
+          class="input-textarea"
+          placeholder="Pregunta algo o pide una acción... (Enter para enviar)"
+          rows="1"
+          onkeydown="handleKey(event)"
+          oninput="autoResize(this)"
+        ></textarea>
+        <button class="send-btn" id="send-btn" onclick="sendMessage()" title="Enviar">
+          <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+        </button>
+      </div>
+      <div class="input-hint">El agente tiene acceso a tus datos reales de Supabase · Puede enviar WhatsApp · Bloquear pedidos</div>
+    </div>
+  </div>
+</div>
+
+<script src="/js/supabase-client.js"></script>
+<script>
+// ── ESTADO ───────────────────────────────────────────────────────────────────
+const state = {
+  messages: [],   // historial para la API
+  running: false,
+  token: null,
+  orgId: null,
+};
+
+// ── INIT ─────────────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', async () => {
+  try {
+    if (typeof requireAuth === 'function') {
+      const session = await requireAuth();
+      state.token = session?.access_token;
+    }
+    document.getElementById('header-sub').textContent = 'Listo — consulta tus datos en tiempo real';
+  } catch {
+    document.getElementById('header-sub').textContent = 'Sin sesión — algunas funciones no estarán disponibles';
+  }
+});
+
+// ── SEND ──────────────────────────────────────────────────────────────────────
+async function sendMessage(text) {
+  const input = document.getElementById('msg-input');
+  const msg   = (text || input.value).trim();
+  if (!msg || state.running) return;
+
+  // Limpiar welcome
+  const welcome = document.getElementById('welcome');
+  if (welcome) welcome.remove();
+
+  input.value = '';
+  autoResize(input);
+
+  // Agregar mensaje del usuario
+  state.messages.push({ role: 'user', content: msg });
+  appendUserMsg(msg);
+
+  // Typing indicator
+  const typingId = appendTyping();
+  setRunning(true);
+
+  try {
+    await streamAgent(typingId);
+  } catch (e) {
+    removeEl(typingId);
+    appendAgentMsg(`Error: ${e.message}`, []);
+  } finally {
+    setRunning(false);
+  }
+}
+
+function sendQuick(btn) { sendMessage(btn.textContent); }
+
+async function streamAgent(typingId) {
+  const r = await fetch('/api/agent-ops', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...(state.token ? { Authorization: `Bearer ${state.token}` } : {}),
+    },
+    body: JSON.stringify({ messages: state.messages }),
+  });
+
+  if (!r.ok) {
+    removeEl(typingId);
+    const err = await r.json().catch(() => ({ error: `HTTP ${r.status}` }));
+    appendAgentMsg(`⚠ ${err.error || 'Error del servidor'}`, []);
+    return;
+  }
+
+  removeEl(typingId);
+
+  const reader = r.body.getReader();
+  const dec    = new TextDecoder();
+  let   buf    = '';
+
+  // Crear contenedor del mensaje agente
+  const msgEl   = appendAgentMsgStream();
+  const textEl  = msgEl.querySelector('.msg-text');
+  const toolsEl = msgEl.querySelector('.msg-tools');
+
+  let   fullText = '';
+  const toolMap  = {};  // id → {headerEl, bodyEl, status}
+
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    buf += dec.decode(value, { stream: true });
+
+    const lines = buf.split('\n');
+    buf = lines.pop();
+
+    for (const line of lines) {
+      if (!line.startsWith('data: ')) continue;
+      let evt;
+      try { evt = JSON.parse(line.slice(6)); } catch { continue; }
+
+      switch (evt.type) {
+        case 'text':
+          fullText += evt.text;
+          textEl.innerHTML = markdownLite(fullText);
+          scrollBottom();
+          break;
+
+        case 'tool_start': {
+          const card = createToolCard(evt.name, evt.input, 'querying');
+          toolsEl.appendChild(card);
+          toolMap[evt.id] = card;
+          scrollBottom();
+          break;
+        }
+
+        case 'tool_result': {
+          const card = toolMap[evt.id];
+          if (card) updateToolCard(card, evt.result, 'done');
+          break;
+        }
+
+        case 'tool_error': {
+          const card = toolMap[evt.id];
+          if (card) updateToolCard(card, { error: evt.error }, 'error');
+          break;
+        }
+
+        case 'error':
+          fullText += `\n\n⚠ ${evt.message}`;
+          textEl.innerHTML = markdownLite(fullText);
+          break;
+
+        case 'done':
+          break;
+      }
+    }
+  }
+
+  // Guardar en historial (solo texto por ahora)
+  if (fullText) state.messages.push({ role: 'assistant', content: fullText });
+}
+
+// ── DOM HELPERS ───────────────────────────────────────────────────────────────
+function appendUserMsg(text) {
+  const msgs = document.getElementById('messages');
+  const el = document.createElement('div');
+  el.className = 'msg user';
+  el.innerHTML = `
+    <div class="msg-avatar">U</div>
+    <div class="msg-body"><div class="msg-text">${escHtml(text)}</div></div>`;
+  msgs.appendChild(el);
+  scrollBottom();
+}
+
+function appendTyping() {
+  const msgs = document.getElementById('messages');
+  const id = 'typing-' + Date.now();
+  const el = document.createElement('div');
+  el.className = 'msg agent';
+  el.id = id;
+  el.innerHTML = `
+    <div class="msg-avatar">AI</div>
+    <div class="msg-body">
+      <div class="typing">
+        <span style="font-size:11px;color:var(--cyan)">LitperOps</span>
+        <div class="typing-dots">
+          <div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>
+        </div>
+      </div>
+    </div>`;
+  msgs.appendChild(el);
+  scrollBottom();
+  return id;
+}
+
+function appendAgentMsgStream() {
+  const msgs = document.getElementById('messages');
+  const el = document.createElement('div');
+  el.className = 'msg agent';
+  el.innerHTML = `
+    <div class="msg-avatar">AI</div>
+    <div class="msg-body">
+      <div class="msg-tools"></div>
+      <div class="msg-text"></div>
+    </div>`;
+  msgs.appendChild(el);
+  return el;
+}
+
+function appendAgentMsg(text, tools) {
+  const msgs = document.getElementById('messages');
+  const el = document.createElement('div');
+  el.className = 'msg agent';
+  el.innerHTML = `
+    <div class="msg-avatar">AI</div>
+    <div class="msg-body"><div class="msg-text">${markdownLite(text)}</div></div>`;
+  msgs.appendChild(el);
+  scrollBottom();
+}
+
+// ── TOOL CARDS ────────────────────────────────────────────────────────────────
+const TOOL_LABELS = {
+  get_delivery_stats:    ['📊', 'Consultando semáforo...'],
+  get_logistics_kpis:    ['📈', 'Calculando KPIs...'],
+  get_cod_orders:        ['📦', 'Cargando pedidos COD...'],
+  send_whatsapp:         ['💬', 'Enviando WhatsApp...'],
+  block_order:           ['🚫', 'Bloqueando pedido...'],
+  run_cod_confirmation:  ['⚡', 'Iniciando agente COD...'],
+};
+
+function createToolCard(name, input, status) {
+  const [icon, label] = TOOL_LABELS[name] || ['🔧', `${name}...`];
+  const el = document.createElement('div');
+  el.className = 'tool-card';
+  el.innerHTML = `
+    <div class="tool-header" onclick="toggleTool(this)">
+      <span>${icon}</span>
+      <span class="tool-name">${name}</span>
+      <div class="tool-status">
+        <div class="tool-spinner"></div>
+        <span class="tool-badge querying">${label}</span>
+      </div>
+    </div>
+    <div class="tool-body">
+      <pre>${escHtml(JSON.stringify(input, null, 2))}</pre>
+    </div>`;
+  return el;
+}
+
+function updateToolCard(card, result, status) {
+  const header = card.querySelector('.tool-header');
+  const spinner = card.querySelector('.tool-spinner');
+  const badge   = card.querySelector('.tool-badge');
+
+  if (spinner) spinner.remove();
+
+  if (status === 'done') {
+    badge.className = 'tool-badge done';
+    badge.textContent = '✓ Listo';
+  } else {
+    badge.className = 'tool-badge error';
+    badge.textContent = '✗ Error';
+  }
+
+  // Render result
+  const body = card.querySelector('.tool-body');
+  body.innerHTML = renderToolResult(result);
+}
+
+function toggleTool(header) {
+  const body = header.nextElementSibling;
+  body.classList.toggle('open');
+}
+
+function renderToolResult(result) {
+  if (!result || typeof result !== 'object') return `<pre>${escHtml(String(result))}</pre>`;
+  if (result.error) return `<pre style="color:var(--red)">${escHtml(result.error)}</pre>`;
+
+  // City/carrier stats → tabla
+  if (result.rows && Array.isArray(result.rows)) {
+    const rows = result.rows.slice(0, 15);
+    if (!rows.length) return '<pre>Sin datos</pre>';
+    const keys = Object.keys(rows[0]).filter(k => !['id','org_id','upload_id'].includes(k));
+    return `<table class="result-table">
+      <thead><tr>${keys.map(k=>`<th>${k}</th>`).join('')}</tr></thead>
+      <tbody>${rows.map(r=>`<tr>${keys.map(k=>`<td class="${k==='semaforo'?'sema-'+r[k]:''}">${r[k]??'—'}</td>`).join('')}</tr>`).join('')}</tbody>
+    </table>`;
+  }
+
+  // KPIs → lista legible
+  if (result.delivery_rate_pct !== undefined) {
+    const s = result.semaforo;
+    const color = s==='verde'?'--green':s==='amarillo'?'--yellow':'--red';
+    return `<pre>Tasa: <span style="color:var(${color})">${result.delivery_rate_pct}% (${s})</span>
+CPA actual:  $${(result.cpa_actual||0).toLocaleString('es-CO')} COP
+CPA objetivo: $${(result.cpa_objetivo||0).toLocaleString('es-CO')} COP
+Pedidos: ${result.total_orders||0} total · ${result.delivered||0} entregados · ${result.returned||0} devueltos
+${result.scenario?`\nSimulación ${result.scenario.rate_pct}%: $${result.scenario.cpa_simulado.toLocaleString('es-CO')} CPA · Ahorro: $${result.scenario.ahorro_por_pedido_cop?.toLocaleString('es-CO')||'—'}/pedido`:''}
+Ciudades en rojo: ${(result.top_ciudades_rojo||[]).map(c=>`${c.city} (${c.rate}%)`).join(', ')||'ninguna'}</pre>`;
+  }
+
+  // WhatsApp sent
+  if (result.sent !== undefined) {
+    return `<pre>${result.sent?'✓ Enviado':'✗ No enviado'}${result.to?' → +'+result.to:''}
+${result.preview?'Mensaje: '+result.preview:''}
+${result.reason||''}</pre>`;
+  }
+
+  return `<pre>${escHtml(JSON.stringify(result, null, 2))}</pre>`;
+}
+
+// ── UTILS ─────────────────────────────────────────────────────────────────────
+function markdownLite(text) {
+  return text
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g,'<em>$1</em>')
+    .replace(/`([^`]+)`/g,'<code style="font-family:var(--mono);background:rgba(0,255,136,.08);padding:1px 5px;border-radius:3px;color:var(--cyan)">$1</code>')
+    .replace(/^### (.+)$/gm,'<div style="font-weight:700;color:var(--text);margin:6px 0 2px">$1</div>')
+    .replace(/^## (.+)$/gm,'<div style="font-weight:700;font-size:15px;color:var(--brand);margin:8px 0 4px">$1</div>')
+    .replace(/^- (.+)$/gm,'<div style="padding-left:14px">• $1</div>')
+    .replace(/\n/g,'<br>');
+}
+
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function removeEl(id) {
+  const el = document.getElementById(id);
+  if (el) el.remove();
+}
+
+function scrollBottom() {
+  const msgs = document.getElementById('messages');
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function setRunning(v) {
+  state.running = v;
+  document.getElementById('send-btn').disabled = v;
+  document.getElementById('msg-input').disabled = v;
+}
+
+function clearChat() {
+  state.messages = [];
+  const msgs = document.getElementById('messages');
+  msgs.innerHTML = '';
+  const welcome = document.createElement('div');
+  welcome.className = 'welcome';
+  welcome.id = 'welcome';
+  welcome.innerHTML = `
+    <div class="welcome-icon">🤖</div>
+    <h2>Nueva conversación</h2>
+    <p>¿Qué quieres revisar o ejecutar?</p>
+    <div class="quick-prompts">
+      <button class="quick-btn" onclick="sendQuick(this)">¿Cómo estamos hoy en entregas?</button>
+      <button class="quick-btn" onclick="sendQuick(this)">¿Qué ciudades están en rojo?</button>
+      <button class="quick-btn" onclick="sendQuick(this)">¿Cuántos pedidos pendientes?</button>
+      <button class="quick-btn" onclick="sendQuick(this)">Dame un resumen ejecutivo</button>
+    </div>`;
+  msgs.appendChild(welcome);
+}
+
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+}
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+}
+</script>
+</body>
+</html>
