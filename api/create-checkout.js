@@ -1,5 +1,5 @@
 // ══════════════════════════════════════════════════════════════
-// LITPERPRO — Vercel Serverless: Create Stripe Checkout Session
+// ZYNEX — Vercel Serverless: Create Stripe Checkout Session
 // FIX 2026-04-14: Restricted CORS to allowed origins only
 // ══════════════════════════════════════════════════════════════
 

@@ -1,5 +1,6 @@
+function esc(v){return String(v==null?'':v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
 /* ═══════════════════════════════════════════════
-   LITPERPRO Dashboard — JavaScript v2.0
+   ZYNEX Dashboard — JavaScript v2.0
    Extracted from inline <script> blocks
    ═══════════════════════════════════════════════ */
 
@@ -1653,7 +1654,7 @@ function renderBenchmark(){
     </table>
     </div>
     <div style="font-size:10px;font-family:var(--mono);color:rgba(255,255,255,.2);margin-top:10px">
-      * Datos anonimizados de sellers COD activos en LitperPro. Tu información nunca se comparte con terceros.
+      * Datos anonimizados de sellers COD activos en ZYNEX. Tu información nunca se comparte con terceros.
     </div>
     ` : `<p style="font-size:13px;color:rgba(255,255,255,.4);text-align:center;padding:20px">Carga un Excel con pedidos para ver tu benchmark vs el sector.</p>`}
   `;
@@ -2130,8 +2131,8 @@ function exportTxt(){
   const model = currentModel||'ia';
   const analysis = activeAI||'gen';
   const chip = document.querySelector('.chip.act')?.textContent?.trim().replace(/[^a-zA-Z0-9]/g,'_')||'analisis';
-  const filename = `LitperPro_${model}_${chip}_${date}.txt`;
-  const header = `LitperPro — Análisis con ${model.toUpperCase()}
+  const filename = `ZYNEX_${model}_${chip}_${date}.txt`;
+  const header = `ZYNEX — Análisis con ${model.toUpperCase()}
 Fecha: ${new Date().toLocaleString('es-CO')}
 Tipo: ${chip}
 Modelo: ${model}
@@ -2158,7 +2159,7 @@ function copyNotion(){
   const model = currentModel||'IA';
   const date = new Date().toLocaleString('es-CO',{dateStyle:'short',timeStyle:'short'});
   // Formato Notion: título, fecha, modelo, separador, contenido
-  var notionFmt = '## ' + chip + ' -- LitperPro\n> Generado por ' + model.toUpperCase() + ' - ' + date + '\n\n---\n\n' + text;
+  var notionFmt = '## ' + chip + ' -- ZYNEX\n> Generado por ' + model.toUpperCase() + ' - ' + date + '\n\n---\n\n' + text;
   navigator.clipboard.writeText(notionFmt).then(()=>{
     const btn = document.getElementById('btn-notion');
     btn.innerHTML = '✅ Copiado para Notion';
@@ -2399,7 +2400,7 @@ function exportCSV(){
     csv += `"${ciudad}",${total},${ent||''},${dev||''},${tasa},"${mc}",${estado}
 `;
   });
-  downloadFile(csv, `LitperPro_Semaforo_${now}.csv`, 'text/csv');
+  downloadFile(csv, `ZYNEX_Semaforo_${now}.csv`, 'text/csv');
 }
 
 function exportCarriersCSV(){
@@ -2411,7 +2412,7 @@ function exportCarriersCSV(){
     csv += `"${t.transportadora}",${t.total},${t.entregados||''},${t.devoluciones||''},${t.tasa_entrega},${cpa}
 `;
   });
-  downloadFile(csv, `LitperPro_Carriers_${now}.csv`, 'text/csv');
+  downloadFile(csv, `ZYNEX_Carriers_${now}.csv`, 'text/csv');
 }
 
 function exportJSON(){
@@ -2428,7 +2429,7 @@ function exportJSON(){
     carriers: T,
     alertas: A
   };
-  downloadFile(JSON.stringify(data, null, 2), `LitperPro_Data_${now}.json`, 'application/json');
+  downloadFile(JSON.stringify(data, null, 2), `ZYNEX_Data_${now}.json`, 'application/json');
 }
 
 function exportReport(){
@@ -2438,7 +2439,7 @@ function exportReport(){
   const verdes = C.filter(x=>x[4]>=80.5&&x[1]>=50).sort((a,b)=>b[1]-a[1]).slice(0,5);
   const topCarrier = T.sort((a,b)=>b.tasa_entrega-a.tasa_entrega)[0];
   
-  let txt = `LITPERPRO - REPORTE EJECUTIVO
+  let txt = `ZYNEX - REPORTE EJECUTIVO
 ${'='.repeat(50)}
 Generado: ${now}
 
@@ -2480,12 +2481,12 @@ ${'-'.repeat(30)}
   
   txt += `
 ${'='.repeat(50)}
-LitperPro - litperpro.vercel.app
+ZYNEX - litperpro.vercel.app
 Colombia (CO) - Chile (CL) - Guatemala (GT) - Mexico (MX)
 `;
   
   const now2 = new Date().toLocaleDateString('es-CO').replace(/\//g,'-');
-  downloadFile(txt, `LitperPro_Reporte_${now2}.txt`, 'text/plain');
+  downloadFile(txt, `ZYNEX_Reporte_${now2}.txt`, 'text/plain');
 }
 
 function exportBloqueoCSV(){
@@ -2503,7 +2504,7 @@ Ciudad,Tasa_%,Total_Pedidos,Carrier_Actual,Accion_Recomendada
     csv += `"${row[0]}",${row[4]},${row[1]},"${mc}","${accion}"
 `;
   });
-  downloadFile(csv, `LitperPro_Bloqueo_${umbral}pct_${now}.csv`, 'text/csv');
+  downloadFile(csv, `ZYNEX_Bloqueo_${umbral}pct_${now}.csv`, 'text/csv');
 }
 
 // ════════════════════════════════════════════════════════════
@@ -2584,7 +2585,7 @@ function handleJSONImport(input){
     try{
       const data = JSON.parse(e.target.result);
       if(!data.global||!data.ciudades){
-        alert('JSON inválido. Debe ser un archivo exportado desde LitperPro (contiene: global, ciudades, carriers, alertas).');
+        alert('JSON inválido. Debe ser un archivo exportado desde ZYNEX (contiene: global, ciudades, carriers, alertas).');
         return;
       }
       // Restaurar datos
@@ -2597,7 +2598,7 @@ function handleJSONImport(input){
       rMetrics();
       switchTab('ciudades');
     }catch(err){
-      alert('Error leyendo JSON: '+err.message+'\n\nAsegúrate de que sea un archivo exportado por LitperPro.');
+      alert('Error leyendo JSON: '+err.message+'\n\nAsegúrate de que sea un archivo exportado por ZYNEX.');
     }
   };
   reader.readAsText(file, 'UTF-8');
@@ -2719,7 +2720,7 @@ function lpWelcome(){
     msg += '🏆 Mayor volumen: ' + top[0] + ' (' + top[1] + ' ped, ' + top[4] + '%)\n\n';
     msg += 'Usa los botones de la izquierda o escríbeme libremente. ¿Qué analizamos?';
   }else{
-    msg = '👋 Hola, soy LitperBot.\n\nSube un Excel de Dropi en la zona de upload para que pueda analizar tus datos de entrega. Cuando estén listos, podré darte análisis de ciudades, carriers, carrier swap y planes semanales.\n\n¿En qué te ayudo mientras tanto?';
+    msg = '👋 Hola, soy ZYNEX Agent.\n\nSube un Excel de Dropi en la zona de upload para que pueda analizar tus datos de entrega. Cuando estén listos, podré darte análisis de ciudades, carriers, carrier swap y planes semanales.\n\n¿En qué te ayudo mientras tanto?';
   }
   lpAddMsg('bot', msg);
 }
@@ -2776,11 +2777,11 @@ function lpRemoveTyping(){
 
 // ── BUILD PROMPT (igual que pestaña IA) ──────────────────────
 function lpBuildSystemPrompt(){
-  if(typeof C === 'undefined' || !C || C.length===0) return 'Eres LitperBot, asistente logístico de LitperPro. No hay datos cargados. Responde en español, sé conciso.';
+  if(typeof C === 'undefined' || !C || C.length===0) return 'Eres ZYNEX Agent, asistente logístico de ZYNEX. No hay datos cargados. Responde en español, sé conciso.';
   var rojas = C.filter(function(x){return x[4]<70&&x[1]>=30;}).slice(0,8).map(function(x){return x[0]+':'+x[4]+'%';}).join(', ');
   var verdes = C.filter(function(x){return x[4]>=80.5&&x[1]>=30;}).slice(0,8).map(function(x){return x[0]+':'+x[4]+'%';}).join(', ');
   var carriers = (typeof T!=='undefined'?T:[]).map(function(t){return t.transportadora+':'+t.total+'ped/'+t.tasa_entrega+'%';}).join(', ');
-  return 'Eres LitperBot, asistente de logística para LitperPro (e-commerce COD en Colombia, Chile, Guatemala y México).\n' +
+  return 'Eres ZYNEX Agent, asistente de logística para ZYNEX (e-commerce COD en Colombia, Chile, Guatemala y México).\n' +
     'DATOS ACTUALES: ' + G.total + ' pedidos · ' + G.tasa_entrega + '% entrega · ' + G.devoluciones + ' devoluciones · ' + G.ciudades + ' ciudades · ' + G.transportadoras + ' carriers.\n' +
     'CIUDADES CRÍTICAS (<70%): ' + (rojas||'ninguna') + '.\n' +
     'CIUDADES GANADORAS (≥80%): ' + (verdes||'ninguna') + '.\n' +
@@ -2996,14 +2997,14 @@ function lpExportTxt(){
   var now = new Date().toLocaleDateString('es-CO').replace(/\//g,'-');
   var header = 'LITPERBOT — Sesión de chat\nFecha: '+new Date().toLocaleString('es-CO',{dateStyle:'full',timeStyle:'short'})+'\nModelo: '+lpChatModel.toUpperCase()+'\n'+'='.repeat(50)+'\n\n';
   var blob = new Blob([header+text],{type:'text/plain;charset=utf-8'});
-  var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='LitperBot_Chat_'+now+'.txt';a.click();URL.revokeObjectURL(a.href);
+  var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='ZYNEX Agent_Chat_'+now+'.txt';a.click();URL.revokeObjectURL(a.href);
   lpShowToast('💾 Chat exportado');
 }
 
 function lpExportNotion(){
   var text = lpGetChatText();
   var date = new Date().toLocaleString('es-CO',{dateStyle:'short',timeStyle:'short'});
-  var notion = '## LitperBot — Sesión ' + date + '\n> Modelo: ' + lpChatModel.toUpperCase() + '\n\n---\n\n' + text;
+  var notion = '## ZYNEX Agent — Sesión ' + date + '\n> Modelo: ' + lpChatModel.toUpperCase() + '\n\n---\n\n' + text;
   navigator.clipboard.writeText(notion).then(function(){
     lpShowToast('📓 Copiado con formato Notion');
   });

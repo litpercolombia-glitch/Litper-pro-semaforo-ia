@@ -1,5 +1,5 @@
 // ══════════════════════════════════════════════════════════════
-// LITPERPRO — Supabase Client Module v2.0
+// ZYNEX — Supabase Client Module v2.0
 // Shared across all pages. Load after supabase-js CDN.
 // Updated: uses auth_profiles (not profiles from Mission Control)
 // ══════════════════════════════════════════════════════════════
@@ -230,18 +230,7 @@ async function getUploadCarriers(uploadId) {
   return data || [];
 }
 
-async function updateOrgPlan(plan, aiQuota) {
-  const orgId = await getOrgId();
-  if (!orgId) return null;
-  const { data, error } = await supabase
-    .from('organizations')
-    .update({ plan, ai_quota: aiQuota })
-    .eq('id', orgId)
-    .select()
-    .single();
-  if (error) console.error('updateOrgPlan error:', error);
-  return data;
-}
+// updateOrgPlan ELIMINADO: el plan solo lo escribe el webhook de Stripe (service role).
 
 async function updateProfile(updates) {
   const user = await getUser();

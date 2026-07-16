@@ -1,5 +1,5 @@
 // ══════════════════════════════════════════════════════════════
-// LITPERPRO — Vercel Serverless: Stripe Webhook Handler
+// ZYNEX — Vercel Serverless: Stripe Webhook Handler
 // ══════════════════════════════════════════════════════════════
 
 import { buffer } from 'micro';

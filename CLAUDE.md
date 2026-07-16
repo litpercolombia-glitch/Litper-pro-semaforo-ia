@@ -1,4 +1,4 @@
-# LitperPro Semáforo IA — Guía completa para Claude Code
+# ZYNEX Semáforo IA — Guía completa para Claude Code
 
 ## Qué es esto
 Dashboard logístico COD (Cash on Delivery) de **Litper Group LLC** (Wyoming LLC, EIN: 38-4366550).
@@ -36,7 +36,7 @@ URL producción: https://litper-semaforo.vercel.app
 ### Persistencia (Supabase)
 - uploads, city_stats, carrier_stats — se guardan al subir Excel
 - ai_analyses — cada analisis de IA se persiste
-- chat_sessions — conversaciones del LitperBot
+- chat_sessions — conversaciones del ZYNEX Agent
 - Columnas generadas: city_stats.semaforo, carrier_stats.cpa_cop
 
 ### API Backend (Vercel Serverless)

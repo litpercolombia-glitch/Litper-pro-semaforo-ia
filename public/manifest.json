@@ -1,6 +1,6 @@
 {
-  "name": "LitperPro — Semáforo de Ciudades",
-  "short_name": "LitperPro",
+  "name": "ZYNEX — Semáforo de Ciudades",
+  "short_name": "ZYNEX",
   "description": "Plataforma de inteligencia logística COD para e-commerce en LATAM",
   "start_url": "/dashboard",
   "display": "standalone",
@@ -41,7 +41,7 @@
       "sizes": "1280x800",
       "type": "image/png",
       "form_factor": "wide",
-      "label": "Dashboard principal de LitperPro"
+      "label": "Dashboard principal de ZYNEX"
     }
   ]
 }

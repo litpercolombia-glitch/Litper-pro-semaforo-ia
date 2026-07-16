@@ -1,4 +1,4 @@
-# LitperPro by Litper Group LLC — Brand Identity System
+# ZYNEX by Litper Group LLC — Brand Identity System
 
 > **Version**: 2.0
 > **Last updated**: 2026-04-03
@@ -22,7 +22,7 @@ Porque cada paquete devuelto es dinero que una empresa LATAM pierde sin siquiera
 Value = (Dream Outcome x Perceived Likelihood) / (Time Delay x Effort)
 ```
 
-| Variable              | LitperPro Implementation                                           |
+| Variable              | ZYNEX Implementation                                           |
 |-----------------------|--------------------------------------------------------------------|
 | Dream Outcome         | Reducir perdidas logisticas 40%, optimizar carriers automaticamente |
 | Perceived Likelihood  | Dashboard con datos reales, IA predictiva, semaforo visual          |
@@ -37,10 +37,10 @@ Value = (Dream Outcome x Perceived Likelihood) / (Time Delay x Effort)
 ```
 Litper Group LLC              (Holding / Wyoming, USA — EIN: 38-4366550)
   |
-  +-- LitperPro               (Producto SaaS principal)
+  +-- ZYNEX               (Producto SaaS principal)
   |     |
   |     +-- Semaforo de Ciudades (TM)   — Feature insignia
-  |     +-- LitperBot IA               — Asistente conversacional
+  |     +-- ZYNEX Agent IA               — Asistente conversacional
   |     +-- Modo Jimmy                  — Operaciones diarias
   |     +-- Scorecard de Carriers       — Comparacion automatizada
   |
@@ -52,10 +52,10 @@ Litper Group LLC              (Holding / Wyoming, USA — EIN: 38-4366550)
 | Contexto         | Nombre           | Uso                                        |
 |------------------|------------------|--------------------------------------------|
 | Legal/Oficial    | Litper Group LLC | Contratos, facturacion, footer             |
-| Producto         | LitperPro        | App, marketing, pricing, landing           |
+| Producto         | ZYNEX        | App, marketing, pricing, landing           |
 | Casual/Brand     | Litper           | Social media, conversacion, dominio        |
 | Feature          | Semaforo(TM)     | Dentro del producto, marketing             |
-| Bot/IA           | LitperBot        | Chat, asistente inteligente                |
+| Bot/IA           | ZYNEX Agent        | Chat, asistente inteligente                |
 
 ### Taglines
 - **Principal**: "Inteligencia logistica que salva tu margen"
@@ -210,7 +210,7 @@ Dark-mode-first. Inspirado en Linear, Vercel y Stripe. El verde esmeralda (#00FF
 | Dashboard     | Analitico, preciso       | "Coordinadora: 82.3% entrega, CPA $18,200"       |
 | Pricing       | Valor > precio           | "ROI de 200x desde el primer mes"                 |
 | Error/Alert   | Claro, solucionable      | "No pudimos cargar los datos. Intenta de nuevo."  |
-| LitperBot     | Consultor experto        | "Basado en tus datos, te recomiendo..."           |
+| ZYNEX Agent     | Consultor experto        | "Basado en tus datos, te recomiendo..."           |
 | Onboarding    | Guia amigable            | "Sube tu Excel y en 30 segundos ves todo"         |
 
 ### Palabras Marca (usar)
@@ -224,7 +224,7 @@ Dark-mode-first. Inspirado en Linear, Vercel y Stripe. El verde esmeralda (#00FF
 ## 7. Logo Guidelines
 
 ### Logotipo Principal
-Wordmark tipografico: **LitperPro** en Inter weight 700 con letter-spacing 0.02em y color `#00FF88`.
+Wordmark tipografico: **ZYNEX** en Inter weight 700 con letter-spacing 0.02em y color `#00FF88`.
 
 ### Variantes
 
@@ -439,7 +439,7 @@ SVG fractal noise overlay al 3-5% opacidad como background sutil.
 ## 10. Grand Slam Offer (Hormozi) — Pricing Strategy
 
 ### Oferta Principal
-**LitperPro Dashboard** — La herramienta que reduce tus perdidas logisticas 40%
+**ZYNEX Dashboard** — La herramienta que reduce tus perdidas logisticas 40%
 
 ### Plans
 
@@ -449,7 +449,7 @@ SVG fractal noise overlay al 3-5% opacidad como background sutil.
 | Paises disponibles            | 1 (demo)       | 4              | Ilimitados            |
 | Datos reales                  | Demo only      | Ilimitados     | Ilimitados            |
 | IA predictiva (3 modelos)     | —              | Si             | Si                    |
-| Chat inteligente LitperBot    | —              | Si             | Si                    |
+| Chat inteligente ZYNEX Agent    | —              | Si             | Si                    |
 | API access                    | —              | Si             | Dedicada              |
 | Export multi-formato          | Basico         | Completo       | Completo              |
 | White label                   | —              | —              | Si                    |
@@ -465,7 +465,7 @@ SVG fractal noise overlay al 3-5% opacidad como background sutil.
 ### Value Stack
 | Item                           | Valor     |
 |--------------------------------|-----------|
-| Dashboard LitperPro            | $49/mes   |
+| Dashboard ZYNEX            | $49/mes   |
 | Templates reportes ejecutivos  | $97/mes   |
 | Onboarding personalizado       | $200      |
 | Grupo privado operadores       | $47/mes   |

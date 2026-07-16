@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════
-   LITPERPRO Dashboard — Stylesheet v2.0
+   ZYNEX Dashboard — Stylesheet v2.0
    Brand: #00FF88 Esmeralda | Dark-first
    Inspired by: Linear · Vercel · Stripe
    ═══════════════════════════════════════════════ */
@@ -251,7 +251,7 @@ input[type=range]{accent-color:var(--cn);}
 .ti:focus{border-color:var(--cn);}
 
 /* ═══════════════════════════════════════════════
-   LITPERPRO — ANIMATION SYSTEM v2
+   ZYNEX — ANIMATION SYSTEM v2
    Inspired by: Linear · Vercel · Stripe · Apple
    ═══════════════════════════════════════════════ */
 
@@ -523,7 +523,7 @@ input[type=range]:hover { transform: scaleY(1.1); }
 .mnum { animation: countUp .5s var(--ease-out) .2s both; }
 .scn  { animation: countUp .4s var(--ease-out) .1s both; }
 
-/* ── NEON SCAN LINE (LitperPro signature) ── */
+/* ── NEON SCAN LINE (ZYNEX signature) ── */
 @keyframes scanLine {
   0%   { transform:translateY(-100%); opacity:.6; }
   100% { transform:translateY(100vh); opacity:0; }
@@ -1081,7 +1081,7 @@ input[type=range]:hover { transform: scaleY(1.1); }
 .imp-source-icon--amber{background:rgba(255,179,0,.1);}
 .imp-source-icon--red{background:rgba(255,45,85,.1);}
 
-/* ── MODEL DOTS (LitperBot sidebar) ── */
+/* ── MODEL DOTS (ZYNEX Agent sidebar) ── */
 .lp-model-dot--gemini{background:#818cf8;box-shadow:0 0 5px rgba(129,140,248,.5);}
 .lp-model-dot--claude{background:#f59e0b;}
 .lp-model-dot--chatgpt{background:#10b981;}

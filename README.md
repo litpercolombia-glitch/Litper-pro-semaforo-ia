@@ -1,4 +1,4 @@
-# LitperPro — Semáforo de Ciudades + SaaS
+# ZYNEX — Semáforo de Ciudades + SaaS
 
 Dashboard logístico COD para Litper Group LLC.
 **Colombia · Chile · Guatemala · México**
@@ -23,7 +23,7 @@ Dashboard logístico COD para Litper Group LLC.
 - ⚖️ Asignación dinámica de carriers
 - ⚠️ Alertas automáticas
 - 🤖 IA multi-modelo: Gemini (auto-conectado), Claude, GPT-4o
-- 💬 Chat LitperBot 3 modos + 12 prompts predefinidos
+- 💬 Chat ZYNEX Agent 3 modos + 12 prompts predefinidos
 - 📥 Upload Excel de Dropi
 - 📤 Export CSV / JSON / TXT / Reporte ejecutivo
 
