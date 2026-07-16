@@ -23,6 +23,11 @@ const TOOLS = [
     input_schema: { type: 'object', properties: { novedad: { type: 'string' }, carrier: { type: 'string' } }, required: ['novedad'] }
   },
   {
+    name: 'check_cod_coverage',
+    description: 'Verifica qué transportadoras tienen cobertura en una ciudad y si aceptan contraentrega (COD) o solo pago anticipado. Fuente: matriz oficial Dropi cargada en ZYNEX.',
+    input_schema: { type: 'object', properties: { city: { type: 'string' }, only_cod: { type: 'boolean', description: 'true = solo transportadoras con contraentrega' } }, required: ['city'] }
+  },
+  {
     name: 'draft_whatsapp',
     description: 'Redacta un mensaje de WhatsApp para el cliente final según la situación de la guía (ausente, sin dinero, en oficina, etc). Tono colombiano cercano.',
     input_schema: { type: 'object', properties: { situacion: { type: 'string' }, nombre_cliente: { type: 'string' }, ciudad: { type: 'string' } }, required: ['situacion'] }
@@ -46,6 +51,17 @@ async function runTool(name, input, authToken) {
     const c = input.carrier ? findCarrier(input.carrier) : null;
     if (c) base.contexto_transportadora = { intentos_max: c.intentos_entrega, cambio_direccion: c.cambio_direccion_misma_ciudad, reclamo_oficina: c.reclamo_oficina, dias_reclamo: c.dias_reclamo_oficina };
     return JSON.stringify(base);
+  }
+  if (name === 'check_cod_coverage') {
+    try {
+      const codFilter = input.only_cod === false ? '' : '&cod=eq.true';
+      const r = await fetch(`${SB_URL}/rest/v1/zynex_carrier_coverage?city=ilike.*${encodeURIComponent(input.city)}*${codFilter}&select=carrier,city,department,cod&limit=60`, {
+        headers: { apikey: process.env.SUPABASE_ANON_KEY || '', Authorization: `Bearer ${authToken}` }
+      });
+      const rows = r.ok ? await r.json() : [];
+      if (!rows.length) return JSON.stringify({ resultado: `Sin cobertura registrada para "${input.city}". Verificar nombre exacto de la ciudad o considerar pago anticipado/oficina cercana.` });
+      return JSON.stringify({ ciudad: input.city, cobertura: rows });
+    } catch (e) { return JSON.stringify({ error: e.message }); }
   }
   if (name === 'recommend_carrier') {
     // Consulta city_stats del usuario (RLS aplica con su token)
