@@ -1,0 +1,8 @@
+{
+  "name": "zynex-mcp",
+  "version": "1.0.0",
+  "description": "Servidor MCP del cerebro ZYNEX — logística COD LATAM",
+  "type": "module",
+  "bin": { "zynex-mcp": "index.mjs" },
+  "dependencies": { "@modelcontextprotocol/sdk": "^1.0.0" }
+}

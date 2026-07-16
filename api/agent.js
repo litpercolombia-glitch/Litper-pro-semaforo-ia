@@ -123,6 +123,65 @@ Reglas:
 - Mensajes WhatsApp: tono colombiano cercano, cortos, sin sonar a robot.
 Resumen KB:\n${kbSummary()}`;
 
+
+// Fase A1: skills dinámicas desde el registro zynex_skills
+async function loadSkills() {
+  try {
+    const key = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY || '';
+    const r = await fetch(`${SB_URL}/rest/v1/zynex_skills?active=eq.true&select=slug,name,system_prompt`, {
+      headers: { apikey: key, Authorization: `Bearer ${key}` }
+    });
+    if (!r.ok) return '';
+    const rows = await r.json();
+    return rows.map(x => `\n[${x.name}] ${x.system_prompt}`).join('');
+  } catch { return ''; }
+}
+
+// Fase A2: memoria — persistir conversación en chat_sessions (fire and forget)
+async function saveMemory(userId, messages, reply) {
+  try {
+    const key = process.env.SUPABASE_SERVICE_ROLE_KEY; if (!key) return;
+    await fetch(`${SB_URL}/rest/v1/chat_sessions`, {
+      method: 'POST',
+      headers: { apikey: key, Authorization: `Bearer ${key}`, 'Content-Type': 'application/json', Prefer: 'return=minimal' },
+      body: JSON.stringify({ user_id: userId, model: 'zynex-agent', title: (messages[0]?.content || 'chat').slice(0, 80),
+        messages: [...messages, { role: 'assistant', content: reply }], msg_count: messages.length + 1 })
+    });
+  } catch {}
+}
+
+// Núcleo reutilizable del agente (lo usa /api/agent y /api/brain)
+export async function runZynexAgent(messages, authToken) {
+  const key = process.env.ANTHROPIC_API_KEY || process.env.CLAUDE_API_KEY;
+  if (!key) throw new Error('ANTHROPIC_API_KEY no configurada');
+  const skills = await loadSkills();
+  const convo = messages.map(m => ({ role: m.role, content: m.content }));
+  const toolCalls = [];
+  for (let turn = 0; turn < 6; turn++) {
+    const r = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-api-key': key, 'anthropic-version': '2023-06-01' },
+      body: JSON.stringify({ model: 'claude-sonnet-4-5', max_tokens: 3000, system: SYSTEM + '\n\nSKILLS ACTIVAS:' + skills, tools: TOOLS, messages: convo }),
+    });
+    if (!r.ok) throw new Error(`Claude ${r.status}: ${(await r.text()).slice(0, 200)}`);
+    const d = await r.json();
+    if (d.stop_reason === 'tool_use') {
+      convo.push({ role: 'assistant', content: d.content });
+      const results = [];
+      for (const block of d.content.filter(b => b.type === 'tool_use')) {
+        const out = await runTool(block.name, block.input, authToken);
+        toolCalls.push({ tool: block.name, input: block.input });
+        results.push({ type: 'tool_result', tool_use_id: block.id, content: out });
+      }
+      convo.push({ role: 'user', content: results });
+      continue;
+    }
+    const text = d.content.filter(b => b.type === 'text').map(b => b.text).join('\n');
+    return { text, tools_used: toolCalls };
+  }
+  return { text: 'El agente alcanzó el límite de pasos. Reformula la pregunta.', tools_used: toolCalls };
+}
+
 export default async function handler(req, res) {
   setCors(res, req.headers.origin);
   if (req.method === 'OPTIONS') return res.status(204).end();
@@ -140,34 +199,10 @@ export default async function handler(req, res) {
   if (!Array.isArray(messages) || !messages.length) return res.status(400).json({ error: 'messages[] requerido' });
 
   const authToken = (req.headers.authorization || '').replace('Bearer ', '').trim();
-  const convo = messages.map(m => ({ role: m.role, content: m.content }));
-  const toolCalls = [];
-
   try {
-    for (let turn = 0; turn < 6; turn++) {
-      const r = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'x-api-key': key, 'anthropic-version': '2023-06-01' },
-        body: JSON.stringify({ model: 'claude-sonnet-4-5', max_tokens: 3000, system: SYSTEM, tools: TOOLS, messages: convo }),
-      });
-      if (!r.ok) throw new Error(`Claude ${r.status}: ${(await r.text()).slice(0, 200)}`);
-      const d = await r.json();
-
-      if (d.stop_reason === 'tool_use') {
-        convo.push({ role: 'assistant', content: d.content });
-        const results = [];
-        for (const block of d.content.filter(b => b.type === 'tool_use')) {
-          const out = await runTool(block.name, block.input, authToken);
-          toolCalls.push({ tool: block.name, input: block.input });
-          results.push({ type: 'tool_result', tool_use_id: block.id, content: out });
-        }
-        convo.push({ role: 'user', content: results });
-        continue;
-      }
-      const text = d.content.filter(b => b.type === 'text').map(b => b.text).join('\n');
-      return res.status(200).json({ text, tools_used: toolCalls, quota_remaining: quota.remaining });
-    }
-    return res.status(200).json({ text: 'El agente alcanzó el límite de pasos. Reformula la pregunta.', tools_used: toolCalls });
+    const out = await runZynexAgent(messages, authToken);
+    saveMemory(user.id, messages, out.text); // no bloquea la respuesta
+    return res.status(200).json({ ...out, quota_remaining: quota.remaining });
   } catch (err) {
     console.error('[agent.js]', err.message);
     return res.status(500).json({ error: err.message });
