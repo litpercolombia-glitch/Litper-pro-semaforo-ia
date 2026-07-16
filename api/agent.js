@@ -46,6 +46,16 @@ async function runTool(name, input, authToken) {
     return c ? JSON.stringify(c) : `Transportadora "${input.carrier}" no encontrada. Disponibles: ${Object.keys({ ...CARRIERS_CO, ...CARRIERS_PA }).join(', ')}`;
   }
   if (name === 'translate_novedad') {
+    // 1) Diccionario oficial por transportadora (184 estatus reales cargados en Supabase)
+    try {
+      const q = encodeURIComponent(`%${(input.novedad || '').trim()}%`);
+      const cf = input.carrier ? `&carrier=ilike.*${encodeURIComponent(input.carrier)}*` : '';
+      const r = await fetch(`${SB_URL}/rest/v1/zynex_novedades?or=(estatus_dropi.ilike.${q},estatus_carrier.ilike.${q},significado.ilike.${q})${cf}&select=carrier,estatus_dropi,estatus_carrier,significado,accion&limit=8`, {
+        headers: { apikey: process.env.SUPABASE_ANON_KEY || '', Authorization: `Bearer ${authToken}` }
+      });
+      const rows = r.ok ? await r.json() : [];
+      if (rows.length) return JSON.stringify({ fuente: 'diccionario oficial', resultados: rows });
+    } catch (e) { /* fallback a KB local */ }
     const k = Object.keys(NOVEDADES).find(n => (input.novedad || '').toUpperCase().includes(n) || n.includes((input.novedad || '').toUpperCase()));
     const base = k ? { novedad: k, ...NOVEDADES[k] } : { nota: 'Novedad no catalogada en KB v1; interpretar con criterio general COD' };
     const c = input.carrier ? findCarrier(input.carrier) : null;
