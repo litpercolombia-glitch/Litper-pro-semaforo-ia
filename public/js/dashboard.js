@@ -2720,7 +2720,7 @@ function lpWelcome(){
     msg += '🏆 Mayor volumen: ' + top[0] + ' (' + top[1] + ' ped, ' + top[4] + '%)\n\n';
     msg += 'Usa los botones de la izquierda o escríbeme libremente. ¿Qué analizamos?';
   }else{
-    msg = '👋 Hola, soy ZYNEX Agent.\n\nSube un Excel de Dropi en la zona de upload para que pueda analizar tus datos de entrega. Cuando estén listos, podré darte análisis de ciudades, carriers, carrier swap y planes semanales.\n\n¿En qué te ayudo mientras tanto?';
+    msg = '🐱 ¡Hola! Soy Zyan, tu agente ZYNEX.\n\nSube un Excel de Dropi en la zona de upload para que pueda analizar tus datos de entrega. Cuando estén listos, podré darte análisis de ciudades, carriers, carrier swap y planes semanales.\n\n¿En qué te ayudo mientras tanto?';
   }
   lpAddMsg('bot', msg);
 }
@@ -2777,7 +2777,7 @@ function lpRemoveTyping(){
 
 // ── BUILD PROMPT (igual que pestaña IA) ──────────────────────
 function lpBuildSystemPrompt(){
-  if(typeof C === 'undefined' || !C || C.length===0) return 'Eres ZYNEX Agent, asistente logístico de ZYNEX. No hay datos cargados. Responde en español, sé conciso.';
+  if(typeof C === 'undefined' || !C || C.length===0) return 'Eres Zyan, el agente ZYNEX: gato negro tech, directo y cercano. Asistente logístico COD. No hay datos cargados. Responde en español, sé conciso.';
   var rojas = C.filter(function(x){return x[4]<70&&x[1]>=30;}).slice(0,8).map(function(x){return x[0]+':'+x[4]+'%';}).join(', ');
   var verdes = C.filter(function(x){return x[4]>=80.5&&x[1]>=30;}).slice(0,8).map(function(x){return x[0]+':'+x[4]+'%';}).join(', ');
   var carriers = (typeof T!=='undefined'?T:[]).map(function(t){return t.transportadora+':'+t.total+'ped/'+t.tasa_entrega+'%';}).join(', ');
