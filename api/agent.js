@@ -23,6 +23,11 @@ const TOOLS = [
     input_schema: { type: 'object', properties: { novedad: { type: 'string' }, carrier: { type: 'string' } }, required: ['novedad'] }
   },
   {
+    name: 'find_office',
+    description: 'Busca oficinas/puntos de reclamo de las transportadoras en una ciudad (dirección exacta), para ofrecer retiro en oficina al cliente.',
+    input_schema: { type: 'object', properties: { city: { type: 'string' }, carrier: { type: 'string' } }, required: ['city'] }
+  },
+  {
     name: 'check_cod_coverage',
     description: 'Verifica qué transportadoras tienen cobertura en una ciudad y si aceptan contraentrega (COD) o solo pago anticipado. Fuente: matriz oficial Dropi cargada en ZYNEX.',
     input_schema: { type: 'object', properties: { city: { type: 'string' }, only_cod: { type: 'boolean', description: 'true = solo transportadoras con contraentrega' } }, required: ['city'] }
