@@ -9,7 +9,7 @@
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',system-ui,sans-serif;}
 body{background:var(--bg);color:var(--tx);height:100vh;display:flex;overflow:hidden;}
 /* ── SIDEBAR ── */
-.side{width:260px;background:var(--s1);border-right:1px solid var(--b);display:flex;flex-direction:column;padding:14px;flex-shrink:0;}
+.side{width:260px;background:var(--s1);border-right:1px solid var(--b);display:flex;flex-direction:column;padding:14px;flex-shrink:0;overflow-y:auto;}
 .logo{display:flex;align-items:center;gap:10px;padding:6px 8px 18px;}
 .logo .z{width:34px;height:34px;}
 .logo b{font-size:18px;letter-spacing:.14em;}
@@ -17,7 +17,10 @@ body{background:var(--bg);color:var(--tx);height:100vh;display:flex;overflow:hid
 .newchat{background:linear-gradient(135deg,var(--cy),#2563FF);color:#04101F;font-weight:700;border:0;border-radius:10px;padding:11px;font-size:13px;cursor:pointer;margin-bottom:14px;box-shadow:0 0 18px rgba(25,200,255,.25);}
 .newchat:hover{filter:brightness(1.1);}
 .sect{font-size:10px;letter-spacing:.15em;color:var(--t2);margin:10px 6px 6px;text-transform:uppercase;}
-.hist{flex:1;overflow-y:auto;}
+.hist{max-height:120px;overflow-y:auto;}
+.nav a{display:flex;align-items:center;gap:9px;padding:7px 10px;border-radius:8px;color:var(--t2);font-size:12.5px;text-decoration:none;}
+.nav a:hover{background:var(--s2);color:var(--cy);}
+.nav a i{font-style:normal;width:18px;text-align:center;filter:saturate(.8);}
 .hist a{display:block;padding:9px 10px;border-radius:8px;color:var(--t2);font-size:12.5px;text-decoration:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;}
 .hist a:hover,.hist a.on{background:var(--s2);color:var(--tx);}
 .skills{border-top:1px solid var(--b);padding-top:10px;}
@@ -84,6 +87,21 @@ body{background:var(--bg);color:var(--tx);height:100vh;display:flex;overflow:hid
     <div><b>ZYNEX</b><small>Less chaos. More control.</small></div>
   </div>
   <button class="newchat" onclick="nuevo()">＋ Nueva conversación</button>
+  <div class="sect">Navegación</div>
+  <nav class="nav">
+    <a href="/"><i>🏠</i> Inicio (landing)</a>
+    <a href="/dashboard#ciudades"><i>🚦</i> Semáforo Pro</a>
+    <a href="/dashboard#carriers"><i>🚚</i> Carriers</a>
+    <a href="/dashboard#bloqueo"><i>🚫</i> Bloqueo · Alertas</a>
+    <a href="/dashboard#asignacion"><i>⚖️</i> Asignación</a>
+    <a href="/dashboard#recuperacion"><i>💰</i> Recuperación</a>
+    <a href="/dashboard#matriz"><i>📊</i> Matriz · Pareto</a>
+    <a href="/dashboard#benchmark"><i>🏆</i> Benchmark</a>
+    <a href="/dashboard#export"><i>📥</i> Export · Import</a>
+    <a href="/pricing"><i>💎</i> Planes</a>
+    <a href="/checkout"><i>🛒</i> Checkout</a>
+    <a href="/profile"><i>👤</i> Mi Cuenta</a>
+  </nav>
   <div class="sect">Historial</div>
   <div class="hist" id="hist"></div>
   <div class="skills">

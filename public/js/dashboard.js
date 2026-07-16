@@ -3154,3 +3154,6 @@ async function onbFinish(){
 function onbSkip(){
   onbFinish();
 }
+
+// Deep-link: /dashboard#carriers, #bloqueo, #asignacion, #recuperacion, #matriz, #benchmark, #export
+try{ if(location.hash){ const t=location.hash.slice(1); setTimeout(()=>{ try{ switchTab(t); }catch(e){} }, 400); } }catch(e){}
