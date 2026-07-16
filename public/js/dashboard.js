@@ -117,7 +117,7 @@ async function callChatProxy(model, messages, system, maxTokens){
   const ctrl = new AbortController();
   const timer = setTimeout(()=>ctrl.abort(), 20000);
   try{
-    const r = await fetch('/api/chat', {
+    const r = await fetch('/api/agent', {
       method:'POST',
       headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},
       body:JSON.stringify({model, messages, system, max_tokens: maxTokens||700}),
