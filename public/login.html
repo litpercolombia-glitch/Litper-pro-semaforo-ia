@@ -431,7 +431,7 @@ async function doL(){
   try{
     const{data,error}=await supabase.auth.signInWithPassword({email,password:pass});
     if(error){btn.disabled=false;document.getElementById('lb').textContent='\ud83d\udd13 INGRESAR A MI CUENTA \u2192';sA(error.message||'Email o contrasena incorrectos','err');}
-    else{sA('Sesion iniciada','ok');window.location.href='/dashboard';}
+    else{sA('Sesion iniciada','ok');window.location.href='/zyan';}
   }catch(e){btn.disabled=false;document.getElementById('lb').textContent='\ud83d\udd13 INGRESAR A MI CUENTA \u2192';sA('Error al conectar. Intenta de nuevo.','err');}
 }
 
@@ -452,7 +452,7 @@ async function doR(){
   try{
     const{data,error}=await supabase.auth.signUp({email:re,password:rp,options:{data:{first_name:fn,last_name:ln,company:em}}});
     if(error){btn.disabled=false;document.getElementById('rb').textContent='\u2705 CREAR CUENTA GRATIS \u2014 SIN TARJETA \u2192';sA(error.message||'Error al crear cuenta','err');}
-    else{sA('Cuenta creada! Bienvenido a ZYNEX','ok');setTimeout(()=>window.location.href='/dashboard',1500);}
+    else{sA('Cuenta creada! Bienvenido a ZYNEX','ok');setTimeout(()=>window.location.href='/zyan',1500);}
   }catch(e){btn.disabled=false;document.getElementById('rb').textContent='\u2705 CREAR CUENTA GRATIS \u2014 SIN TARJETA \u2192';sA('Error al conectar. Intenta de nuevo.','err');}
 }
 
@@ -473,7 +473,7 @@ async function doF(){
 
 async function soc(p){
   sA('Conectando con '+p+'...','ok');
-  try{await supabase.auth.signInWithOAuth({provider:p.toLowerCase(),options:{redirectTo:window.location.origin+'/dashboard'}});}
+  try{await supabase.auth.signInWithOAuth({provider:p.toLowerCase(),options:{redirectTo:window.location.origin+'/zyan'}});}
   catch(e){sA('Error al conectar con '+p,'err');}
 }
 

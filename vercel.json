@@ -7,6 +7,8 @@
     "api/*.js": { "maxDuration": 30 }
   },
   "rewrites": [
+    { "source": "/zyan",      "destination": "/zyan.html" },
+    { "source": "/app",       "destination": "/zyan.html" },
     { "source": "/dashboard", "destination": "/dashboard.html" },
     { "source": "/landing",   "destination": "/index.html" },
     { "source": "/checkout",  "destination": "/checkout.html" },

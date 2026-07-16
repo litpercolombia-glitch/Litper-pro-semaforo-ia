@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zyan — ZYNEX AI</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{--bg:#070B18;--s1:#0B1122;--s2:#121A30;--cy:#19C8FF;--mg:#E5199B;--tx:#F2F5FA;--t2:#8B93A7;--b:#1B2542;--mono:'Consolas',monospace;}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',system-ui,sans-serif;}
+body{background:var(--bg);color:var(--tx);height:100vh;display:flex;overflow:hidden;}
+/* ── SIDEBAR ── */
+.side{width:260px;background:var(--s1);border-right:1px solid var(--b);display:flex;flex-direction:column;padding:14px;flex-shrink:0;}
+.logo{display:flex;align-items:center;gap:10px;padding:6px 8px 18px;}
+.logo .z{width:34px;height:34px;}
+.logo b{font-size:18px;letter-spacing:.14em;}
+.logo small{display:block;font-size:10px;color:var(--cy);letter-spacing:.08em;}
+.newchat{background:linear-gradient(135deg,var(--cy),#2563FF);color:#04101F;font-weight:700;border:0;border-radius:10px;padding:11px;font-size:13px;cursor:pointer;margin-bottom:14px;box-shadow:0 0 18px rgba(25,200,255,.25);}
+.newchat:hover{filter:brightness(1.1);}
+.sect{font-size:10px;letter-spacing:.15em;color:var(--t2);margin:10px 6px 6px;text-transform:uppercase;}
+.hist{flex:1;overflow-y:auto;}
+.hist a{display:block;padding:9px 10px;border-radius:8px;color:var(--t2);font-size:12.5px;text-decoration:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;}
+.hist a:hover,.hist a.on{background:var(--s2);color:var(--tx);}
+.skills{border-top:1px solid var(--b);padding-top:10px;}
+.skill{display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--t2);padding:5px 8px;}
+.skill i{width:6px;height:6px;border-radius:50%;background:var(--cy);box-shadow:0 0 6px var(--cy);}
+.side .foot{border-top:1px solid var(--b);padding-top:10px;display:flex;gap:8px;}
+.side .foot a{flex:1;text-align:center;font-size:11px;color:var(--t2);text-decoration:none;padding:7px;border-radius:8px;border:1px solid var(--b);}
+.side .foot a:hover{color:var(--cy);border-color:var(--cy);}
+/* ── MAIN ── */
+.main{flex:1;display:flex;flex-direction:column;position:relative;}
+.chat{flex:1;overflow-y:auto;padding:28px 0 140px;}
+.wrap{max-width:780px;margin:0 auto;padding:0 24px;}
+/* hero vacío */
+.hero{text-align:center;padding-top:9vh;}
+.hero .z{width:96px;height:96px;margin:0 auto 14px;filter:drop-shadow(0 0 24px rgba(25,200,255,.45));}
+.hero h1{font-size:30px;font-weight:800;}
+.hero h1 em{font-style:normal;background:linear-gradient(90deg,var(--cy),var(--mg));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.hero p{color:var(--t2);font-size:14px;margin:8px 0 30px;}
+.qs{display:grid;grid-template-columns:1fr 1fr;gap:12px;text-align:left;}
+.q{background:var(--s1);border:1px solid var(--b);border-radius:14px;padding:15px 16px;cursor:pointer;transition:.15s;}
+.q:hover{border-color:var(--cy);transform:translateY(-2px);box-shadow:0 6px 24px rgba(25,200,255,.12);}
+.q b{font-size:13px;display:flex;gap:8px;align-items:center;}
+.q span{font-size:11.5px;color:var(--t2);display:block;margin-top:4px;}
+/* mensajes */
+.msg{display:flex;gap:14px;margin-bottom:26px;}
+.av{width:34px;height:34px;border-radius:10px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;}
+.msg.user .av{background:var(--s2);border:1px solid var(--b);color:var(--cy);}
+.msg .body{flex:1;font-size:14.5px;line-height:1.65;padding-top:5px;white-space:pre-wrap;word-break:break-word;}
+.msg.user .body{color:#D7DCE8;}
+.tools{margin:6px 0;display:flex;flex-wrap:wrap;gap:6px;}
+.tool{font-family:var(--mono);font-size:10.5px;color:var(--cy);border:1px solid rgba(25,200,255,.35);background:rgba(25,200,255,.07);border-radius:99px;padding:3px 10px;}
+.think{color:var(--t2);font-size:13px;display:flex;gap:10px;align-items:center;}
+.dots i{display:inline-block;width:6px;height:6px;margin-right:4px;border-radius:50%;background:var(--cy);animation:p 1.2s infinite;}
+.dots i:nth-child(2){animation-delay:.2s}.dots i:nth-child(3){animation-delay:.4s}
+@keyframes p{0%,80%,100%{opacity:.2}40%{opacity:1}}
+/* input */
+.inbar{position:absolute;bottom:0;left:0;right:0;padding:18px 24px 22px;background:linear-gradient(transparent,var(--bg) 35%);}
+.inbox{max-width:780px;margin:0 auto;background:var(--s1);border:1px solid var(--b);border-radius:16px;padding:12px 14px;display:flex;gap:10px;align-items:flex-end;transition:.15s;}
+.inbox:focus-within{border-color:var(--cy);box-shadow:0 0 0 3px rgba(25,200,255,.12);}
+.inbox textarea{flex:1;background:transparent;border:0;outline:0;color:var(--tx);font-size:14.5px;resize:none;max-height:160px;line-height:1.5;font-family:inherit;}
+.send{background:linear-gradient(135deg,var(--cy),#2563FF);border:0;color:#04101F;width:38px;height:38px;border-radius:10px;font-size:16px;cursor:pointer;flex-shrink:0;}
+.send:disabled{opacity:.35;cursor:default;}
+.hint{max-width:780px;margin:8px auto 0;text-align:center;font-size:10.5px;color:var(--t2);}
+@media(max-width:800px){.side{display:none}.qs{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<svg style="display:none"><defs><g id="zyan-face">
+<circle cx="32" cy="32" r="31" fill="#0B1122" stroke="#19C8FF" stroke-width="1.6"/>
+<path d="M15 30 L11 12 L25 20 Z" fill="#0B1122" stroke="#19C8FF" stroke-width="1.4"/>
+<path d="M49 30 L53 12 L39 20 Z" fill="#0B1122" stroke="#19C8FF" stroke-width="1.4"/>
+<ellipse cx="32" cy="36" rx="19" ry="17" fill="#0B1122" stroke="#19C8FF" stroke-width="1.4"/>
+<circle cx="24.5" cy="34" r="5" fill="#070B18" stroke="#19C8FF" stroke-width="1.2"/>
+<circle cx="39.5" cy="34" r="5" fill="#070B18" stroke="#19C8FF" stroke-width="1.2"/>
+<circle cx="24.5" cy="34" r="2.4" fill="#19C8FF"/><circle cx="39.5" cy="34" r="2.4" fill="#19C8FF"/>
+<path d="M30 41 L32 43.5 L34 41" fill="none" stroke="#19C8FF" stroke-width="1.4" stroke-linecap="round"/>
+<path d="M32 24 v-5 M28 22 l-2.5-3.5 M36 22 l2.5-3.5" stroke="#19C8FF" stroke-width="1.2" stroke-linecap="round"/>
+</g></defs></svg>
+
+<aside class="side">
+  <div class="logo">
+    <svg class="z" viewBox="0 0 64 64"><use href="#zyan-face"/></svg>
+    <div><b>ZYNEX</b><small>Less chaos. More control.</small></div>
+  </div>
+  <button class="newchat" onclick="nuevo()">＋ Nueva conversación</button>
+  <div class="sect">Historial</div>
+  <div class="hist" id="hist"></div>
+  <div class="skills">
+    <div class="sect">Skills activas</div>
+    <div class="skill"><i></i> Semáforo de ciudades</div>
+    <div class="skill"><i></i> Validador pre-despacho</div>
+    <div class="skill"><i></i> Traductor de novedades</div>
+    <div class="skill"><i></i> Rescate en oficina</div>
+    <div class="skill"><i></i> Reporte ejecutivo</div>
+  </div>
+  <div class="foot">
+    <a href="/dashboard">📊 Datos</a><a href="/pricing">💎 Plan</a><a href="#" onclick="salir()">Salir</a>
+  </div>
+</aside>
+
+<main class="main">
+  <div class="chat" id="chat">
+    <div class="wrap" id="feed">
+      <div class="hero" id="hero">
+        <svg class="z" viewBox="0 0 64 64"><use href="#zyan-face"/></svg>
+        <h1>Hola, soy <em>Zyan</em> 🐱</h1>
+        <p>Tu agente logístico COD. Conozco 13 transportadoras, 2.300 ciudades, 426 novedades y tu semáforo completo.</p>
+        <div class="qs">
+          <div class="q" onclick="quick('¿A qué ciudades NO debería despachar esta semana según mi semáforo?')"><b>🚦 Semáforo</b><span>Ciudades rojas donde estás perdiendo plata</span></div>
+          <div class="q" onclick="quick('¿Puedo enviar contraentrega a Lorica y con qué transportadora me conviene?')"><b>📦 Pre-despacho</b><span>Valida cobertura COD, tope y método de pago</span></div>
+          <div class="q" onclick="quick('Me llegó la novedad \'destinatario ausente\' de Interrapidísimo, ¿qué hago?')"><b>⚠️ Novedades</b><span>Significado oficial + acción + WhatsApp listo</span></div>
+          <div class="q" onclick="quick('El cliente de Barranquilla no estaba, ¿en qué oficina puede reclamar su pedido?')"><b>🏢 Rescate</b><span>Oficina más cercana con dirección exacta</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="inbar">
+    <div class="inbox">
+      <textarea id="inp" rows="1" placeholder="Pregúntale a Zyan sobre tu operación..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();enviar();}" oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,160)+'px'"></textarea>
+      <button class="send" id="btn" onclick="enviar()">➤</button>
+    </div>
+    <div class="hint">Zyan usa herramientas reales sobre tus datos · ZYNEX Brain</div>
+  </div>
+</main>
+
+<script src="/js/supabase-client.js"></script>
+<script>
+let msgs=[], busy=false, chatId=Date.now();
+const feed=document.getElementById('feed'), hero=document.getElementById('hero');
+
+function quick(t){document.getElementById('inp').value=t;enviar();}
+function nuevo(){msgs=[];chatId=Date.now();feed.querySelectorAll('.msg').forEach(e=>e.remove());hero.style.display='block';renderHist();}
+function salir(){try{signOut&&signOut();}catch(e){}location.href='/login';}
+function esc(v){return String(v==null?'':v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+function add(role, text, tools){
+  hero.style.display='none';
+  const d=document.createElement('div');d.className='msg '+role;
+  const av=role==='user'?'<div class="av">TÚ</div>':'<div class="av"><svg viewBox="0 0 64 64" width="34" height="34"><use href="#zyan-face"/></svg></div>';
+  let t='';
+  if(tools&&tools.length)t='<div class="tools">'+tools.map(x=>'<span class="tool">⚡ '+esc(x.tool)+'</span>').join('')+'</div>';
+  d.innerHTML=av+'<div class="body">'+t+esc(text)+'</div>';
+  feed.appendChild(d);
+  document.getElementById('chat').scrollTop=1e9;
+  return d;
+}
+
+async function enviar(){
+  const inp=document.getElementById('inp'); const text=inp.value.trim();
+  if(!text||busy)return;
+  busy=true;document.getElementById('btn').disabled=true;
+  inp.value='';inp.style.height='auto';
+  msgs.push({role:'user',content:text});
+  add('user',text);
+  saveHist(text);
+  const w=add('zyan','');w.querySelector('.body').innerHTML='<div class="think"><span class="dots"><i></i><i></i><i></i></span> Zyan está trabajando con sus herramientas...</div>';
+  try{
+    const s=await getSession();
+    if(!s||!s.access_token){w.querySelector('.body').textContent='Inicia sesión para hablar conmigo 🐱 → /login';busy=false;document.getElementById('btn').disabled=false;return;}
+    const r=await fetch('/api/agent',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+s.access_token},body:JSON.stringify({messages:msgs})});
+    const d=await r.json();
+    if(!r.ok)throw new Error(d.error||('Error '+r.status));
+    msgs.push({role:'assistant',content:d.text});
+    w.remove();add('zyan',d.text,d.tools_used);
+  }catch(e){
+    w.querySelector('.body').textContent='😿 '+e.message;
+  }
+  busy=false;document.getElementById('btn').disabled=false;
+}
+
+// historial simple (local)
+function saveHist(first){
+  try{
+    const h=JSON.parse(localStorage.getItem('zyan_hist')||'[]');
+    if(!h.find(x=>x.id===chatId))h.unshift({id:chatId,t:first.slice(0,48)});
+    localStorage.setItem('zyan_hist',JSON.stringify(h.slice(0,20)));renderHist();
+  }catch(e){}
+}
+function renderHist(){
+  try{
+    const h=JSON.parse(localStorage.getItem('zyan_hist')||'[]');
+    document.getElementById('hist').innerHTML=h.map(x=>'<a class="'+(x.id===chatId?'on':'')+'">'+esc(x.t)+'</a>').join('');
+  }catch(e){}
+}
+renderHist();
+</script>
+</body>
+</html>
