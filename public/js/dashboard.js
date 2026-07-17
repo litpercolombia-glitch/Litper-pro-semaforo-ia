@@ -207,7 +207,7 @@ const INST={
   transportadoras:{t:'Scorecard de Transportadoras',p:[['🏅 Score /100','70% tasa de entrega + 30% participación de volumen.'],['💰 CPA logístico','Costo real por entrega exitosa = tarifa ÷ tasa. Cambia la tarifa arriba.'],['📊 Gráfica','Verde=entregados, Rojo=devoluciones. Compara visualmente carriers.'],['💡 Uso','Usa el scorecard para negociar tarifas con carriers.']]},
   bloqueo:{t:'Reglas de bloqueo',p:[['⚙️ Umbral','Desliza para definir % mínimo aceptable. Ej: 50% bloquea rutas <50%.'],['🚫 Lista','El sistema lista automáticamente carrier+ciudad por debajo del umbral.'],['📦 Mínimo','Ignora rutas con muy pocos pedidos (datos poco confiables).'],['💡 Uso semanal','Comparte con el equipo cada lunes. Esas rutas NO reciben pedidos esa semana.']]},
   matriz:{t:'Matriz de prioridad',p:[['📊 4 cuadrantes','Verde=escalar, Naranja=optimizar urgente, Cyan=crecer, Gris=revisar.'],['⚫ Los puntos','Cada punto = una ciudad. Tamaño = volumen. Color = semáforo.'],['🔍 Hover','Pasa el mouse sobre un punto para ver ciudad, volumen y tasa.'],['💡 Uso','Evan usa esta vista para decidir en qué ciudades escalar pauta esta semana.']]},
-  pareto:{t:'Análisis Pareto',p:[['📊 La curva','Cuántas ciudades necesitas para llegar al 50% u 80% del volumen total.'],['💡 Insight clave','Litper NO es 80/20: top 20 ciudades = solo 42% del volumen. Ventaja competitiva.'],['🎯 Estrategia','Mejorar la tasa sistémicamente tiene más impacto que enfocarse en una sola ciudad.']]},
+  pareto:{t:'Análisis Pareto',p:[['📊 La curva','Cuántas ciudades necesitas para llegar al 50% u 80% del volumen total.'],['💡 Insight clave','ZYNEX NO es 80/20: top 20 ciudades = solo 42% del volumen. Ventaja competitiva.'],['🎯 Estrategia','Mejorar la tasa sistémicamente tiene más impacto que enfocarse en una sola ciudad.']]},
   recuperacion:{t:'Calculadora de recuperación',p:[['🔢 Tarifa','El costo que pagas por envío en pesos COP.'],['🎯 Ciudad','Selecciona una ciudad problemática (las más críticas aparecen primero).'],['📈 Meta','Define a qué tasa quieres llegar. El sistema calcula cuánta plata recuperas.'],['💡 Uso','Justifica por qué vale la pena trabajar una ciudad específica esta semana.']]},
   asignacion:{t:'Asignación dinámica',p:[['⚙️ Inputs','Ciudad, pedidos a repartir, y método de distribución.'],['📊 Métodos','Proporcional = según tasa histórica. Winner 70/30 = premia al mejor. Igualitario = partes iguales.'],['🎯 Output','Cuántos pedidos dar a cada carrier y cuántas entregas exitosas esperar.'],['💡 Uso','Usalo los lunes para distribuir el volumen semanal por ciudad y carrier.']]},
   alertas:{t:'Centro de alertas',p:[['🔴 Críticas','+100 pedidos y <65% entrega. Actuar esta semana.'],['🟡 Warnings','+50 pedidos y <70%. Monitorear.'],['🔵 Oportunidades','Gap >15% entre carriers en la misma ciudad. Mueve el volumen al mejor carrier.'],['💡 Uso','Comparte las alertas rojas con el equipo en el standup del lunes.']]},
@@ -797,11 +797,11 @@ function buildPrompt(k){
   const criticas=A.filter(a=>a[0]===0).map(a=>`${a[1]} ${a[3]}%`).join(', ');
   const escalar=C.filter(c=>c[4]>=80.5&&c[1]>=30).sort((a,b)=>b[1]-a[1]).slice(0,15).map(c=>`${c[0]} ${c[1]}ped ${c[4]}%`).join('\n');
   const trans=T.map(t=>`${t.transportadora} ${t.total}ped ${t.tasa_entrega}%`).join(', ');
-  if(k==='gen')return`Eres experto en logística e-commerce COD para LATAM (Colombia, Chile, Guatemala, México). Datos Litper Mayo2025-Ene2026:\nGlobal: ${G.total} pedidos, ${G.tasa_entrega}% entrega, ${G.devoluciones} devoluciones (~$91M COP costo estimado).\nCarriers: ${trans}\nTop 10 ciudades: ${top10}\nEntrega:\n1) Diagnóstico ejecutivo (3-4 líneas)\n2) 3 hallazgos clave con números\n3) 3 recomendaciones para ESTA semana\n4) 1 insight no obvio`;
-  if(k==='rojo')return`Experto logística COD LATAM (Colombia, Chile, Guatemala, México). Ciudades Litper <70% entrega (mín 30 ped):\n${rojas}\nPara cada ciudad: acción inmediata, carrier alternativo, impacto estimado. Sé concreto y directo.`;
-  if(k==='swap')return`Experto carriers COD. Oportunidades de carrier swap Litper:\n${ops}\nPara cada una: % volumen a migrar, impacto en tasa, KPI post-cambio.`;
-  if(k==='escalar')return`Experto e-commerce COD. Ciudades Litper para escalar (≥80%, mín 30 ped):\n${escalar}\nTop 10: potencial de crecimiento, carrier recomendado, riesgo al escalar.`;
-  return`Director operaciones Litper. Plan de acción semanal:\nCríticas: ${criticas}\nOportunidades: ${ops.split('\n').slice(0,4).join(' | ')}\n1) 3 acciones URGENTES para logística\n2) 3 ciudades para escalar pauta\n3) 3 ciudades reducir inversión\n4) 1 experimento carrier swap con métricas de éxito\n5) KPIs a revisar el próximo lunes\nFormato listo para copiar a Notion.`;
+  if(k==='gen')return`Eres experto en logística e-commerce COD para LATAM (Colombia, Chile, Guatemala, México). Datos ZYNEX Mayo2025-Ene2026:\nGlobal: ${G.total} pedidos, ${G.tasa_entrega}% entrega, ${G.devoluciones} devoluciones (~$91M COP costo estimado).\nCarriers: ${trans}\nTop 10 ciudades: ${top10}\nEntrega:\n1) Diagnóstico ejecutivo (3-4 líneas)\n2) 3 hallazgos clave con números\n3) 3 recomendaciones para ESTA semana\n4) 1 insight no obvio`;
+  if(k==='rojo')return`Experto logística COD LATAM (Colombia, Chile, Guatemala, México). Ciudades ZYNEX <70% entrega (mín 30 ped):\n${rojas}\nPara cada ciudad: acción inmediata, carrier alternativo, impacto estimado. Sé concreto y directo.`;
+  if(k==='swap')return`Experto carriers COD. Oportunidades de carrier swap ZYNEX:\n${ops}\nPara cada una: % volumen a migrar, impacto en tasa, KPI post-cambio.`;
+  if(k==='escalar')return`Experto e-commerce COD. Ciudades ZYNEX para escalar (≥80%, mín 30 ped):\n${escalar}\nTop 10: potencial de crecimiento, carrier recomendado, riesgo al escalar.`;
+  return`Director operaciones ZYNEX. Plan de acción semanal:\nCríticas: ${criticas}\nOportunidades: ${ops.split('\n').slice(0,4).join(' | ')}\n1) 3 acciones URGENTES para logística\n2) 3 ciudades para escalar pauta\n3) 3 ciudades reducir inversión\n4) 1 experimento carrier swap con métricas de éxito\n5) KPIs a revisar el próximo lunes\nFormato listo para copiar a Notion.`;
 }
 function setChip(el,k){activeAI=k;document.querySelectorAll('.chip').forEach(c=>c.classList.remove('act'));el.classList.add('act');}
 function saveKey(){}
@@ -2645,11 +2645,11 @@ document.addEventListener('DOMContentLoaded', function(){
 })();
 
 // ════════════════════════════════════════════
-// SECTION 4: LITPERBOT CHAT
+// SECTION 4: ZYAN CHAT
 // Multi-mode chat: Float, Sidebar, Fullscreen
 // ════════════════════════════════════════════
 // ════════════════════════════════════════════════════════════
-// LITPERBOT v2 — Chat IA Multi-modo · Claude · ChatGPT · Gemini
+// ZYAN v2 — Chat IA Multi-modo · Claude · ChatGPT · Gemini
 // ════════════════════════════════════════════════════════════
 
 var lpChatOpen = false;
@@ -2798,13 +2798,13 @@ function lpBuildAnalysisPrompt(type){
   var verdes = C.filter(function(x){return x[4]>=80.5&&x[1]>=30;}).sort(function(a,b){return b[1]-a[1];}).slice(0,10).map(function(x){return x[0]+':'+x[4]+'%/'+x[1]+'ped';}).join(', ');
   var carriers = (typeof T!=='undefined'?T:[]).map(function(t){return t.transportadora+':'+t.total+'ped/'+t.tasa_entrega+'%';}).join(', ');
   var glob = (typeof G!=='undefined') ? G.total+'ped/'+G.tasa_entrega+'%/'+G.devoluciones+'dev' : 'sin datos globales';
-  if(type==='reporte') return 'Genera un REPORTE EJECUTIVO completo de las operaciones Litper. Incluye: 1) Resumen ejecutivo 3 lineas. 2) Metricas clave con numeros exactos: '+glob+'. 3) Top 5 ciudades criticas con accion especifica. 4) Top 5 ciudades para escalar. 5) Ranking de carriers con CPA estimado. 6) Plan de accion 7 dias para el equipo de logistica y marketing. 7) KPI objetivo para el lunes. Carriers: '+carriers;
-  if(type==='cpa') return 'Analiza el CPA (Costo Por Adquisicion) logistico de cada carrier en Litper. Formula: $15.000 COP / tasa_entrega. Carriers actuales: '+carriers+'. Para cada carrier: CPA calculado, comparacion vs promedio, recomendacion de % volumen a asignar. Datos globales: '+glob;
-  if(type==='rec') return 'Calcula el impacto economico de mejorar la tasa de entrega en las ciudades criticas de Litper. Datos globales: '+glob+'. Ciudades criticas: '+rojas+'. Si se mejora cada ciudad critica de su tasa actual al 80.5% (promedio): cuantos pedidos adicionales entregados, cuanto dinero recuperado (asumiendo $80.000 COP ticket promedio), prioridad de accion.';
-  if(type==='evan') return 'Genera un briefing de pauta para Evan (Director de Marketing de Litper). Datos: '+glob+'. Ciudades ganadoras para escalar: '+verdes+'. Ciudades a reducir pauta: '+rojas+'. Para cada ciudad ganadora: cuanto aumentar presupuesto (%). Para cada ciudad critica: cuanto reducir o pausar. Recomendacion de distribucion de presupuesto por ciudad.';
-  if(type==='bloqueo') return 'Genera la lista de bloqueo URGENTE para esta semana en Litper. Datos: '+glob+'. Ciudades con tasa < 70%: '+rojas+'. Para cada ciudad: 1) Bloquear total o parcial? 2) Carrier alternativo si existe. 3) Impacto estimado de seguir enviando. Formato: tabla ciudad / accion / carrier alternativo / urgencia (ALTA/MEDIA).';
-  if(type==='kpi') return 'Define los KPIs especificos que el equipo Litper debe revisar el proximo lunes. Datos actuales: '+glob+'. Carriers: '+carriers+'. Proporciona: 1) 5 KPIs de logistica con valor actual y meta. 2) 3 KPIs de marketing con ciudades especificas. 3) 2 KPIs financieros (CPA y costo devoluciones). 4) Semaforo de cada KPI (verde/amarillo/rojo). Formato listo para pegar en Notion.';
-  return 'Analiza los datos de logistica COD de Litper. Datos: '+glob+'. Tipo de analisis: ' + type + '. Da recomendaciones concretas y accionables.';
+  if(type==='reporte') return 'Genera un REPORTE EJECUTIVO completo de las operaciones ZYNEX. Incluye: 1) Resumen ejecutivo 3 lineas. 2) Metricas clave con numeros exactos: '+glob+'. 3) Top 5 ciudades criticas con accion especifica. 4) Top 5 ciudades para escalar. 5) Ranking de carriers con CPA estimado. 6) Plan de accion 7 dias para el equipo de logistica y marketing. 7) KPI objetivo para el lunes. Carriers: '+carriers;
+  if(type==='cpa') return 'Analiza el CPA (Costo Por Adquisicion) logistico de cada carrier en ZYNEX. Formula: $15.000 COP / tasa_entrega. Carriers actuales: '+carriers+'. Para cada carrier: CPA calculado, comparacion vs promedio, recomendacion de % volumen a asignar. Datos globales: '+glob;
+  if(type==='rec') return 'Calcula el impacto economico de mejorar la tasa de entrega en las ciudades criticas de ZYNEX. Datos globales: '+glob+'. Ciudades criticas: '+rojas+'. Si se mejora cada ciudad critica de su tasa actual al 80.5% (promedio): cuantos pedidos adicionales entregados, cuanto dinero recuperado (asumiendo $80.000 COP ticket promedio), prioridad de accion.';
+  if(type==='evan') return 'Genera un briefing de pauta para Evan (Director de Marketing de ZYNEX). Datos: '+glob+'. Ciudades ganadoras para escalar: '+verdes+'. Ciudades a reducir pauta: '+rojas+'. Para cada ciudad ganadora: cuanto aumentar presupuesto (%). Para cada ciudad critica: cuanto reducir o pausar. Recomendacion de distribucion de presupuesto por ciudad.';
+  if(type==='bloqueo') return 'Genera la lista de bloqueo URGENTE para esta semana en ZYNEX. Datos: '+glob+'. Ciudades con tasa < 70%: '+rojas+'. Para cada ciudad: 1) Bloquear total o parcial? 2) Carrier alternativo si existe. 3) Impacto estimado de seguir enviando. Formato: tabla ciudad / accion / carrier alternativo / urgencia (ALTA/MEDIA).';
+  if(type==='kpi') return 'Define los KPIs especificos que el equipo ZYNEX debe revisar el proximo lunes. Datos actuales: '+glob+'. Carriers: '+carriers+'. Proporciona: 1) 5 KPIs de logistica con valor actual y meta. 2) 3 KPIs de marketing con ciudades especificas. 3) 2 KPIs financieros (CPA y costo devoluciones). 4) Semaforo de cada KPI (verde/amarillo/rojo). Formato listo para pegar en Notion.';
+  return 'Analiza los datos de logistica COD de ZYNEX. Datos: '+glob+'. Tipo de analisis: ' + type + '. Da recomendaciones concretas y accionables.';
 }
 
 // ── PROMPTS RÁPIDOS ───────────────────────────────────────────
@@ -2976,7 +2976,7 @@ function lpGetChatText(){
   var msgs = document.getElementById('lp-msgs').querySelectorAll('.lp-msg');
   var lines = [];
   msgs.forEach(function(m){
-    var role = m.classList.contains('user') ? 'YO' : 'LITPERBOT';
+    var role = m.classList.contains('user') ? 'YO' : 'ZYAN';
     var bubble = m.querySelector('.lp-bubble');
     if(bubble && !bubble.classList.contains('typing')){
       lines.push('[' + role + ']\n' + bubble.textContent + '\n');
@@ -2995,7 +2995,7 @@ function lpCopyChat(){
 function lpExportTxt(){
   var text = lpGetChatText();
   var now = new Date().toLocaleDateString('es-CO').replace(/\//g,'-');
-  var header = 'LITPERBOT — Sesión de chat\nFecha: '+new Date().toLocaleString('es-CO',{dateStyle:'full',timeStyle:'short'})+'\nModelo: '+lpChatModel.toUpperCase()+'\n'+'='.repeat(50)+'\n\n';
+  var header = 'ZYAN — Sesión de chat\nFecha: '+new Date().toLocaleString('es-CO',{dateStyle:'full',timeStyle:'short'})+'\nModelo: '+lpChatModel.toUpperCase()+'\n'+'='.repeat(50)+'\n\n';
   var blob = new Blob([header+text],{type:'text/plain;charset=utf-8'});
   var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='ZYNEX Agent_Chat_'+now+'.txt';a.click();URL.revokeObjectURL(a.href);
   lpShowToast('💾 Chat exportado');
@@ -3015,7 +3015,7 @@ function lpGenerateReport(){
   var hasData = typeof C!=='undefined' && C && C.length>0;
   if(!hasData){ lpShowToast('⚠️ Primero carga un Excel de datos'); return; }
   lpAddMsg('user','📄 Generar reporte ejecutivo completo');
-  var reportPrompt = 'Genera un reporte ejecutivo completo de las operaciones logísticas de Litper. Incluye:\n1. Resumen ejecutivo (3-4 líneas)\n2. Métricas clave con números exactos\n3. Top 5 ciudades críticas con acción inmediata\n4. Top 5 ciudades para escalar (oportunidades)\n5. Análisis de carriers (ranking y CPA estimado)\n6. Plan de acción para los próximos 7 días (equipo logística y marketing)\n7. KPI objetivo para el lunes siguiente\nFormato: estructurado, listo para compartir con el equipo.';
+  var reportPrompt = 'Genera un reporte ejecutivo completo de las operaciones logísticas de ZYNEX. Incluye:\n1. Resumen ejecutivo (3-4 líneas)\n2. Métricas clave con números exactos\n3. Top 5 ciudades críticas con acción inmediata\n4. Top 5 ciudades para escalar (oportunidades)\n5. Análisis de carriers (ranking y CPA estimado)\n6. Plan de acción para los próximos 7 días (equipo logística y marketing)\n7. KPI objetivo para el lunes siguiente\nFormato: estructurado, listo para compartir con el equipo.';
   lpCallAPI(reportPrompt);
 }
 
