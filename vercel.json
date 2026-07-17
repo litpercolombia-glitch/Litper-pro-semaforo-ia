@@ -7,13 +7,12 @@
     "api/*.js": { "maxDuration": 30 }
   },
   "rewrites": [
-    { "source": "/",          "destination": "/zyan.html" },
     { "source": "/terminos",  "destination": "/terminos.html" },
     { "source": "/privacidad","destination": "/privacidad.html" },
     { "source": "/zyan",      "destination": "/zyan.html" },
     { "source": "/app",       "destination": "/zyan.html" },
     { "source": "/dashboard", "destination": "/dashboard.html" },
-    { "source": "/landing",   "destination": "/index.html" },
+    { "source": "/landing",   "destination": "/landing.html" },
     { "source": "/checkout",  "destination": "/checkout.html" },
     { "source": "/login",     "destination": "/login.html" },
     { "source": "/pricing",   "destination": "/pricing.html" },
