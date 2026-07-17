@@ -32,7 +32,7 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Invalid signature' });
   }
 
-  const PLAN_QUOTAS = { pro: 50, enterprise: 999999 };
+  const PLAN_QUOTAS = { basico: 25, pro: 50, enterprise: 999999 };
 
   try {
     switch (event.type) {

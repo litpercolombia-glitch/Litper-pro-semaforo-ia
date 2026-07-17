@@ -60,6 +60,8 @@ export default async function handler(req, res) {
 
   // Price IDs from Stripe Dashboard - set these as env vars
   const PRICE_IDS = {
+    basico_monthly: process.env.STRIPE_PRICE_BASICO_MONTHLY,
+    basico_annual: process.env.STRIPE_PRICE_BASICO_ANNUAL,
     pro_monthly: process.env.STRIPE_PRICE_PRO_MONTHLY,
     pro_annual: process.env.STRIPE_PRICE_PRO_ANNUAL,
     enterprise_monthly: process.env.STRIPE_PRICE_ENTERPRISE_MONTHLY,

@@ -267,6 +267,14 @@ body{background:var(--bg);color:var(--t1);font-family:var(--sans);min-height:100
           <div class="plan-opt-desc">1 usuario · 10 consultas IA/mes · 1 país</div>
           <div class="radio-dot"></div>
         </div>
+        <div class="plan-opt" id="opt-basico" onclick="selectPlan('basico')">
+          <div class="plan-opt-header">
+            <div class="plan-opt-name">Básico</div>
+            <div class="plan-opt-price" id="price-basico">$39.000/mes</div>
+          </div>
+          <div class="plan-opt-desc">2 usuarios · 25 consultas a Zyan/mes · 2 países · Semáforo completo</div>
+          <div class="radio-dot"></div>
+        </div>
         <div class="plan-opt selected" id="opt-pro" onclick="selectPlan('pro')">
           <div class="pop-badge">MÁS POPULAR</div>
           <div class="plan-opt-header">
@@ -479,11 +487,12 @@ const pasos = {actual:1};
 
 const PRECIOS = {
   starter:{m:0,a:0},
+  basico:{m:39000,a:31200},
   pro:{m:79000,a:63200},
   enterprise:{m:299000,a:239200},
 };
-const ORIG = {starter:0,pro:95000,enterprise:359000};
-const NAMES = {starter:'Starter',pro:'ZYNEX Pro',enterprise:'Enterprise'};
+const ORIG = {starter:0,basico:49000,pro:95000,enterprise:359000};
+const NAMES = {starter:'Starter',basico:'ZYNEX Básico',pro:'ZYNEX Pro',enterprise:'Enterprise'};
 
 // ─── ANUAL TOGGLE ─────────────────────────────────────────
 function toggleAnual(){
@@ -493,7 +502,7 @@ function toggleAnual(){
 }
 
 function updatePrices(){
-  ['starter','pro','enterprise'].forEach(p=>{
+  ['starter','basico','pro','enterprise'].forEach(p=>{
     const px = anual ? PRECIOS[p].a : PRECIOS[p].m;
     const el = document.getElementById('price-'+p);
     if(el) el.textContent = px===0 ? 'Gratis' : '$'+px.toLocaleString('es-CO')+(anual?'/mes':'/'+'mes');
@@ -508,7 +517,7 @@ function selectPlan(p){
   document.getElementById('opt-'+p).classList.add('selected');
   updateSidebar();
   // Ajustar precio upsell onboarding
-  document.getElementById('upsell-onb-price').textContent = p==='starter' ? '+$80.000' : '+$50.000';
+  document.getElementById('upsell-onb-price').textContent = p==='starter'||p==='basico' ? '+$80.000' : '+$50.000';
 }
 
 function updateSidebar(){
