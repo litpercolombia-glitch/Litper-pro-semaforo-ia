@@ -23,7 +23,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="/js/supabase-client.js"></script>
 <style>
-:root{--brand:#00FF88;--brand-hover:#00CC6A;--brand-muted:rgba(0,255,136,0.1);--brand-glow:0 0 25px rgba(0,255,136,.4), 0 0 60px rgba(0,255,136,.12);--bg:#07080A;--surface:#0D1117;--surface-elevated:#161B22;--border:rgba(255,255,255,0.08);--border-hover:rgba(255,255,255,0.15);--text-primary:#F0F6FC;--text-secondary:rgba(240,246,252,0.7);--text-tertiary:rgba(240,246,252,0.4);--accent-cyan:#00D4FF;--accent-violet:#A855F7;--error:#FF4757;--warning:#FFBE0B;--success:#00FF88;--font:'Inter',system-ui,-apple-system,sans-serif;--mono:'JetBrains Mono','Fira Code',monospace;--ease-spring:cubic-bezier(.34,1.56,.64,1);--ease-out:cubic-bezier(.16,1,.3,1);--r-sm:6px;--r-md:8px;--r-lg:12px;--r-xl:16px;--r-full:9999px;
+:root{--brand:#19C8FF;--brand-hover:#0FA8DB;--brand-muted:rgba(25,200,255,0.1);--brand-glow:0 0 25px rgba(25,200,255,.4), 0 0 60px rgba(25,200,255,.12);--bg:#07080A;--surface:#0D1117;--surface-elevated:#161B22;--border:rgba(255,255,255,0.08);--border-hover:rgba(255,255,255,0.15);--text-primary:#F0F6FC;--text-secondary:rgba(240,246,252,0.7);--text-tertiary:rgba(240,246,252,0.4);--accent-cyan:#00D4FF;--accent-violet:#A855F7;--error:#FF4757;--warning:#FFBE0B;--success:#22C55E;--font:'Inter',system-ui,-apple-system,sans-serif;--mono:'JetBrains Mono','Fira Code',monospace;--ease-spring:cubic-bezier(.34,1.56,.64,1);--ease-out:cubic-bezier(.16,1,.3,1);--r-sm:6px;--r-md:8px;--r-lg:12px;--r-xl:16px;--r-full:9999px;
   /* Legacy aliases for compatibility */
   --teal:var(--brand);--violet:var(--accent-violet);--red:var(--error);--green:var(--success);--amber:var(--warning);
   --bg2:var(--surface);--bg3:var(--surface-elevated);
@@ -65,7 +65,7 @@ body{background:var(--bg);color:var(--t1);font-family:var(--sans);min-height:100
 .social-txt{font-size:12px;color:var(--t2)}<br>.social-num{font-weight:600;color:var(--teal)}
 
 /* ─── PLAN CARD (resumen en sidebar) ─────────────────────── */
-.plan-card{background:rgba(13,17,23,0.8);backdrop-filter:blur(20px) saturate(1.2);-webkit-backdrop-filter:blur(20px) saturate(1.2);border:1px solid rgba(0,255,136,.2);border-radius:var(--r);padding:20px;margin-bottom:20px}
+.plan-card{background:rgba(13,17,23,0.8);backdrop-filter:blur(20px) saturate(1.2);-webkit-backdrop-filter:blur(20px) saturate(1.2);border:1px solid rgba(25,200,255,.2);border-radius:var(--r);padding:20px;margin-bottom:20px}
 .plan-badge{font-size:10px;font-family:var(--mono);font-weight:600;color:var(--teal);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px}
 .plan-name{font-size:20px;font-weight:700;margin-bottom:4px}
 .plan-desc{font-size:12px;color:var(--t2);margin-bottom:14px;line-height:1.6}
@@ -73,10 +73,10 @@ body{background:var(--bg);color:var(--t1);font-family:var(--sans);min-height:100
 .plan-original{font-size:13px;color:var(--t3);text-decoration:line-through;font-family:var(--mono)}
 .plan-price{font-size:32px;font-weight:800;color:var(--t1);font-family:var(--mono)}
 .plan-per{font-size:12px;color:var(--t3);font-family:var(--mono)}
-.plan-savings{font-size:11px;font-family:var(--mono);color:var(--green);background:rgba(0,255,136,.1);border:1px solid rgba(0,255,136,.2);border-radius:6px;padding:3px 8px;display:inline-block;margin-bottom:14px}
+.plan-savings{font-size:11px;font-family:var(--mono);color:var(--green);background:rgba(25,200,255,.1);border:1px solid rgba(25,200,255,.2);border-radius:6px;padding:3px 8px;display:inline-block;margin-bottom:14px}
 .plan-items{display:flex;flex-direction:column;gap:7px}
 .plan-item{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--t2);line-height:1.4}
-.plan-item-icon{width:16px;height:16px;border-radius:4px;background:rgba(0,255,136,.15);display:flex;align-items:center;justify-content:center;font-size:9px;flex-shrink:0;margin-top:1px;color:var(--teal)}
+.plan-item-icon{width:16px;height:16px;border-radius:4px;background:rgba(25,200,255,.15);display:flex;align-items:center;justify-content:center;font-size:9px;flex-shrink:0;margin-top:1px;color:var(--teal)}
 
 /* ─── TRUST SIGNALS EN SIDEBAR ───────────────────────────── */
 .trust-section{margin-top:20px;padding-top:20px;border-top:1px solid var(--t4)}
@@ -105,12 +105,12 @@ body{background:var(--bg);color:var(--t1);font-family:var(--sans);min-height:100
 .toggle-track.on{background:var(--teal)}
 .toggle-thumb{width:18px;height:18px;border-radius:50%;background:#fff;position:absolute;top:2px;left:2px;transition:transform .3s}
 .toggle-track.on .toggle-thumb{transform:translateX(18px)}
-.save-badge{background:rgba(0,255,136,.12);color:var(--green);font-size:10px;font-family:var(--mono);font-weight:600;padding:2px 8px;border-radius:6px;border:1px solid rgba(0,255,136,.2)}
+.save-badge{background:rgba(25,200,255,.12);color:var(--green);font-size:10px;font-family:var(--mono);font-weight:600;padding:2px 8px;border-radius:6px;border:1px solid rgba(25,200,255,.2)}
 
 .plan-opts{display:flex;flex-direction:column;gap:8px;margin-bottom:24px}
 .plan-opt{border:1.5px solid var(--t4);border-radius:var(--r);padding:14px 16px;cursor:pointer;transition:all .2s;position:relative}
-.plan-opt:hover{border-color:rgba(0,255,136,.3);background:rgba(0,255,136,.03)}
-.plan-opt.selected{border-color:var(--teal);background:rgba(0,255,136,.05)}
+.plan-opt:hover{border-color:rgba(25,200,255,.3);background:rgba(25,200,255,.03)}
+.plan-opt.selected{border-color:var(--teal);background:rgba(25,200,255,.05)}
 .plan-opt-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
 .plan-opt-name{font-size:14px;font-weight:600}
 .plan-opt-price{font-size:14px;font-weight:700;font-family:var(--mono);color:var(--teal)}
@@ -129,7 +129,7 @@ body{background:var(--bg);color:var(--t1);font-family:var(--sans);min-height:100
 .field{display:flex;flex-direction:column;gap:5px}
 .field label{font-size:11px;font-family:var(--mono);color:var(--t2);font-weight:500;letter-spacing:.04em}
 .field input,.field select{background:var(--bg3);border:1px solid var(--t4);border-radius:10px;padding:11px 14px;font-size:14px;color:var(--t1);font-family:var(--sans);outline:none;transition:border-color .2s,box-shadow .2s;-webkit-appearance:none;width:100%}
-.field input:focus,.field select:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(0,255,136,.12)}
+.field input:focus,.field select:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(25,200,255,.12)}
 .field input::placeholder{color:var(--t3)}
 .field select{cursor:pointer}
 .field select option{background:var(--bg3)}
@@ -141,7 +141,7 @@ body{background:var(--bg);color:var(--t1);font-family:var(--sans);min-height:100
 
 /* ─── CTA BUTTON ─────────────────────────────────────────── */
 .cta-btn{width:100%;padding:16px;border:none;border-radius:12px;background:linear-gradient(135deg,var(--brand),var(--accent-cyan));color:#000;font-family:var(--sans);font-size:15px;font-weight:700;cursor:pointer;transition:all .25s;position:relative;overflow:hidden;letter-spacing:.02em;margin-top:20px}
-.cta-btn:hover{transform:translateY(-1px);box-shadow:0 8px 32px rgba(0,255,136,.3)}
+.cta-btn:hover{transform:translateY(-1px);box-shadow:0 8px 32px rgba(25,200,255,.3)}
 .cta-btn:active{transform:scale(.99)}
 .cta-btn::after{content:'';position:absolute;inset:0;background:rgba(255,255,255,.06);opacity:0;transition:opacity .2s}
 .cta-btn:hover::after{opacity:1}
@@ -149,7 +149,7 @@ body{background:var(--bg);color:var(--t1);font-family:var(--sans);min-height:100
 .cta-sub{text-align:center;font-size:11px;color:var(--t3);margin-top:10px;font-family:var(--mono)}
 
 /* ─── GARANTÍA ───────────────────────────────────────────── */
-.garantia{background:rgba(0,255,136,.06);border:1px solid rgba(0,255,136,.18);border-radius:12px;padding:14px 16px;display:flex;align-items:flex-start;gap:12px;margin-top:20px}
+.garantia{background:rgba(25,200,255,.06);border:1px solid rgba(25,200,255,.18);border-radius:12px;padding:14px 16px;display:flex;align-items:flex-start;gap:12px;margin-top:20px}
 .garantia-icon{font-size:24px;flex-shrink:0;margin-top:2px}
 .garantia-title{font-size:13px;font-weight:600;color:var(--green);margin-bottom:3px}
 .garantia-text{font-size:11px;color:var(--t2);line-height:1.6}
@@ -192,7 +192,7 @@ body{background:var(--bg);color:var(--t1);font-family:var(--sans);min-height:100
 .main{animation:fadeInUp .5s ease-out}
 .sidebar{animation:fadeInUp .5s ease-out .1s both}
 </style>
-<style id="mrx-style">#mrx{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;}</style><style id="sl-style">#sl{position:fixed;top:0;left:0;width:100%;height:3px;background:linear-gradient(90deg,transparent,rgba(0,255,136,0.18),rgba(0,255,136,0.35),rgba(0,255,136,0.18),transparent);pointer-events:none;z-index:1;animation:sl-down 8s linear infinite;}@keyframes sl-down{0%{top:-3px}100%{top:100vh}}</style></head>
+<style id="mrx-style">#mrx{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;}</style><style id="sl-style">#sl{position:fixed;top:0;left:0;width:100%;height:3px;background:linear-gradient(90deg,transparent,rgba(25,200,255,0.18),rgba(25,200,255,0.35),rgba(25,200,255,0.18),transparent);pointer-events:none;z-index:1;animation:sl-down 8s linear infinite;}@keyframes sl-down{0%{top:-3px}100%{top:100vh}}</style></head>
 <body><div id="sl"></div><canvas id="mrx"></canvas>
 
 <!-- TOP BAR -->
@@ -422,8 +422,8 @@ body{background:var(--bg);color:var(--t1);font-family:var(--sans);min-height:100
     </div>
 
     <!-- ROI Calculator -->
-    <div style="background:rgba(0,255,136,.05);border:1px solid rgba(0,255,136,.15);border-radius:var(--r);padding:16px;margin-bottom:16px">
-      <div style="font-size:10px;font-family:var(--mono);color:rgba(0,255,136,.7);text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px">Cuánto recuperas con ZYNEX</div>
+    <div style="background:rgba(25,200,255,.05);border:1px solid rgba(25,200,255,.15);border-radius:var(--r);padding:16px;margin-bottom:16px">
+      <div style="font-size:10px;font-family:var(--mono);color:rgba(25,200,255,.7);text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px">Cuánto recuperas con ZYNEX</div>
       <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:12px">
         <div style="font-size:11px;color:var(--t3);font-family:var(--mono)">Pedidos/semana:</div>
         <input type="range" id="roi-pedidos" aria-label="Pedidos por semana para calcular ROI" min="100" max="5000" value="1000" step="100" oninput="calcROI()" style="accent-color:var(--teal)">
@@ -711,5 +711,5 @@ void(0);
 updatePrices();
 updateSidebar();
 </script>
-<script id="mrx-js">(function(){var c=document.getElementById("mrx");if(!c)return;var x=c.getContext("2d"),H="0123456789ABCDEF",fs=14,cols,drops,paused=false,lt=0,IV=40;function rsz(){c.width=innerWidth;c.height=innerHeight;cols=Math.floor(c.width/fs);drops=Array.from({length:cols},function(){return Math.random()*-60|0;});}function draw(t){if(!paused&&t-lt>=IV){lt=t;x.fillStyle="rgba(7,8,10,0.08)";x.fillRect(0,0,c.width,c.height);x.font=fs+"px monospace";x.fillStyle="rgba(0,255,136,0.55)";for(var i=0;i<drops.length;i++){x.fillText(H[Math.random()*16|0],i*fs,drops[i]*fs);if(drops[i]*fs>c.height&&Math.random()>.975)drops[i]=0;drops[i]++;}}requestAnimationFrame(draw);}document.addEventListener("visibilitychange",function(){paused=document.hidden;if(!paused)lt=0;});window.addEventListener("resize",rsz);rsz();requestAnimationFrame(draw);})();</script></body>
+<script id="mrx-js">(function(){var c=document.getElementById("mrx");if(!c)return;var x=c.getContext("2d"),H="0123456789ABCDEF",fs=14,cols,drops,paused=false,lt=0,IV=40;function rsz(){c.width=innerWidth;c.height=innerHeight;cols=Math.floor(c.width/fs);drops=Array.from({length:cols},function(){return Math.random()*-60|0;});}function draw(t){if(!paused&&t-lt>=IV){lt=t;x.fillStyle="rgba(7,8,10,0.08)";x.fillRect(0,0,c.width,c.height);x.font=fs+"px monospace";x.fillStyle="rgba(25,200,255,0.55)";for(var i=0;i<drops.length;i++){x.fillText(H[Math.random()*16|0],i*fs,drops[i]*fs);if(drops[i]*fs>c.height&&Math.random()>.975)drops[i]=0;drops[i]++;}}requestAnimationFrame(draw);}document.addEventListener("visibilitychange",function(){paused=document.hidden;if(!paused)lt=0;});window.addEventListener("resize",rsz);rsz();requestAnimationFrame(draw);})();</script></body>
 </html>

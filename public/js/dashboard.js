@@ -152,7 +152,7 @@ let SS={k:'t',d:-1};
 let activeAI='gen';
 
 // ─── HELPERS ────────────────────────────────────────────────────────────────
-function si(t){if(t>=80.5)return{c:'pv',l:'Verde',x:'#00ff88'};if(t>=70)return{c:'pa',l:'Amarillo',x:'#FFBE0B'};return{c:'pr',l:'Rojo',x:'#FF4757'};}
+function si(t){if(t>=80.5)return{c:'pv',l:'Verde',x:'#19C8FF'};if(t>=70)return{c:'pa',l:'Amarillo',x:'#FFBE0B'};return{c:'pr',l:'Rojo',x:'#FF4757'};}
 function bar(p,x){return`<div class="bar"><div class="btr"><div class="bfl" style="width:${p}%;background:${x};box-shadow:0 0 4px ${x}44"></div></div><span class="bpc">${p}%</span></div>`;}
 function pill(t){const s=si(t);return`<span class="pill ${s.c}"><span class="pd" style="background:${s.x}"></span>${s.l}</span>`;}
 function fn(n){return Number(n).toLocaleString('es-CO');}
@@ -331,7 +331,7 @@ function rTrans(){
   document.getElementById('tb-trans').innerHTML=T.filter(t=>t.total>0).map(t=>{
     const s=calcSc(t),cpa=Math.round(tarifa/(t.tasa_entrega/100)/1000);
     const diff = t.tasa_entrega - avgTE;
-    const diffStr = diff>=0?`<span style="color:#00ff88">+${diff.toFixed(1)}%</span>`:`<span style="color:#ff4757">${diff.toFixed(1)}%</span>`;
+    const diffStr = diff>=0?`<span style="color:#19C8FF">+${diff.toFixed(1)}%</span>`:`<span style="color:#ff4757">${diff.toFixed(1)}%</span>`;
     return`<tr class="carrier-row" onclick="openDrill('${t.transportadora}')" id="crow-${t.transportadora.replace(/[^A-Z0-9]/g,'_')}">
       <td><span class="expand-arrow">▶</span></td>
       <td><strong>${t.transportadora}</strong></td>
@@ -349,7 +349,7 @@ function rTrans(){
   const ctx=document.getElementById('ch-trans').getContext('2d');
   if(window._ct)window._ct.destroy();
   const d=T.filter(t=>t.total>=10);
-  window._ct=new Chart(ctx,{type:'bar',data:{labels:d.map(t=>t.transportadora),datasets:[{data:d.map(t=>t.entregados),backgroundColor:'rgba(0,255,136,.65)',borderRadius:4},{data:d.map(t=>t.devoluciones),backgroundColor:'rgba(255,71,87,.55)',borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>ctx.dataset.data[ctx.dataIndex].toLocaleString()}}},scales:{x:{grid:{display:false},ticks:{color:'#555',font:{size:10}}},y:{grid:{color:'rgba(0,255,136,.04)'},ticks:{color:'#555',font:{size:10},callback:v=>v>=1000?v/1000+'K':v}}}}});
+  window._ct=new Chart(ctx,{type:'bar',data:{labels:d.map(t=>t.transportadora),datasets:[{data:d.map(t=>t.entregados),backgroundColor:'rgba(25,200,255,.65)',borderRadius:4},{data:d.map(t=>t.devoluciones),backgroundColor:'rgba(255,71,87,.55)',borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>ctx.dataset.data[ctx.dataIndex].toLocaleString()}}},scales:{x:{grid:{display:false},ticks:{color:'#555',font:{size:10}}},y:{grid:{color:'rgba(25,200,255,.04)'},ticks:{color:'#555',font:{size:10},callback:v=>v>=1000?v/1000+'K':v}}}}});
 }
 
 // ─── DRILL-DOWN DE TRANSPORTADORA ────────────────────────────────────────────
@@ -402,7 +402,7 @@ function openDrill(carrierName){
     <div class="drill-kpi-card"><div class="drill-kpi-val" style="color:var(--am)">${cpa}K</div><div class="drill-kpi-lbl">CPA logístico</div></div>
     <div class="drill-kpi-card"><div class="drill-kpi-val">${cities.length}</div><div class="drill-kpi-lbl">Ciudades activas</div></div>
     <div class="drill-kpi-card"><div class="drill-kpi-val" style="color:#ff4757">${ciudadesCrit}</div><div class="drill-kpi-lbl">Críticas (&lt;60%)</div></div>
-    <div class="drill-kpi-card"><div class="drill-kpi-val" style="color:#00ff88">${ciudadesOK}</div><div class="drill-kpi-lbl">OK (&gt;75%)</div></div>
+    <div class="drill-kpi-card"><div class="drill-kpi-val" style="color:#19C8FF">${ciudadesOK}</div><div class="drill-kpi-lbl">OK (&gt;75%)</div></div>
   `;
   filterDrill();
 }
@@ -434,7 +434,7 @@ function filterDrill(){
     ?'<tr><td colspan="8" style="text-align:center;color:var(--t3);padding:16px">Sin ciudades para este filtro.</td></tr>'
     :sl.map(c=>{
       const diff=c.te-avg;
-      const diffStr=diff>=0?`<span style="color:#00ff88">+${diff.toFixed(1)}%</span>`:`<span style="color:#ff4757">${diff.toFixed(1)}%</span>`;
+      const diffStr=diff>=0?`<span style="color:#19C8FF">+${diff.toFixed(1)}%</span>`:`<span style="color:#ff4757">${diff.toFixed(1)}%</span>`;
       const accion=c.te<60?'<span class="pill pr">🚫 Bloquear</span>':c.te<75?'<span class="pill" style="background:rgba(255,165,0,.1);border-color:rgba(255,165,0,.4);color:#ffa500">⚠️ Monitorear</span>':'<span class="pill pg">✅ OK</span>';
       const mejor=c.esMejor?'<span style="color:var(--brand);font-size:10px">⭐ Mejor</span>':'';
       return`<tr>
@@ -696,13 +696,13 @@ function rMatriz(){
     data:{datasets:[{data:data.map(c=>({x:c[1],y:c[4],r:Math.max(3,Math.min(18,Math.sqrt(c[1]/maxV)*32)),n:c[0]})),
       backgroundColor:data.map(c=>si(c[4]).x+'66'),borderColor:data.map(c=>si(c[4]).x),borderWidth:1}]},
     options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>{const d=ctx.raw;return`${d.n}: ${fn(d.x)} ped · ${d.y}%`;}}},},
-      scales:{x:{title:{display:true,text:'Volumen de pedidos',color:'#555',font:{size:10}},grid:{color:'rgba(0,255,136,.04)'},ticks:{color:'#555',font:{size:10},callback:v=>v>=1000?v/1000+'K':v}},
-        y:{title:{display:true,text:'% Tasa de entrega',color:'#555',font:{size:10}},min:40,max:100,grid:{color:'rgba(0,255,136,.04)'},ticks:{color:'#555',font:{size:10},callback:v=>v+'%'}}}}
+      scales:{x:{title:{display:true,text:'Volumen de pedidos',color:'#555',font:{size:10}},grid:{color:'rgba(25,200,255,.04)'},ticks:{color:'#555',font:{size:10},callback:v=>v>=1000?v/1000+'K':v}},
+        y:{title:{display:true,text:'% Tasa de entrega',color:'#555',font:{size:10}},min:40,max:100,grid:{color:'rgba(25,200,255,.04)'},ticks:{color:'#555',font:{size:10},callback:v=>v+'%'}}}}
   });
   const esc=data.filter(c=>c[1]>=medV&&c[4]>=80.5).sort((a,b)=>b[1]-a[1]).slice(0,5);
   const opt=data.filter(c=>c[1]>=medV&&c[4]<80.5).sort((a,b)=>b[1]-a[1]).slice(0,5);
   document.getElementById('mz-list').innerHTML=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px">
-    <div style="background:rgba(0,255,136,.04);border:1px solid var(--gnb);border-radius:var(--r);padding:10px 12px"><div style="font-size:9px;color:var(--gn);text-transform:uppercase;letter-spacing:.08em;font-weight:500;margin-bottom:6px">🚀 Escalar ahora (top 5)</div>${esc.map(c=>`<div style="font-size:11px;display:flex;justify-content:space-between;padding:2px 0"><span class="text-t2">${c[0]}</span><span class="mono font-xs text-gn">${c[4]}%</span></div>`).join('')}</div>
+    <div style="background:rgba(25,200,255,.04);border:1px solid var(--gnb);border-radius:var(--r);padding:10px 12px"><div style="font-size:9px;color:var(--gn);text-transform:uppercase;letter-spacing:.08em;font-weight:500;margin-bottom:6px">🚀 Escalar ahora (top 5)</div>${esc.map(c=>`<div style="font-size:11px;display:flex;justify-content:space-between;padding:2px 0"><span class="text-t2">${c[0]}</span><span class="mono font-xs text-gn">${c[4]}%</span></div>`).join('')}</div>
     <div style="background:rgba(255,190,11,.04);border:1px solid var(--amb);border-radius:var(--r);padding:10px 12px"><div style="font-size:9px;color:var(--am);text-transform:uppercase;letter-spacing:.08em;font-weight:500;margin-bottom:6px">🔧 Optimizar urgente (top 5)</div>${opt.map(c=>`<div style="font-size:11px;display:flex;justify-content:space-between;padding:2px 0"><span class="text-t2">${c[0]}</span><span style="font-family:var(--mono);font-size:10px;color:var(--rd)">${c[4]}%</span></div>`).join('')}</div>
   </div>`;
 }
@@ -718,8 +718,8 @@ function rPareto(){
     <div class="pi"><div class="pil">Top 10 ciudades</div><div class="pin cn">${P[9]?P[9][3]:0}%</div><div class="pis">del volumen total</div></div>`;
   const ctx=document.getElementById('ch-pareto').getContext('2d');
   if(window._cp)window._cp.destroy();
-  window._cp=new Chart(ctx,{type:'line',data:{labels:P.map(p=>p[0]),datasets:[{data:P.map(p=>p[3]),borderColor:'#00f5ff',backgroundColor:'rgba(0,255,136,.05)',borderWidth:1.5,fill:true,tension:.4,pointRadius:0}]},
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#444',font:{size:9},maxTicksLimit:10,maxRotation:45},grid:{display:false}},y:{min:0,max:100,ticks:{color:'#444',font:{size:10},callback:v=>v+'%'},grid:{color:'rgba(0,255,136,.04)'}}}}
+  window._cp=new Chart(ctx,{type:'line',data:{labels:P.map(p=>p[0]),datasets:[{data:P.map(p=>p[3]),borderColor:'#00f5ff',backgroundColor:'rgba(25,200,255,.05)',borderWidth:1.5,fill:true,tension:.4,pointRadius:0}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#444',font:{size:9},maxTicksLimit:10,maxRotation:45},grid:{display:false}},y:{min:0,max:100,ticks:{color:'#444',font:{size:10},callback:v=>v+'%'},grid:{color:'rgba(25,200,255,.04)'}}}}
   });
   document.getElementById('tb-pareto').innerHTML=P.map((p,i)=>`<tr><td class="nc" class="text-t3">${i+1}</td><td><strong>${p[0]}</strong></td><td class="nc">${fn(p[1])}</td><td class="nc">${(p[1]/total*100).toFixed(1)}%</td><td class="nc" class="text-cn">${p[3]}%</td><td>${bar(p[2],si(p[2]).x)}</td><td>${pill(p[2])}</td></tr>`).join('');
 }
@@ -741,7 +741,7 @@ function calcRec(){
     <div class="crow"><span class="text-t2">Pedidos recuperados</span><strong class="text-cn">+${fn(pedRec)} ped</strong></div>
     <div class="crow"><span class="text-t2">CPA actual</span><strong style="color:var(--rd)">${cpaA}K COP</strong></div>
     <div class="crow"><span class="text-t2">CPA con meta</span><strong class="text-gn">${cpaM}K COP</strong></div>
-    <div class="crow" style="border:none;background:rgba(0,255,136,.06);border-radius:4px;padding:6px 8px;margin-top:4px"><span style="font-weight:500;color:var(--gn)">💰 Ahorro estimado</span><strong style="color:var(--gn);font-size:15px;text-shadow:0 0 10px rgba(0,255,136,.35)">$${fn(Math.round(ahorro/1000))}K COP</strong></div>`;
+    <div class="crow" style="border:none;background:rgba(25,200,255,.06);border-radius:4px;padding:6px 8px;margin-top:4px"><span style="font-weight:500;color:var(--gn)">💰 Ahorro estimado</span><strong style="color:var(--gn);font-size:15px;text-shadow:0 0 10px rgba(25,200,255,.35)">$${fn(Math.round(ahorro/1000))}K COP</strong></div>`;
   document.getElementById('rc-detail').style.display='block';
   document.getElementById('tb-rc').innerHTML=(c[6]||[]).map(r=>{
     const cA=Math.round(tarifa/(r[3]/100)/1000),cM=Math.round(tarifa/(meta/100)/1000),ah=(cA-cM)*1000;
@@ -771,9 +771,9 @@ function calcAsig(){
       <span style="font-weight:500;min-width:130px;font-size:11px;color:var(--t2)">${a.t}</span>
       <div style="flex:1;height:3px;border-radius:2px;background:rgba(255,255,255,.07);overflow:hidden"><div style="height:100%;border-radius:2px;background:${si(a.te).x};width:${Math.round(a.a/maxA*100)}%;box-shadow:0 0 4px ${si(a.te).x}55"></div></div>
       <span style="font-family:var(--mono);font-size:10px;color:var(--t3);min-width:34px">${a.te}%</span>
-      <span style="font-family:var(--mono);font-size:11px;color:var(--gn);min-width:56px;text-shadow:0 0 8px rgba(0,255,136,.25)">${fn(a.a)} ped</span>
+      <span style="font-family:var(--mono);font-size:11px;color:var(--gn);min-width:56px;text-shadow:0 0 8px rgba(25,200,255,.25)">${fn(a.a)} ped</span>
     </div>`).join('')}
-    <div style="margin-top:9px;padding:9px 11px;background:rgba(0,255,136,.04);border:1px solid var(--gnb);border-radius:var(--r);font-size:11px;display:flex;justify-content:space-between">
+    <div style="margin-top:9px;padding:9px 11px;background:rgba(25,200,255,.04);border:1px solid var(--gnb);border-radius:var(--r);font-size:11px;display:flex;justify-content:space-between">
       <span class="text-t2">Entregas proyectadas: <strong class="text-gn">${fn(entExp)} / ${fn(vol)}</strong></span>
       <span class="text-t2">Tasa proyectada: <strong class="text-gn">${tasaP}%</strong></span>
     </div>`;
@@ -1036,7 +1036,7 @@ async function handleFiles(fileList){
   // Múltiples archivos — mostrar progreso
   const prog = document.createElement('div');
   prog.id = 'upload-progress';
-  prog.style.cssText = 'position:fixed;bottom:80px;right:20px;z-index:9000;background:rgba(0,0,0,.9);border:1px solid rgba(0,255,136,.3);border-radius:12px;padding:12px 18px;font-family:var(--mono);font-size:12px;color:rgba(0,255,136,.9);min-width:260px;';
+  prog.style.cssText = 'position:fixed;bottom:80px;right:20px;z-index:9000;background:rgba(0,0,0,.9);border:1px solid rgba(25,200,255,.3);border-radius:12px;padding:12px 18px;font-family:var(--mono);font-size:12px;color:rgba(25,200,255,.9);min-width:260px;';
   prog.innerHTML = `<div style="margin-bottom:6px;font-weight:600">Combinando ${files.length} archivos...</div><div id="prog-detail" style="color:rgba(255,255,255,.6);font-size:11px;"></div>`;
   document.body.appendChild(prog);
 
@@ -1418,8 +1418,8 @@ function mostrarBannerCiudadesNuevas(ciudades){
   banner.id = 'banner-ciudades-nuevas';
   banner.style.cssText = `
     position:fixed;top:56px;left:0;right:0;z-index:8000;
-    background:linear-gradient(135deg,rgba(0,255,136,.12),rgba(168,85,247,.08));
-    border-bottom:1px solid rgba(0,255,136,.3);
+    background:linear-gradient(135deg,rgba(25,200,255,.12),rgba(168,85,247,.08));
+    border-bottom:1px solid rgba(25,200,255,.3);
     padding:10px 18px;display:flex;align-items:center;gap:12px;
     backdrop-filter:blur(12px);animation:fadeDown .4s ease-out;
   `;
@@ -1429,7 +1429,7 @@ function mostrarBannerCiudadesNuevas(ciudades){
   banner.innerHTML = `
     <span style="font-size:16px">📍</span>
     <div style="flex:1;min-width:0">
-      <div style="font-size:13px;font-weight:600;color:rgba(0,255,136,.95)">
+      <div style="font-size:13px;font-weight:600;color:rgba(25,200,255,.95)">
         ${ciudades.length} ciudad${ciudades.length > 1 ? 'es nuevas detectadas' : ' nueva detectada'} — ${PAISES[PAIS_ACTIVO].flag} ${PAISES[PAIS_ACTIVO].nombre}
       </div>
       <div style="font-size:11px;color:rgba(255,255,255,.55);margin-top:2px;font-family:var(--mono)">
@@ -1437,7 +1437,7 @@ function mostrarBannerCiudadesNuevas(ciudades){
       </div>
     </div>
     <button onclick="mostrarConfigCiudadesNuevas(${JSON.stringify(ciudades).replace(/"/g,'&quot;')})"
-      style="background:rgba(0,255,136,.15);border:1px solid rgba(0,255,136,.3);border-radius:8px;padding:5px 12px;font-size:11px;font-weight:600;color:rgba(0,255,136,.9);cursor:pointer;white-space:nowrap;font-family:var(--mono)">
+      style="background:rgba(25,200,255,.15);border:1px solid rgba(25,200,255,.3);border-radius:8px;padding:5px 12px;font-size:11px;font-weight:600;color:rgba(25,200,255,.9);cursor:pointer;white-space:nowrap;font-family:var(--mono)">
       ⚙️ Configurar carrier
     </button>
     <button onclick="this.closest('#banner-ciudades-nuevas').remove()"
@@ -1456,7 +1456,7 @@ function mostrarConfigCiudadesNuevas(ciudades){
   overlay.style.cssText = 'position:fixed;inset:0;z-index:9000;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;padding:20px;';
 
   const modal = document.createElement('div');
-  modal.style.cssText = 'background:#0d0f1a;border:1px solid rgba(0,255,136,.25);border-radius:16px;padding:24px;max-width:520px;width:100%;max-height:80vh;overflow-y:auto;';
+  modal.style.cssText = 'background:#0d0f1a;border:1px solid rgba(25,200,255,.25);border-radius:16px;padding:24px;max-width:520px;width:100%;max-height:80vh;overflow-y:auto;';
 
   const carriers_disponibles = [...new Set(T.map(t=>t.transportadora))].filter(Boolean);
 
@@ -1483,14 +1483,14 @@ function mostrarConfigCiudadesNuevas(ciudades){
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px">
       <span style="font-size:18px">📍</span>
       <div>
-        <div style="font-size:14px;font-weight:600;color:rgba(0,255,136,.95)">Configurar carrier para ciudades nuevas</div>
+        <div style="font-size:14px;font-weight:600;color:rgba(25,200,255,.95)">Configurar carrier para ciudades nuevas</div>
         <div style="font-size:11px;color:rgba(255,255,255,.45);margin-top:2px">${ciudades.length} ciudades nuevas en ${PAISES[PAIS_ACTIVO].flag} ${PAISES[PAIS_ACTIVO].nombre}</div>
       </div>
     </div>
     ${rows_html}
     <div style="display:flex;gap:8px;margin-top:16px">
       <button onclick="guardarConfigNuevasCiudades(this)"
-        style="flex:1;background:linear-gradient(135deg,rgba(0,255,136,.9),rgba(168,85,247,.8));border:none;border-radius:10px;padding:10px;font-size:12px;font-weight:700;color:#000;cursor:pointer">
+        style="flex:1;background:linear-gradient(135deg,rgba(25,200,255,.9),rgba(168,85,247,.8));border:none;border-radius:10px;padding:10px;font-size:12px;font-weight:700;color:#000;cursor:pointer">
         GUARDAR CONFIGURACIÓN
       </button>
       <button onclick="this.closest('[style*=inset]').remove()"
@@ -1589,8 +1589,8 @@ function renderBenchmark(){
   const topRate = bench.tasa_top10;
   const diffAvg = (myRate - avgRate).toFixed(1);
   const diffTop = (myRate - topRate).toFixed(1);
-  const colorAvg = diffAvg >= 0 ? '#00FF88' : '#FF4757';
-  const colorTop = parseFloat(diffTop) >= 0 ? '#00FF88' : '#FFBE0B';
+  const colorAvg = diffAvg >= 0 ? '#19C8FF' : '#FF4757';
+  const colorTop = parseFloat(diffTop) >= 0 ? '#19C8FF' : '#FFBE0B';
 
   // Top ciudades con benchmark
   const ciudadesConBench = C
@@ -1601,7 +1601,7 @@ function renderBenchmark(){
   const rows = ciudadesConBench.map(c => {
     const b = bench.ciudades[c[0]];
     const diff = (c[4] - b.avg).toFixed(1);
-    const color = parseFloat(diff) >= 0 ? '#00FF88' : '#FF4757';
+    const color = parseFloat(diff) >= 0 ? '#19C8FF' : '#FF4757';
     const indicator = parseFloat(diff) >= 5 ? '↑↑' : parseFloat(diff) >= 0 ? '↑' : parseFloat(diff) > -5 ? '↓' : '↓↓';
     return `
       <tr>
@@ -1626,9 +1626,9 @@ function renderBenchmark(){
         <div style="font-size:24px;font-weight:700;color:rgba(255,255,255,.6)">${avgRate}%</div>
         <div style="font-size:11px;font-weight:700;color:${colorAvg};margin-top:2px">${diffAvg > 0 ? '+' : ''}${diffAvg}% vs ti</div>
       </div>
-      <div style="background:rgba(0,255,136,.06);border:1px solid rgba(0,255,136,.18);border-radius:10px;padding:12px;text-align:center">
-        <div style="font-size:10px;font-family:var(--mono);color:rgba(0,255,136,.7);margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em">Top 10% sector</div>
-        <div style="font-size:24px;font-weight:700;color:rgba(0,255,136,.9)">${topRate}%</div>
+      <div style="background:rgba(25,200,255,.06);border:1px solid rgba(25,200,255,.18);border-radius:10px;padding:12px;text-align:center">
+        <div style="font-size:10px;font-family:var(--mono);color:rgba(25,200,255,.7);margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em">Top 10% sector</div>
+        <div style="font-size:24px;font-weight:700;color:rgba(25,200,255,.9)">${topRate}%</div>
         <div style="font-size:11px;font-weight:700;color:${colorTop};margin-top:2px">${diffTop > 0 ? '+' : ''}${diffTop}% objetivo</div>
       </div>
     </div>
@@ -1643,7 +1643,7 @@ function renderBenchmark(){
       <thead>
         <tr style="border-bottom:1px solid rgba(255,255,255,.08)">
           <th class="panel-th">Ciudad</th>
-          <th style="padding:6px 8px;text-align:left;font-size:10px;font-family:var(--mono);color:rgba(0,255,136,.7);font-weight:500;text-transform:uppercase">Tu tasa</th>
+          <th style="padding:6px 8px;text-align:left;font-size:10px;font-family:var(--mono);color:rgba(25,200,255,.7);font-weight:500;text-transform:uppercase">Tu tasa</th>
           <th class="panel-th">Prom sector</th>
           <th class="panel-th">Top 10%</th>
           <th class="panel-th">Diferencia</th>
@@ -1671,7 +1671,7 @@ rBloq();
 // ── TOAST NOTIFICATIONS ──────────────────────────────
 function showToast(msg, type){
   const t = document.createElement('div');
-  const colors = {info:'rgba(0,255,136,.9)',success:'rgba(0,230,118,.9)',warn:'rgba(255,179,0,.9)',error:'rgba(255,45,85,.9)'};
+  const colors = {info:'rgba(25,200,255,.9)',success:'rgba(0,230,118,.9)',warn:'rgba(255,179,0,.9)',error:'rgba(255,45,85,.9)'};
   const bg = colors[type||'info']||colors.info;
   t.style.cssText = 'position:fixed;bottom:24px;right:20px;z-index:9999;background:'+bg+';color:#000;padding:10px 18px;border-radius:10px;font-size:12px;font-weight:600;font-family:var(--font);box-shadow:0 4px 20px rgba(0,0,0,.4);transition:all .3s;pointer-events:none';
   t.textContent = msg;
@@ -1736,10 +1736,10 @@ function calcularPredictor(){
   const pred2 = Math.min(99, Math.max(40, actual+slope*2));
   const pred3 = Math.min(99, Math.max(40, actual+slope*3));
 
-  const col1 = pred1>=80.5?'#00FF88':pred1>=70?'#FFBE0B':'#FF4757';
-  const col2 = pred2>=80.5?'#00FF88':pred2>=70?'#FFBE0B':'#FF4757';
-  const col3 = pred3>=80.5?'#00FF88':pred3>=70?'#FFBE0B':'#FF4757';
-  const slopeColor = slope>=0?'#00FF88':'#FF4757';
+  const col1 = pred1>=80.5?'#19C8FF':pred1>=70?'#FFBE0B':'#FF4757';
+  const col2 = pred2>=80.5?'#19C8FF':pred2>=70?'#FFBE0B':'#FF4757';
+  const col3 = pred3>=80.5?'#19C8FF':pred3>=70?'#FFBE0B':'#FF4757';
+  const slopeColor = slope>=0?'#19C8FF':'#FF4757';
   const slopeIcon = slope>=0.5?'↑↑':slope>=0?'↑':slope>-0.5?'↓':'↓↓';
 
   panel.innerHTML = `
@@ -1795,9 +1795,9 @@ function calcularPredictor(){
     const potencial = Math.round(c[1]*0.3);
     return `<tr>
       <td style="padding:7px 8px;font-size:12px;color:rgba(255,255,255,.8)">${c[0]}</td>
-      <td style="padding:7px 8px;font-size:12px;font-family:var(--mono);color:#00FF88">${c[4]}%</td>
+      <td style="padding:7px 8px;font-size:12px;font-family:var(--mono);color:#19C8FF">${c[4]}%</td>
       <td style="padding:7px 8px;font-size:12px;font-family:var(--mono);color:rgba(255,255,255,.5)">${c[1]} ped</td>
-      <td style="padding:7px 8px;font-size:12px;font-family:var(--mono);color:#00FF88">+${potencial} si escalas 30%</td>
+      <td style="padding:7px 8px;font-size:12px;font-family:var(--mono);color:#19C8FF">+${potencial} si escalas 30%</td>
     </tr>`;
   }).join('');
 
@@ -1870,8 +1870,8 @@ function renderScore(){
   const ciudadesScore = C.map(c=>{
     const score = calcularScoreCiudad(c[0], c[4], c[1], c[6]);
     let nivel, color;
-    if(score>=85){nivel='Verde permanente';color='#00FF88';}
-    else if(score>=75){nivel='Estable';color='#00FF88';}
+    if(score>=85){nivel='Verde permanente';color='#19C8FF';}
+    else if(score>=75){nivel='Estable';color='#19C8FF';}
     else if(score>=65){nivel='Variable';color='#FFBE0B';}
     else{nivel='Rojo estructural';color='#FF4757';}
     return {...{ciudad:c[0],tasa:c[4],total:c[1],best:c[5]?c[5][0]:'—'}, score, nivel, color};
@@ -1885,12 +1885,12 @@ function renderScore(){
   global.innerHTML = `
     <div style="background:rgba(0,230,118,.08);border:1px solid rgba(0,230,118,.2);border-radius:12px;padding:14px;text-align:center">
       <div style="font-size:10px;font-family:var(--mono);color:rgba(0,230,118,.7);margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em">Siempre enviar</div>
-      <div style="font-size:28px;font-weight:700;color:#00FF88">${verde}</div>
+      <div style="font-size:28px;font-weight:700;color:#19C8FF">${verde}</div>
       <div class="font-sm text-t3">score ≥ 85</div>
     </div>
-    <div style="background:rgba(0,255,136,.06);border:1px solid rgba(0,255,136,.15);border-radius:12px;padding:14px;text-align:center">
-      <div style="font-size:10px;font-family:var(--mono);color:rgba(0,255,136,.7);margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em">Estables</div>
-      <div style="font-size:28px;font-weight:700;color:#00FF88">${estable}</div>
+    <div style="background:rgba(25,200,255,.06);border:1px solid rgba(25,200,255,.15);border-radius:12px;padding:14px;text-align:center">
+      <div style="font-size:10px;font-family:var(--mono);color:rgba(25,200,255,.7);margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em">Estables</div>
+      <div style="font-size:28px;font-weight:700;color:#19C8FF">${estable}</div>
       <div class="font-sm text-t3">score 75–84</div>
     </div>
     <div style="background:rgba(255,179,0,.06);border:1px solid rgba(255,179,0,.18);border-radius:12px;padding:14px;text-align:center">
@@ -2379,7 +2379,7 @@ function showExpToast(msg){
   if(!t){
     t = document.createElement('div');
     t.id = 'exp-toast';
-    t.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:rgba(13,17,23,.97);border:1px solid rgba(0,255,136,.3);border-radius:11px;padding:10px 18px;font-size:12px;font-weight:600;color:var(--tx);z-index:600;transition:all .35s cubic-bezier(.34,1.56,.64,1);backdrop-filter:blur(20px);box-shadow:0 4px 20px rgba(0,0,0,.5);pointer-events:none;white-space:nowrap;';
+    t.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:rgba(13,17,23,.97);border:1px solid rgba(25,200,255,.3);border-radius:11px;padding:10px 18px;font-size:12px;font-weight:600;color:var(--tx);z-index:600;transition:all .35s cubic-bezier(.34,1.56,.64,1);backdrop-filter:blur(20px);box-shadow:0 4px 20px rgba(0,0,0,.5);pointer-events:none;white-space:nowrap;';
     document.body.appendChild(t);
   }
   t.textContent = msg;
