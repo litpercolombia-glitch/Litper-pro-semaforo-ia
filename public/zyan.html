@@ -24,7 +24,8 @@ body{background:var(--bg);color:var(--tx);height:100vh;display:flex;overflow:hid
 .hist a{display:block;padding:9px 10px;border-radius:8px;color:var(--t2);font-size:12.5px;text-decoration:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;}
 .hist a:hover,.hist a.on{background:var(--s2);color:var(--tx);}
 .skills{border-top:1px solid var(--b);padding-top:10px;}
-.skill{display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--t2);padding:5px 8px;}
+.skill{display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--t2);padding:6px 8px;border-radius:8px;cursor:pointer;transition:.12s;}
+.skill:hover{background:var(--s2);color:var(--cy);transform:translateX(2px);}
 .skill i{width:6px;height:6px;border-radius:50%;background:var(--cy);box-shadow:0 0 6px var(--cy);}
 .side .foot{border-top:1px solid var(--b);padding-top:10px;display:flex;gap:8px;}
 .side .foot a{flex:1;text-align:center;font-size:11px;color:var(--t2);text-decoration:none;padding:7px;border-radius:8px;border:1px solid var(--b);}
@@ -83,13 +84,13 @@ body{background:var(--bg);color:var(--tx);height:100vh;display:flex;overflow:hid
 
 <aside class="side">
   <div class="logo">
-    <svg class="z" viewBox="0 0 64 64"><use href="#zyan-face"/></svg>
+    <svg viewBox="0 0 64 64" width="36" height="36" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="zt" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#E5199B"/><stop offset="1" stop-color="#FF5FC0"/></linearGradient><linearGradient id="zb" x1="1" y1="0" x2="0" y2="0"><stop offset="0" stop-color="#19C8FF"/><stop offset="1" stop-color="#2563FF"/></linearGradient></defs><path d="M14 20 L42 20 L42 12 L56 24 L42 36 L42 28 L26 28 Z" fill="url(#zt)" stroke="#0B1122" stroke-width="1"/><path d="M50 44 L22 44 L22 52 L8 40 L22 28 L22 36 L38 36 Z" fill="url(#zb)" stroke="#0B1122" stroke-width="1"/></svg>
     <div><b>ZYNEX</b><small>Less chaos. More control.</small></div>
   </div>
   <button class="newchat" onclick="nuevo()">＋ Nueva conversación</button>
   <div class="sect">Navegación</div>
   <nav class="nav">
-    <a href="/"><i>🏠</i> Inicio (landing)</a>
+    <a href="/landing"><i>🏠</i> Página de venta</a>
     <a href="/dashboard#ciudades"><i>🚦</i> Semáforo Pro</a>
     <a href="/dashboard#carriers"><i>🚚</i> Carriers</a>
     <a href="/dashboard#bloqueo"><i>🚫</i> Bloqueo · Alertas</a>
@@ -103,13 +104,14 @@ body{background:var(--bg);color:var(--tx);height:100vh;display:flex;overflow:hid
   <div class="sect">Historial</div>
   <div class="hist" id="hist"></div>
   <div class="skills">
-    <div class="sect">Skills activas</div>
-    <div class="skill"><i></i> Semáforo de ciudades</div>
-    <div class="skill"><i></i> Validador pre-despacho</div>
-    <div class="skill"><i></i> Traductor de novedades</div>
-    <div class="skill"><i></i> Rescate en oficina</div>
-    <div class="skill"><i></i> Reporte ejecutivo</div>
+    <div class="sect">Skills — haz clic para usar</div>
+    <div class="skill" onclick="quick('Analiza mi semáforo: ¿qué ciudades están en rojo y cuánta plata me están costando?')"><i></i> Semáforo de ciudades</div>
+    <div class="skill" onclick="quick('Valida este despacho: ciudad, valor y método de pago que te voy a dar. ¿Con qué transportadora lo envío?')"><i></i> Validador pre-despacho</div>
+    <div class="skill" onclick="quick('Tengo una novedad en una guía. Te la escribo y me dices qué significa y qué hacer:')"><i></i> Traductor de novedades</div>
+    <div class="skill" onclick="quick('Un cliente no recibió su pedido. Dime en qué oficina puede reclamarlo y redáctame el WhatsApp.')"><i></i> Rescate en oficina</div>
+    <div class="skill" onclick="quick('Dame el reporte ejecutivo de mi operación: tasa de entrega, ciudades problema y 3 acciones.')"><i></i> Reporte ejecutivo</div>
   </div>
+
   <div class="foot">
     <a href="/dashboard">📊 Datos</a><a href="/pricing">💎 Plan</a><a href="#" onclick="salir()">Salir</a>
   </div>
