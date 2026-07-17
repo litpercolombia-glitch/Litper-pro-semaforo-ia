@@ -2481,7 +2481,7 @@ ${'-'.repeat(30)}
   
   txt += `
 ${'='.repeat(50)}
-ZYNEX - litperpro.vercel.app
+ZYNEX - litper-semaforo.vercel.app
 Colombia (CO) - Chile (CL) - Guatemala (GT) - Mexico (MX)
 `;
   
@@ -2781,7 +2781,7 @@ function lpBuildSystemPrompt(){
   var rojas = C.filter(function(x){return x[4]<70&&x[1]>=30;}).slice(0,8).map(function(x){return x[0]+':'+x[4]+'%';}).join(', ');
   var verdes = C.filter(function(x){return x[4]>=80.5&&x[1]>=30;}).slice(0,8).map(function(x){return x[0]+':'+x[4]+'%';}).join(', ');
   var carriers = (typeof T!=='undefined'?T:[]).map(function(t){return t.transportadora+':'+t.total+'ped/'+t.tasa_entrega+'%';}).join(', ');
-  return 'Eres ZYNEX Agent, asistente de logística para ZYNEX (e-commerce COD en Colombia, Chile, Guatemala y México).\n' +
+  return 'Eres Zyan, asistente de logística para ZYNEX (e-commerce COD en Colombia, Chile, Guatemala y México).\n' +
     'DATOS ACTUALES: ' + G.total + ' pedidos · ' + G.tasa_entrega + '% entrega · ' + G.devoluciones + ' devoluciones · ' + G.ciudades + ' ciudades · ' + G.transportadoras + ' carriers.\n' +
     'CIUDADES CRÍTICAS (<70%): ' + (rojas||'ninguna') + '.\n' +
     'CIUDADES GANADORAS (≥80%): ' + (verdes||'ninguna') + '.\n' +
@@ -2997,14 +2997,14 @@ function lpExportTxt(){
   var now = new Date().toLocaleDateString('es-CO').replace(/\//g,'-');
   var header = 'ZYAN — Sesión de chat\nFecha: '+new Date().toLocaleString('es-CO',{dateStyle:'full',timeStyle:'short'})+'\nModelo: '+lpChatModel.toUpperCase()+'\n'+'='.repeat(50)+'\n\n';
   var blob = new Blob([header+text],{type:'text/plain;charset=utf-8'});
-  var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='ZYNEX Agent_Chat_'+now+'.txt';a.click();URL.revokeObjectURL(a.href);
+  var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='Zyan_Chat_'+now+'.txt';a.click();URL.revokeObjectURL(a.href);
   lpShowToast('💾 Chat exportado');
 }
 
 function lpExportNotion(){
   var text = lpGetChatText();
   var date = new Date().toLocaleString('es-CO',{dateStyle:'short',timeStyle:'short'});
-  var notion = '## ZYNEX Agent — Sesión ' + date + '\n> Modelo: ' + lpChatModel.toUpperCase() + '\n\n---\n\n' + text;
+  var notion = '## Zyan — Sesión ' + date + '\n> Modelo: ' + lpChatModel.toUpperCase() + '\n\n---\n\n' + text;
   navigator.clipboard.writeText(notion).then(function(){
     lpShowToast('📓 Copiado con formato Notion');
   });

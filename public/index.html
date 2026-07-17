@@ -1194,14 +1194,14 @@ body.has-urgencia nav{top:40px}
 
 <!-- URGENCY BANNER — Hormozi scarcity -->
 <div class="urgency-banner rv">
-  ⚡ <strong>Precio actual: $299.000/mes</strong> — Sube a <strong>$399.000</strong> el 1 de julio · Solo quedan <strong>53 cupos</strong> al precio de lanzamiento
+  ⚡ <strong>Precio actual: $299.000/mes</strong> — Sube a <strong>$399.000</strong>  · Solo quedan <strong>53 cupos</strong> al precio de lanzamiento
 </div>
 
 <section id="pricing" class="pad">
   <div class="center rv">
     <div class="s-tag">💳 Precios sin sorpresas</div>
     <h2 class="s-h">Empieza gratis hoy.<br><span class="grad">Cancela cuando quieras.</span></h2>
-    <p class="s-sub">¿Empiezas con Starter gratis o vas directo al Pro con IA? Sin contrato. Sin tarjeta para el Starter. Y si pagas con tarjeta anticipada, tienes 14 días de garantía completa.</p>
+    <p class="s-sub">¿Empiezas con Starter gratis o vas directo al Pro con IA? Sin contrato. Sin tarjeta para el Starter. Y si pagas con tarjeta anticipada, tienes 30 días de garantía completa.</p>
     <div class="billing-tog">
       <span class="tog-lbl">Mensual</span>
       <div class="tog" id="btog" onclick="toggleBilling()"><div class="tog-k"></div></div>
@@ -1260,7 +1260,7 @@ body.has-urgencia nav{top:40px}
 
 <!-- ══ SOCIAL PROOF ══ -->
 <section class="pad-sm">
-  <div class="center rv"><div class="s-tag">Testimonios</div><h2 class="s-h">Lo que dice el equipo</h2></div>
+  <div class="center rv"><div class="s-tag">Testimonios</div><h2 class="s-h">El equipo que lo usa a diario</h2></div>
   <div class="proofs" style="margin-top:48px">
     <div class="proof-c rv d1 tilt" data-hover>
       <div class="proof-stars">★★★★★</div>
@@ -1360,12 +1360,12 @@ body.has-urgencia nav{top:40px}
 
     <div class="vs-guarantee rv">
       <span style="font-size:1.5rem">🛡️</span>
-      <div><strong>Garantía 14 días — sin riesgo, sin preguntas.</strong> Si pagaste con tarjeta y no ves resultados reales en los primeros 30 días, te regresamos el 100% del dinero. Así de seguros estamos. No hay letra pequeña.</div>
+      <div><strong>Garantía 30 días — sin riesgo, sin preguntas.</strong> Si pagaste con tarjeta y no ves resultados reales en los primeros 30 días, te regresamos el 100% del dinero. Así de seguros estamos. No hay letra pequeña.</div>
     </div>
 
     <div style="text-align:center;margin-top:24px">
       <a href="#quiz" class="btn btn-glow" style="font-size:1rem;padding:16px 36px">🚀 Empezar diagnóstico gratis →</a>
-      <p style="font-size:.75rem;color:rgba(232,234,240,0.35);margin-top:10px">Sin tarjeta · 14 días de garantía · Cancela cuando quieras</p>
+      <p style="font-size:.75rem;color:rgba(232,234,240,0.35);margin-top:10px">Sin tarjeta · 30 días de garantía · Cancela cuando quieras</p>
     </div>
   </div>
 </section>
@@ -1502,7 +1502,7 @@ document.addEventListener('click',e=>{
 <script>
 // ── URGENCIA TOP COUNTER ───────────────────────────
 (function(){
-  let end = Date.now() + (8*3600+42*60+17)*1000;
+  let end = 0;
   function tick(){
     let left = Math.max(0, end-Date.now());
     let h = Math.floor(left/3600000);
@@ -1620,7 +1620,7 @@ function showNotif(){
   nb.appendChild(d);
   setTimeout(()=>{d.classList.add('hiding');setTimeout(()=>d.remove(),400);},5000);
 }
-setTimeout(()=>{showNotif();setInterval(showNotif,8000);},3000);
+setTimeout(()=>{showNotif();void(,8000);},3000);
 
 })();
 </script>

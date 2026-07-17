@@ -120,14 +120,14 @@
   <div class="sidebar-divider"></div>
   <div class="sidebar-label">Optimizar</div>
   <button class="sidebar-link" onclick="goTab('bloqueo',this)"><span class="sl-icon">🚫</span>Bloqueo</button>
-  <button class="sidebar-link" onclick="goTab('asignacion',this)"><span class="sl-icon">⚖️</span>Asignación</button>
-  <button class="sidebar-link" onclick="goTab('recuperacion',this)"><span class="sl-icon">💰</span>Recuperación</button>
+  <button class="sidebar-link" style="display:none" onclick="goTab('asignacion',this)"><span class="sl-icon">⚖️</span>Asignación</button>
+  <button class="sidebar-link" style="display:none" onclick="goTab('recuperacion',this)"><span class="sl-icon">💰</span>Recuperación</button>
   <div class="sidebar-divider"></div>
   <div class="sidebar-label">Análisis</div>
-  <button class="sidebar-link" onclick="goTab('ia',this)"><span class="sl-icon">✦</span>Zyan AI ⚡</button>
+  <button class="sidebar-link" onclick="location.href='/zyan'"><span class="sl-icon">✦</span>Zyan AI ⚡</button>
   <button class="sidebar-link" onclick="goTab('matriz',this)"><span class="sl-icon">📊</span>Matriz · Pareto</button>
   <button class="sidebar-link" onclick="goTab('benchmark',this)"><span class="sl-icon">🏆</span>Benchmark</button>
-  <button class="sidebar-link" onclick="goTab('predictor',this)"><span class="sl-icon">🔮</span>Predictor</button>
+  <button class="sidebar-link" style="display:none" onclick="goTab('predictor',this)"><span class="sl-icon">🔮</span>Predictor</button>
   <div class="sidebar-divider"></div>
   <div class="sidebar-label">Datos</div>
   <button class="sidebar-link" onclick="goTab('expImp',this)"><span class="sl-icon">📤</span>Export · Import</button>
@@ -557,7 +557,7 @@
 
 <!-- IA -->
 <div class="panel" id="panel-ia" aria-label="Panel Inteligencia Artificial">
-  <div class="phdr"><div class="phdr-l"><h2>✦ Análisis con IA</h2><p>Claude · ChatGPT · Gemini — elige el modelo que prefieras</p></div>
+  <div class="phdr"><div class="phdr-l"><h2>⚡ Zyan AI</h2><p>El cerebro ZYNEX — este panel fue reemplazado por <a href="/zyan" style="color:#19C8FF">Zyan</a></p></div>
     <div class="phdr-r"><button class="btnai" id="btn-ai" onclick="runAI()"><span class="spin" id="ai-sp" class="hidden"></span><span id="ai-bt">⚡ Generar análisis</span></button>
       <button class="btn-compare" id="btn-compare" onclick="compareModels()" title="Correr el mismo análisis en Claude, GPT-4o y Gemini al mismo tiempo">
         ⚡³ Comparar 3 modelos

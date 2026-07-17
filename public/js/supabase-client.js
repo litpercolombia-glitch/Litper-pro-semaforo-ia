@@ -80,7 +80,7 @@ async function requireAuth() {
 async function redirectIfAuth() {
   try {
     const session = await getSession();
-    if (session) { window.location.href = '/dashboard'; return true; }
+    if (session) { window.location.href = '/zyan'; return true; }
     return false;
   } catch (e) { console.error('redirectIfAuth error:', e); return false; }
 }

@@ -307,7 +307,7 @@ body{background:var(--bg);color:var(--t1);font-family:var(--sans);min-height:100
       </div>
 
       <button class="cta-btn" onclick="irPaso2()">
-        Continuar → Crear cuenta
+        Continuar al pago seguro
       </button>
       <div class="cta-sub">Sin contrato · Cancela cuando quieras</div>
 
@@ -552,7 +552,7 @@ function irPaso3(){
 }
 function mostrarPaso(n){
   pasos.actual = n;
-  [1,2,3].forEach(i=>{
+  [1,2].forEach(i=>{
     document.getElementById('paso'+i).style.display = i===n?'block':'none';
     const num = document.getElementById('step'+i+'n') || (i===1?{className:''}:null);
     const lbl = document.getElementById('step'+i+'l');
@@ -651,7 +651,7 @@ function calcROI(){
 calcROI();
 
 // ─── CONTADOR ─────────────────────────────────────────────
-let endTime = Date.now() + (8*3600+42*60+17)*1000;
+let endTime = 0;
 function updateCnt(){
   const left = Math.max(0, endTime - Date.now());
   const h = Math.floor(left/3600000);
@@ -696,7 +696,7 @@ function showActivity(){
   setTimeout(()=>{pop.classList.add('hide');setTimeout(()=>{pop.style.display='none';},350);}, 4500);
 }
 setTimeout(showActivity, 5000);
-setInterval(showActivity, 55000);
+void(0);
 
 // Init
 updatePrices();
