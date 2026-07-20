@@ -45,6 +45,26 @@ body{background:var(--bg);color:var(--tx);height:100vh;display:flex;overflow:hid
 .q:hover{border-color:var(--cy);transform:translateY(-2px);box-shadow:0 6px 24px rgba(25,200,255,.12);}
 .q b{font-size:13px;display:flex;gap:8px;align-items:center;}
 .q span{font-size:11.5px;color:var(--t2);display:block;margin-top:4px;}
+/* bandeja */
+.tabbar{max-width:780px;margin:0 auto 6px;padding:12px 24px 0;display:flex;gap:8px;}
+.tabb{background:transparent;border:1px solid var(--b);color:var(--t2);padding:8px 18px;border-radius:99px;font-size:12.5px;cursor:pointer;font-weight:600;}
+.tabb.on{background:linear-gradient(135deg,rgba(25,200,255,.15),rgba(37,99,255,.1));border-color:var(--cy);color:var(--cy);}
+.tabb .badge{background:var(--mg);color:#fff;border-radius:99px;padding:1px 7px;font-size:10px;margin-left:6px;}
+.card{background:var(--s1);border:1px solid var(--b);border-radius:14px;padding:16px;margin-bottom:14px;}
+.card h3{font-size:14px;margin-bottom:6px;}
+.card .act{background:var(--s2);border-left:3px solid var(--cy);border-radius:8px;padding:10px 12px;font-size:13px;line-height:1.5;margin:8px 0;white-space:pre-wrap;}
+.card .why{font-size:11.5px;color:var(--t2);margin-bottom:10px;}
+.card .why b{color:var(--cy);}
+.risk{font-size:10px;font-family:var(--mono);border-radius:99px;padding:2px 9px;margin-left:8px;}
+.risk.bajo{color:#22C55E;border:1px solid rgba(34,197,94,.4);}
+.risk.medio{color:#F59E0B;border:1px solid rgba(245,158,11,.4);}
+.risk.alto{color:#EF4444;border:1px solid rgba(239,68,68,.4);}
+.btns{display:flex;gap:8px;}
+.btns button{flex:1;padding:9px;border-radius:9px;font-size:12.5px;font-weight:700;cursor:pointer;border:1px solid var(--b);background:transparent;color:var(--t2);}
+.btns .ok{background:linear-gradient(135deg,var(--cy),#2563FF);color:#04101F;border:0;}
+.btns .ed:hover{border-color:var(--cy);color:var(--cy);}
+.btns .ig:hover{border-color:#EF4444;color:#EF4444;}
+.empty{color:var(--t2);text-align:center;padding:40px 0;font-size:13.5px;}
 /* mensajes */
 .msg{display:flex;gap:14px;margin-bottom:26px;}
 .av{width:34px;height:34px;border-radius:10px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;}
@@ -118,6 +138,11 @@ body{background:var(--bg);color:var(--tx);height:100vh;display:flex;overflow:hid
 </aside>
 
 <main class="main">
+  <div class="tabbar">
+    <button class="tabb on" id="tab-chat" onclick="verTab('chat')">💬 Chat</button>
+    <button class="tabb" id="tab-inbox" onclick="verTab('inbox')">📥 Bandeja<span class="badge" id="inbox-n" style="display:none">0</span></button>
+  </div>
+  <div class="chat" id="panel-inbox" style="display:none"><div class="wrap" id="inbox-list"><div class="empty">Cargando bandeja...</div></div></div>
   <div class="chat" id="chat">
     <div class="wrap" id="feed">
       <div class="hero" id="hero">
@@ -155,9 +180,9 @@ function esc(v){return String(v==null?'':v).replace(/&/g,'&amp;').replace(/</g,'
 function add(role, text, tools){
   hero.style.display='none';
   const d=document.createElement('div');d.className='msg '+role;
-  const av=role==='user'?'<div class="av">TÚ</div>':'<div class="av"><svg viewBox="0 0 64 64" width="34" height="34"><use href="#zyan-face"/></svg></div>';
+  const av=role==='user'?'<div class="av">T\u00da</div>':'<div class="av"><svg viewBox="0 0 64 64" width="34" height="34"><use href="#zyan-face"/></svg></div>';
   let t='';
-  if(tools&&tools.length)t='<div class="tools">'+tools.map(x=>'<span class="tool">⚡ '+esc(x.tool)+'</span>').join('')+'</div>';
+  if(tools&&tools.length)t='<div class="tools">'+tools.map(x=>'<span class="tool">\u26a1 '+esc(x.tool)+'</span>').join('')+'</div>';
   d.innerHTML=av+'<div class="body">'+t+esc(text)+'</div>';
   feed.appendChild(d);
   document.getElementById('chat').scrollTop=1e9;
@@ -172,17 +197,17 @@ async function enviar(){
   msgs.push({role:'user',content:text});
   add('user',text);
   saveHist(text);
-  const w=add('zyan','');w.querySelector('.body').innerHTML='<div class="think"><span class="dots"><i></i><i></i><i></i></span> Zyan está trabajando con sus herramientas...</div>';
+  const w=add('zyan','');w.querySelector('.body').innerHTML='<div class="think"><span class="dots"><i></i><i></i><i></i></span> Zyan est\u00e1 trabajando con sus herramientas...</div>';
   try{
     const s=await getSession();
-    if(!s||!s.access_token){w.querySelector('.body').textContent='Inicia sesión para hablar conmigo 🐱 → /login';busy=false;document.getElementById('btn').disabled=false;return;}
+    if(!s||!s.access_token){w.querySelector('.body').textContent='Inicia sesi\u00f3n para hablar conmigo \ud83d\udc31 \u2192 /login';busy=false;document.getElementById('btn').disabled=false;return;}
     const r=await fetch('/api/agent',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+s.access_token},body:JSON.stringify({messages:msgs})});
     const d=await r.json();
     if(!r.ok)throw new Error(d.error||('Error '+r.status));
     msgs.push({role:'assistant',content:d.text});
     w.remove();add('zyan',d.text,d.tools_used);
   }catch(e){
-    w.querySelector('.body').textContent='😿 '+e.message;
+    w.querySelector('.body').textContent='\ud83d\ude3f '+e.message;
   }
   busy=false;document.getElementById('btn').disabled=false;
 }
@@ -202,6 +227,50 @@ function renderHist(){
   }catch(e){}
 }
 renderHist();
+
+// \u2550\u2550\u2550 BANDEJA ZYAN (agent inbox: aprobar/editar/ignorar) \u2550\u2550\u2550
+async function verTab(t){
+  document.getElementById('tab-chat').classList.toggle('on',t==='chat');
+  document.getElementById('tab-inbox').classList.toggle('on',t==='inbox');
+  document.getElementById('chat').style.display=t==='chat'?'block':'none';
+  document.querySelector('.inbar').style.display=t==='chat'?'block':'none';
+  document.getElementById('panel-inbox').style.display=t==='inbox'?'block':'none';
+  if(t==='inbox') cargarInbox();
+}
+async function cargarInbox(){
+  const el=document.getElementById('inbox-list');
+  try{
+    const s=await getSession(); if(!s){el.innerHTML='<div class="empty">Inicia sesi\u00f3n para ver tu bandeja</div>';return;}
+    const r=await fetch('/api/inbox',{headers:{'Authorization':'Bearer '+s.access_token}});
+    const d=await r.json(); if(!r.ok) throw new Error(d.error);
+    const items=d.items||[];
+    const badge=document.getElementById('inbox-n');
+    badge.textContent=items.length; badge.style.display=items.length?'inline':'none';
+    if(!items.length){el.innerHTML='<div class="empty">\ud83d\udc31 Bandeja limpia. Zyan te avisar\u00e1 cuando haya novedades que resolver.</div>';return;}
+    el.innerHTML=items.map(i=>`<div class="card" id="card-${i.id}">
+      <h3>${esc(i.title)}<span class="risk ${esc(i.risk)}">${esc(i.risk).toUpperCase()}</span></h3>
+      <div class="act" id="act-${i.id}">${esc(i.proposed_action)}</div>
+      <div class="why">\ud83d\udca1 <b>Por qu\u00e9:</b> ${esc(i.why)}</div>
+      <div class="btns">
+        <button class="ok" onclick="decidir(${i.id},'aprobar')">\u2713 Aprobar</button>
+        <button class="ed" onclick="editarItem(${i.id})">\u270e Editar</button>
+        <button class="ig" onclick="decidir(${i.id},'ignorar')">\u2715 Ignorar</button>
+      </div></div>`).join('');
+  }catch(e){el.innerHTML='<div class="empty">Error: '+esc(e.message)+'</div>';}
+}
+async function decidir(id,decision,final){
+  const s=await getSession();
+  const r=await fetch('/api/inbox',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+s.access_token},
+    body:JSON.stringify({op:'decidir',id,decision,final_action:final||null})});
+  if(r.ok){const c=document.getElementById('card-'+id); c.style.opacity='.35'; setTimeout(()=>{c.remove();cargarInbox();},350);}
+}
+function editarItem(id){
+  const cur=document.getElementById('act-'+id).textContent;
+  const nuevo=prompt('Edita la acci\u00f3n (Zyan aprender\u00e1 de tu correcci\u00f3n):',cur);
+  if(nuevo && nuevo.trim() && nuevo!==cur) decidir(id,'editar',nuevo.trim());
+}
+// polling suave del contador
+(async function pollInbox(){try{const s=await getSession();if(s){const r=await fetch('/api/inbox',{headers:{'Authorization':'Bearer '+s.access_token}});if(r.ok){const d=await r.json();const n=(d.items||[]).length;const b=document.getElementById('inbox-n');b.textContent=n;b.style.display=n?'inline':'none';}}}catch(e){} setTimeout(pollInbox,60000);})();
 </script>
 </body>
 </html>
