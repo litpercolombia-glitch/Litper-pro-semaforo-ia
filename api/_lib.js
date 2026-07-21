@@ -32,7 +32,7 @@ export async function consumeAIQuota(userId) {
   const h = { apikey: SB_SERVICE, Authorization: `Bearer ${SB_SERVICE}`, 'Content-Type': 'application/json' };
   try {
     // org del usuario
-    const pr = await fetch(`${SB_URL}/rest/v1/profiles?id=eq.${userId}&select=org_id`, { headers: h });
+    const pr = await fetch(`${SB_URL}/rest/v1/auth_profiles?id=eq.${userId}&select=org_id`, { headers: h });
     const prof = (await pr.json())[0];
     if (!prof?.org_id) return { ok: false, error: 'Perfil sin organización' };
     const or_ = await fetch(`${SB_URL}/rest/v1/organizations?id=eq.${prof.org_id}&select=ai_used,ai_quota,plan`, { headers: h });
