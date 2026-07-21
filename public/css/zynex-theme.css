@@ -1,0 +1,56 @@
+/* ═══ ZYNEX THEME — hoja unificada de marca (cargar DE ÚLTIMAS en cada página) ═══
+   Modo noche: #070B18 + cian #19C8FF + magenta #E5199B (paleta Zyan)
+   Modo día:  estilo Stripe/Linear — #F6F8FB, cards blancas, azul #0284C7, sin neón */
+
+/* ── Unificación DARK: mismas superficies en todas las páginas ── */
+:root{
+  --bg:#070B18;
+  --surface:#0B1122;
+  --surface-elevated:#121A30;
+  --brand:#19C8FF;
+  --accent-cyan:#19C8FF;
+  --zx-magenta:#E5199B;
+}
+
+/* ── MODO DÍA (body.light) — sistema de variables compartido ── */
+body.light{
+  --bg:#F6F8FB;
+  --surface:#FFFFFF;
+  --surface-elevated:#FFFFFF;
+  --border:#E4E9F1;
+  --border-hover:#C3CCDA;
+  --text-primary:#0B1324;
+  --text-secondary:#4A5568;
+  --text-tertiary:#8A94A6;
+  --brand:#0284C7;
+  --brand-hover:#0369A1;
+  --brand-muted:rgba(2,132,199,.08);
+  --brand-glow:0 1px 3px rgba(16,24,40,.12);
+  --accent-cyan:#0284C7;
+  --accent-violet:#7C3AED;
+  --success:#059669;
+  --warning:#B45309;
+  --error:#DC2626;
+  /* variables de zyan.html */
+  --s1:#FFFFFF; --s2:#F0F3F8; --cy:#0284C7; --mg:#C2186F;
+  --tx:#0B1324; --t2:#4A5568; --b:#E4E9F1;
+  background:#F6F8FB; color:#0B1324;
+}
+body.light canvas{opacity:.05!important;}
+body.light [class*="glow"],body.light .logo-mark{box-shadow:0 1px 3px rgba(16,24,40,.12)!important;animation:none!important;}
+body.light .newchat,body.light .send,body.light .btns .ok{background:linear-gradient(135deg,#0284C7,#2563FF);color:#fff;box-shadow:0 1px 3px rgba(16,24,40,.15);}
+body.light .hero::before{background:radial-gradient(ellipse 62% 55% at 50% 52%,rgba(246,248,251,.94) 0%,rgba(246,248,251,.7) 55%,transparent 78%)!important;}
+body.light img,body.light svg{filter:none;}
+body.light a{color:inherit;}
+body.light ::placeholder{color:#8A94A6;}
+
+/* ── Botón de tema flotante ── */
+.zx-theme-btn{
+  position:fixed; bottom:18px; right:18px; z-index:99990;
+  width:42px; height:42px; border-radius:50%;
+  border:1px solid rgba(255,255,255,.14); background:rgba(11,17,34,.85);
+  color:#fff; font-size:18px; cursor:pointer; backdrop-filter:blur(8px);
+  box-shadow:0 4px 16px rgba(0,0,0,.35); transition:.15s;
+}
+.zx-theme-btn:hover{transform:scale(1.08); border-color:#19C8FF;}
+body.light .zx-theme-btn{background:#FFFFFF; color:#0B1324; border-color:#E4E9F1; box-shadow:0 4px 16px rgba(16,24,40,.12);}
