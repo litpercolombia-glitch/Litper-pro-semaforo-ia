@@ -1,0 +1,53 @@
+/* ═══ ZYNEX BITS — efectos portados de ReactBits (MIT, DavidHDev/react-bits)
+   Aurora · SpotlightCard · Tilt3D · ShinyText · CountUp · ElectricBorder · ClickSpark
+   Paleta ZYNEX: cian #19C8FF · magenta #E5199B · azul #2563FF. Ambos modos. ═══ */
+
+/* ── AURORA (fondo animado, port CSS del Aurora.jsx) ── */
+.zx-aurora{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;filter:blur(60px);opacity:.5;}
+.zx-aurora i{position:absolute;border-radius:50%;mix-blend-mode:screen;animation:zxFloat 18s ease-in-out infinite;}
+.zx-aurora i:nth-child(1){width:52vw;height:52vw;left:-10vw;top:-18vw;background:radial-gradient(circle,rgba(25,200,255,.5),transparent 65%);}
+.zx-aurora i:nth-child(2){width:44vw;height:44vw;right:-12vw;top:-8vw;background:radial-gradient(circle,rgba(229,25,155,.38),transparent 65%);animation-delay:-6s;animation-duration:22s;}
+.zx-aurora i:nth-child(3){width:40vw;height:40vw;left:28vw;bottom:-20vw;background:radial-gradient(circle,rgba(37,99,255,.4),transparent 65%);animation-delay:-12s;animation-duration:26s;}
+@keyframes zxFloat{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(6vw,4vh) scale(1.12)}66%{transform:translate(-5vw,-3vh) scale(.94)}}
+body.light .zx-aurora{opacity:.32;}
+body.light .zx-aurora i:nth-child(1){background:radial-gradient(circle,rgba(2,132,199,.35),transparent 65%);}
+body.light .zx-aurora i:nth-child(2){background:radial-gradient(circle,rgba(194,24,111,.22),transparent 65%);}
+body.light .zx-aurora i:nth-child(3){background:radial-gradient(circle,rgba(37,99,255,.25),transparent 65%);}
+@media (prefers-reduced-motion: reduce){.zx-aurora i{animation:none}}
+
+/* ── SPOTLIGHT CARD (port de SpotlightCard.jsx: luz que sigue al mouse) ── */
+.zx-spot{position:relative;overflow:hidden;--mx:50%;--my:50%;--spot:rgba(25,200,255,.16);}
+.zx-spot::before{content:'';position:absolute;inset:0;background:radial-gradient(280px circle at var(--mx) var(--my),var(--spot),transparent 75%);opacity:0;transition:opacity .4s ease;pointer-events:none;}
+.zx-spot:hover::before{opacity:1;}
+body.light .zx-spot{--spot:rgba(2,132,199,.12);}
+
+/* ── TILT 3D (tarjetas con perspectiva que reaccionan al cursor) ── */
+.zx-tilt{transform-style:preserve-3d;transition:transform .18s ease-out;will-change:transform;}
+
+/* ── SHINY TEXT (destello que recorre el texto) ── */
+.zx-shiny{background:linear-gradient(120deg,var(--cy,#19C8FF) 40%,#FFFFFF 50%,var(--mg,#E5199B) 60%);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:#19C8FF;animation:zxShine 4.5s linear infinite;}
+@keyframes zxShine{0%{background-position:120% 0}100%{background-position:-120% 0}}
+body.light .zx-shiny{background:linear-gradient(120deg,#0284C7 40%,#0B1324 50%,#C2186F 60%);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:#0284C7;}
+
+/* ── ELECTRIC BORDER (borde animado para CTA principal) ── */
+.zx-electric{position:relative;z-index:0;}
+.zx-electric::after{content:'';position:absolute;inset:-2px;border-radius:inherit;padding:2px;background:conic-gradient(from var(--zxa,0deg),#19C8FF,#E5199B,#2563FF,#19C8FF);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:zxRotate 3.2s linear infinite;z-index:-1;opacity:.9;}
+@property --zxa{syntax:'<angle>';initial-value:0deg;inherits:false;}
+@keyframes zxRotate{to{--zxa:360deg}}
+@supports not (background: conic-gradient(from 0deg, red, blue)){.zx-electric::after{display:none}}
+
+/* ── COUNT UP (fila de estadísticas del hero) ── */
+.zx-stats{display:flex;gap:26px;justify-content:center;margin:18px 0 26px;flex-wrap:wrap;}
+.zx-stat{text-align:center;min-width:92px;}
+.zx-stat b{display:block;font-size:26px;font-weight:900;font-variant-numeric:tabular-nums;color:var(--cy,#19C8FF);}
+.zx-stat span{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--t2,#8B93A7);}
+body.light .zx-stat b{color:#0284C7;}
+body.light .zx-stat span{color:#4A5568;}
+
+/* ── CLICK SPARK (chispas al hacer clic, port de ClickSpark) ── */
+.zx-spark{position:fixed;width:5px;height:5px;border-radius:50%;pointer-events:none;z-index:99999;background:var(--cy,#19C8FF);animation:zxSpark .5s ease-out forwards;}
+@keyframes zxSpark{to{transform:translate(var(--sx),var(--sy)) scale(0);opacity:0;}}
+
+/* ── FADE UP escalonado al cargar (AnimatedContent) ── */
+.zx-fade{opacity:0;transform:translateY(14px);animation:zxFadeUp .55s cubic-bezier(.2,.7,.3,1) forwards;}
+@keyframes zxFadeUp{to{opacity:1;transform:none}}

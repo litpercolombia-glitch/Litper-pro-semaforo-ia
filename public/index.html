@@ -9,7 +9,7 @@
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',system-ui,sans-serif;}
 body{background:var(--bg);color:var(--tx);height:100vh;display:flex;overflow:hidden;}
 /* ── SIDEBAR ── */
-.side{width:260px;background:var(--s1);border-right:1px solid var(--b);display:flex;flex-direction:column;padding:14px;flex-shrink:0;overflow-y:auto;}
+.side{position:relative;z-index:2;width:260px;background:var(--s1);border-right:1px solid var(--b);display:flex;flex-direction:column;padding:14px;flex-shrink:0;overflow-y:auto;}
 .logo{display:flex;align-items:center;gap:10px;padding:6px 8px 18px;}
 .logo .z{width:34px;height:34px;}
 .logo b{font-size:18px;letter-spacing:.14em;}
@@ -31,7 +31,7 @@ body{background:var(--bg);color:var(--tx);height:100vh;display:flex;overflow:hid
 .side .foot a{flex:1;text-align:center;font-size:11px;color:var(--t2);text-decoration:none;padding:7px;border-radius:8px;border:1px solid var(--b);}
 .side .foot a:hover{color:var(--cy);border-color:var(--cy);}
 /* ── MAIN ── */
-.main{flex:1;display:flex;flex-direction:column;position:relative;}
+.main{flex:1;display:flex;flex-direction:column;position:relative;z-index:1;}
 .chat{flex:1;overflow-y:auto;padding:28px 0 140px;}
 .wrap{max-width:780px;margin:0 auto;padding:0 24px;}
 /* hero vacío */
@@ -89,6 +89,8 @@ body{background:var(--bg);color:var(--tx);height:100vh;display:flex;overflow:hid
 </style>
 <link rel="stylesheet" href="/css/zynex-theme.css">
 <script src="/js/zynex-theme.js" defer></script>
+<link rel="stylesheet" href="/css/zynex-bits.css">
+<script src="/js/zynex-bits.js" defer></script>
 </head>
 <body>
 
