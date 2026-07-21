@@ -117,14 +117,15 @@ nav.scrolled{background:rgba(5,6,10,.88);}
 .tilt{transition:transform .35s var(--out),box-shadow .35s var(--out);}
 
 /* ── HERO ── */
-.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:100px clamp(16px,6vw,120px) 60px;position:relative;z-index:10;}
-.hero-pill{display:inline-flex;align-items:center;gap:8px;padding:5px 14px 5px 7px;border-radius:99px;background:rgba(25,200,255,.1);border:1px solid rgba(25,200,255,.35);font-size:12px;font-weight:600;color:var(--teal);letter-spacing:.03em;margin-bottom:28px;animation:fadeUp .5s var(--out) both;}
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:90px clamp(16px,6vw,120px) 48px;position:relative;z-index:10;}
+.hero::before{content:"";position:absolute;inset:8% 0 12%;background:radial-gradient(ellipse 62% 55% at 50% 52%,rgba(7,11,24,.92) 0%,rgba(7,11,24,.65) 55%,transparent 78%);z-index:-1;pointer-events:none;}
+.hero-pill{display:inline-flex;align-items:center;gap:8px;padding:6px 14px 6px 9px;border-radius:99px;background:rgba(25,200,255,.1);border:1px solid rgba(25,200,255,.35);font-size:12px;font-weight:600;color:var(--teal);letter-spacing:.03em;margin-bottom:20px;max-width:92vw;animation:fadeUp .5s var(--out) both;}
 .pill-dot{width:6px;height:6px;border-radius:50%;background:var(--teal);box-shadow:0 0 8px var(--teal);animation:blink 2s ease-in-out infinite;}
 @keyframes blink{0%,100%{opacity:1;}50%{opacity:.2;}}
 @keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
 .hero-tag{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--t3);margin-bottom:20px;animation:fadeUp .5s .06s var(--out) both;}
-.hero-h{font-family:var(--font);font-size:clamp(48px,9vw,104px);font-weight:900;line-height:.92;letter-spacing:-.04em;margin-bottom:28px;animation:fadeUp .6s .1s var(--out) both;}
-.hero-sub{font-size:clamp(16px,2.2vw,20px);color:var(--t2);max-width:620px;line-height:1.6;margin-bottom:44px;animation:fadeUp .6s .15s var(--out) both;}
+.hero-h{font-family:var(--font);font-size:clamp(38px,8vw,96px);font-weight:900;line-height:.95;letter-spacing:-.04em;margin-bottom:22px;animation:fadeUp .6s .1s var(--out) both;}
+.hero-sub{font-size:clamp(15px,2.2vw,19px);color:var(--t2);max-width:600px;line-height:1.6;margin-bottom:32px;animation:fadeUp .6s .15s var(--out) both;}
 .hero-ctas{display:flex;align-items:center;gap:12px;justify-content:center;flex-wrap:wrap;animation:fadeUp .6s .2s var(--out) both;}
 .hero-proof{display:flex;align-items:center;gap:12px;margin-top:32px;font-size:12px;color:var(--t3);justify-content:center;animation:fadeUp .6s .26s var(--out) both;}
 .proof-avs{display:flex;}
@@ -343,7 +344,7 @@ body.has-urgencia nav{top:40px}
 
 
 /* ══ CANVAS PARTICLE ══ */
-#particle-canvas{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.55;}
+#particle-canvas{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.25;}
 /* ══ LIVE NOTIFICATIONS ══ */
 #live-notifs{position:fixed;bottom:24px;left:24px;z-index:9000;display:flex;flex-direction:column;gap:10px;pointer-events:none;}
 .lnf{display:flex;align-items:center;gap:10px;background:rgba(10,14,22,.92);border:1px solid rgba(25,200,255,.25);border-radius:12px;padding:11px 16px;min-width:240px;max-width:300px;box-shadow:0 4px 24px rgba(0,0,0,.5),0 0 16px rgba(25,200,255,.08);backdrop-filter:blur(12px);animation:nfIn .4s cubic-bezier(.34,1.56,.64,1) forwards;font-size:12.5px;color:rgba(240,246,252,.85);line-height:1.4;}
@@ -364,7 +365,7 @@ body.has-urgencia nav{top:40px}
 .tw-cursor{display:inline-block;width:3px;height:.85em;background:var(--teal,#19C8FF);margin-left:2px;vertical-align:middle;animation:twBlink .7s step-end infinite;border-radius:2px;}
 @keyframes twBlink{0%,100%{opacity:1;}50%{opacity:0;}}
 </style>
-<style id="mrx-style">#mrx{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;}</style><style id="sl-style">#sl{position:fixed;top:0;left:0;width:100%;height:3px;background:linear-gradient(90deg,transparent,rgba(25,200,255,0.18),rgba(25,200,255,0.35),rgba(25,200,255,0.18),transparent);pointer-events:none;z-index:1;animation:sl-down 8s linear infinite;}@keyframes sl-down{0%{top:-3px}100%{top:100vh}}</style>
+<style id="mrx-style">#mrx{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;opacity:.10;}</style><style id="sl-style">#sl{position:fixed;top:0;left:0;width:100%;height:3px;background:linear-gradient(90deg,transparent,rgba(25,200,255,0.18),rgba(25,200,255,0.35),rgba(25,200,255,0.18),transparent);pointer-events:none;z-index:1;animation:sl-down 8s linear infinite;}@keyframes sl-down{0%{top:-3px}100%{top:100vh}}</style>
 <style id="hormozi-style">
 /* ── HERO MICRO GUARANTEE ── */
 .hero-micro-guarantee{
@@ -667,13 +668,6 @@ body.has-urgencia nav{top:40px}
 
 <div id="live-notifs"></div>
 
-<!-- URGENCIA TOP BAR -->
-<div class="urgencia-top" id="urgencia-top">
-  <span>🔥 Precio de lanzamiento cierra en: </span>
-  <span class="cnt" id="urg-cnt">08:42:17</span>
-  <span style="color:rgba(255,255,255,.8)">· Solo <strong id="urg-spots">7</strong> cupos Pro disponibles</span>
-  <button class="urgencia-close" onclick="document.getElementById('urgencia-top').classList.add('hide');document.querySelector('nav').style.top='0'">✕</button>
-</div>
 
 <!-- STICKY CTA BOTTOM -->
 <div class="sticky-cta" id="sticky-cta">
@@ -796,7 +790,7 @@ body.has-urgencia nav{top:40px}
      ══════════════════════════════════ -->
 <section class="hero wrap">
   <!-- URGENCY PILL — Hormozi scarcity + social proof -->
-  <div class="hero-pill"><span class="pill-dot"></span>🔥 +247 equipos COD · Tasa promedio <strong>+22%</strong> en 30 días · Precio sube jun 1</div>
+  <div class="hero-pill"><span class="pill-dot"></span>Inteligencia logística COD · 1.015 ciudades · 13 transportadoras</div>
 
   <!-- MARKET TAGS -->
   <p class="hero-tag">📦 COD contra entrega · 💳 Pago anticipado · 🌎 CO · CL · GT · MX · EC</p>
@@ -1192,10 +1186,6 @@ body.has-urgencia nav{top:40px}
 
 <!-- ══ PRICING ══ -->
 
-<!-- URGENCY BANNER — Hormozi scarcity -->
-<div class="urgency-banner rv">
-  ⚡ <strong>Precio actual: $299.000/mes</strong> — Sube a <strong>$399.000</strong>  · Solo quedan <strong>53 cupos</strong> al precio de lanzamiento
-</div>
 
 <section id="pricing" class="pad">
   <div class="center rv">
@@ -1604,7 +1594,6 @@ document.querySelectorAll('a,button,.btn,.plan-cta,.opt,.faq,.bc,.tilt,[onclick]
 const nb=document.getElementById('live-notifs');
 const NOTIFS=[
   {e:'🇨🇴',t:'<b>Barranquilla</b> — Tasa subió al 93%'},
-  {e:'⚡',t:'<b>Carlos M.</b> activó Plan Pro · hace 2 min'},
   {e:'🚨',t:'<b>Tumaco</b> en rojo · 58% entrega'},
   {e:'🔄',t:'Carrier swap detectado · Bogotá'},
   {e:'✅',t:'<b>+18%</b> tasa entrega en 30 días · ZYNEX'},
@@ -1620,7 +1609,7 @@ function showNotif(){
   nb.appendChild(d);
   setTimeout(()=>{d.classList.add('hiding');setTimeout(()=>d.remove(),400);},5000);
 }
-setTimeout(()=>{showNotif();void(,8000);},3000);
+setTimeout(function(){showNotif();setInterval(showNotif,8000);},3000);
 
 })();
 </script>
@@ -1652,72 +1641,7 @@ setTimeout(()=>{showNotif();void(,8000);},3000);
   document.addEventListener('visibilitychange',function(){paused=document.hidden;if(!paused)lt=0;});
   window.addEventListener('resize',rsz);rsz();requestAnimationFrame(draw);
 })();
-</script><script id="cipher-js">
-(function(){
-  var CHARS='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%';
-  /* Cipher decode: solo text nodes DIRECTOS de cada elemento.
-     NO recursion — nunca entra en <span> hijos como .grad */
-  function 
-    for(var i=0; i<el.childNodes.length; i++){
-      var n = el.childNodes[i];
-      if(n.nodeType===3 && n.textContent.replace(/\s+/g,'').length){
-        directTextNodes.push(n);
-      }
-    }
-    directTextNodes.forEach(function(tn, idx){
-      setTimeout(function(){
-        var real = tn.textContent;
-        var pos = 0;
-        var iv = setInterval(function(){
-          if(pos >= real.length){ tn.textContent=real; clearInterval(iv); return; }
-          var s = '';
-          for(var c=0; c<real.length; c++){
-            s += c<pos ? real[c] : (real[c]===' '||real[c]==='\n' ? real[c] : CHARS[Math.floor(Math.random()*CHARS.length)]);
-          }
-          tn.textContent = s;
-          pos++;
-        }, 35);
-      }, delay + idx*100);
-    });
-    // Para cada HIJO elemento (span, strong, etc): scramble sus text nodes directos también
-    for(var i=0; i<el.childNodes.length; i++){
-      var child = el.childNodes[i];
-      if(child.nodeType===1){ // es un elemento
-        scrambleEl(child, delay + 80);
-      }
-    }
-  }
-  function init(){
-    var h1 = document.querySelector('.hero-h');
-    /* cipher desactivado: causaba letras perdidas */
-    // Stats — solo el texto directo de cada stat-num
-    var stats = document.querySelectorAll('.stat-num');
-    stats.forEach(function(el,i){
-      setTimeout(function(){
-        var directNodes = [];
-        for(var j=0;j<el.childNodes.length;j++){
-          if(el.childNodes[j].nodeType===3 && el.childNodes[j].textContent.trim().length){
-            directNodes.push(el.childNodes[j]);
-          }
-        }
-        directNodes.forEach(function(tn){
-          var real=tn.textContent, pos=0;
-          var iv=setInterval(function(){
-            if(pos>=real.length){tn.textContent=real;clearInterval(iv);return;}
-            var s='';
-            for(var c=0;c<real.length;c++){
-              s+=c<pos?real[c]:(real[c]===' '?real[c]:CHARS[Math.floor(Math.random()*CHARS.length)]);
-            }
-            tn.textContent=s; pos++;
-          },40);
-        });
-      }, 700 + i*200);
-    });
-  }
-  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',init);}
-  else{ setTimeout(init, 50); }
-})();
-</script>
+</script><script id="cipher-js">/* cipher desactivado: causaba letras perdidas y tenia error de sintaxis */</script>
 <script id="glitch-js">
 (function(){
   function doGlitch(){
@@ -1737,7 +1661,7 @@ setTimeout(()=>{showNotif();void(,8000);},3000);
   }, 3500);
 })();
 </script>
-<canvas id="zynex3d" style="position:fixed;inset:0;z-index:0;pointer-events:none"></canvas>
+<canvas id="zynex3d" style="position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.35"></canvas>
 <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
 <script>
 (function(){
