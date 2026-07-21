@@ -1,287 +1,1705 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zyan — ZYNEX AI</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<meta charset="UTF-8">
+  <link rel="manifest" href="/manifest.json" /><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="description" content="Dashboard logístico COD con IA para e-commerce en Colombia, Chile y Ecuador. Semáforo de ciudades, análisis de carriers y predicción de entregas.">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="ZYNEX — ¿Cuánta plata estás perdiendo sin saberlo?">
+<meta property="og:description" content="Dashboard logístico COD con IA para e-commerce en Colombia, Chile y Ecuador. Semáforo de ciudades, análisis de carriers y predicción de entregas.">
+<meta property="og:url" content="https://litper-semaforo.vercel.app/">
+<meta property="og:image" content="https://litper-semaforo.vercel.app/og-image.png">
+<meta property="og:site_name" content="ZYNEX">
+<meta property="og:locale" content="es_CO">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="ZYNEX — ¿Cuánta plata estás perdiendo sin saberlo?">
+<meta name="twitter:description" content="Dashboard logístico COD con IA para e-commerce en Colombia, Chile y Ecuador. Semáforo de ciudades, análisis de carriers y predicción de entregas.">
+<meta name="twitter:image" content="https://litper-semaforo.vercel.app/og-image.png">
+<link rel="canonical" href="https://litper-semaforo.vercel.app/">
+<title>ZYNEX — ¿Cuánta plata estás perdiendo sin saberlo?</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#070B18;--s1:#0B1122;--s2:#121A30;--cy:#19C8FF;--mg:#E5199B;--tx:#F2F5FA;--t2:#8B93A7;--b:#1B2542;--mono:'Consolas',monospace;}
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',system-ui,sans-serif;}
-body{background:var(--bg);color:var(--tx);height:100vh;display:flex;overflow:hidden;}
-/* ── SIDEBAR ── */
-.side{position:relative;z-index:2;width:260px;background:var(--s1);border-right:1px solid var(--b);display:flex;flex-direction:column;padding:14px;flex-shrink:0;overflow-y:auto;}
-.logo{display:flex;align-items:center;gap:10px;padding:6px 8px 18px;}
-.logo .z{width:34px;height:34px;}
-.logo b{font-size:18px;letter-spacing:.14em;}
-.logo small{display:block;font-size:10px;color:var(--cy);letter-spacing:.08em;}
-.newchat{background:linear-gradient(135deg,var(--cy),#2563FF);color:#04101F;font-weight:700;border:0;border-radius:10px;padding:11px;font-size:13px;cursor:pointer;margin-bottom:14px;box-shadow:0 0 18px rgba(25,200,255,.25);}
-.newchat:hover{filter:brightness(1.1);}
-.sect{font-size:10px;letter-spacing:.15em;color:var(--t2);margin:10px 6px 6px;text-transform:uppercase;}
-.hist{max-height:120px;overflow-y:auto;}
-.nav a{display:flex;align-items:center;gap:9px;padding:7px 10px;border-radius:8px;color:var(--t2);font-size:12.5px;text-decoration:none;}
-.nav a:hover{background:var(--s2);color:var(--cy);}
-.nav a i{font-style:normal;width:18px;text-align:center;filter:saturate(.8);}
-.hist a{display:block;padding:9px 10px;border-radius:8px;color:var(--t2);font-size:12.5px;text-decoration:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;}
-.hist a:hover,.hist a.on{background:var(--s2);color:var(--tx);}
-.skills{border-top:1px solid var(--b);padding-top:10px;}
-.skill{display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--t2);padding:6px 8px;border-radius:8px;cursor:pointer;transition:.12s;}
-.skill:hover{background:var(--s2);color:var(--cy);transform:translateX(2px);}
-.skill i{width:6px;height:6px;border-radius:50%;background:var(--cy);box-shadow:0 0 6px var(--cy);}
-.side .foot{border-top:1px solid var(--b);padding-top:10px;display:flex;gap:8px;}
-.side .foot a{flex:1;text-align:center;font-size:11px;color:var(--t2);text-decoration:none;padding:7px;border-radius:8px;border:1px solid var(--b);}
-.side .foot a:hover{color:var(--cy);border-color:var(--cy);}
-/* ── MAIN ── */
-.main{flex:1;display:flex;flex-direction:column;position:relative;z-index:1;}
-.chat{flex:1;overflow-y:auto;padding:28px 0 140px;}
-.wrap{max-width:780px;margin:0 auto;padding:0 24px;}
-/* hero vacío */
-.hero{text-align:center;padding-top:9vh;}
-.hero .z{width:96px;height:96px;margin:0 auto 14px;filter:drop-shadow(0 0 24px rgba(25,200,255,.45));}
-.hero h1{font-size:30px;font-weight:800;}
-.hero h1 em{font-style:normal;background:linear-gradient(90deg,var(--cy),var(--mg));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
-.hero p{color:var(--t2);font-size:14px;margin:8px 0 30px;}
-.qs{display:grid;grid-template-columns:1fr 1fr;gap:12px;text-align:left;}
-.q{background:var(--s1);border:1px solid var(--b);border-radius:14px;padding:15px 16px;cursor:pointer;transition:.15s;}
-.q:hover{border-color:var(--cy);transform:translateY(-2px);box-shadow:0 6px 24px rgba(25,200,255,.12);}
-.q b{font-size:13px;display:flex;gap:8px;align-items:center;}
-.q span{font-size:11.5px;color:var(--t2);display:block;margin-top:4px;}
-/* bandeja */
-.tabbar{max-width:780px;margin:0 auto 6px;padding:12px 24px 0;display:flex;gap:8px;}
-.tabb{background:transparent;border:1px solid var(--b);color:var(--t2);padding:8px 18px;border-radius:99px;font-size:12.5px;cursor:pointer;font-weight:600;}
-.tabb.on{background:linear-gradient(135deg,rgba(25,200,255,.15),rgba(37,99,255,.1));border-color:var(--cy);color:var(--cy);}
-.tabb .badge{background:var(--mg);color:#fff;border-radius:99px;padding:1px 7px;font-size:10px;margin-left:6px;}
-.card{background:var(--s1);border:1px solid var(--b);border-radius:14px;padding:16px;margin-bottom:14px;}
-.card h3{font-size:14px;margin-bottom:6px;}
-.card .act{background:var(--s2);border-left:3px solid var(--cy);border-radius:8px;padding:10px 12px;font-size:13px;line-height:1.5;margin:8px 0;white-space:pre-wrap;}
-.card .why{font-size:11.5px;color:var(--t2);margin-bottom:10px;}
-.card .why b{color:var(--cy);}
-.risk{font-size:10px;font-family:var(--mono);border-radius:99px;padding:2px 9px;margin-left:8px;}
-.risk.bajo{color:#22C55E;border:1px solid rgba(34,197,94,.4);}
-.risk.medio{color:#F59E0B;border:1px solid rgba(245,158,11,.4);}
-.risk.alto{color:#EF4444;border:1px solid rgba(239,68,68,.4);}
-.btns{display:flex;gap:8px;}
-.btns button{flex:1;padding:9px;border-radius:9px;font-size:12.5px;font-weight:700;cursor:pointer;border:1px solid var(--b);background:transparent;color:var(--t2);}
-.btns .ok{background:linear-gradient(135deg,var(--cy),#2563FF);color:#04101F;border:0;}
-.btns .ed:hover{border-color:var(--cy);color:var(--cy);}
-.btns .ig:hover{border-color:#EF4444;color:#EF4444;}
-.empty{color:var(--t2);text-align:center;padding:40px 0;font-size:13.5px;}
-/* mensajes */
-.msg{display:flex;gap:14px;margin-bottom:26px;}
-.av{width:34px;height:34px;border-radius:10px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;}
-.msg.user .av{background:var(--s2);border:1px solid var(--b);color:var(--cy);}
-.msg .body{flex:1;font-size:14.5px;line-height:1.65;padding-top:5px;white-space:pre-wrap;word-break:break-word;}
-.msg.user .body{color:#D7DCE8;}
-.tools{margin:6px 0;display:flex;flex-wrap:wrap;gap:6px;}
-.tool{font-family:var(--mono);font-size:10.5px;color:var(--cy);border:1px solid rgba(25,200,255,.35);background:rgba(25,200,255,.07);border-radius:99px;padding:3px 10px;}
-.think{color:var(--t2);font-size:13px;display:flex;gap:10px;align-items:center;}
-.dots i{display:inline-block;width:6px;height:6px;margin-right:4px;border-radius:50%;background:var(--cy);animation:p 1.2s infinite;}
-.dots i:nth-child(2){animation-delay:.2s}.dots i:nth-child(3){animation-delay:.4s}
-@keyframes p{0%,80%,100%{opacity:.2}40%{opacity:1}}
-/* input */
-.inbar{position:absolute;bottom:0;left:0;right:0;padding:18px 24px 22px;background:linear-gradient(transparent,var(--bg) 35%);}
-.inbox{max-width:780px;margin:0 auto;background:var(--s1);border:1px solid var(--b);border-radius:16px;padding:12px 14px;display:flex;gap:10px;align-items:flex-end;transition:.15s;}
-.inbox:focus-within{border-color:var(--cy);box-shadow:0 0 0 3px rgba(25,200,255,.12);}
-.inbox textarea{flex:1;background:transparent;border:0;outline:0;color:var(--tx);font-size:14.5px;resize:none;max-height:160px;line-height:1.5;font-family:inherit;}
-.send{background:linear-gradient(135deg,var(--cy),#2563FF);border:0;color:#04101F;width:38px;height:38px;border-radius:10px;font-size:16px;cursor:pointer;flex-shrink:0;}
-.send:disabled{opacity:.35;cursor:default;}
-.hint{max-width:780px;margin:8px auto 0;text-align:center;font-size:10.5px;color:var(--t2);}
-@media(max-width:800px){.side{display:none}.qs{grid-template-columns:1fr}}
+/* ═══════════════════════════════════════════════
+   ZYNEX AURORA v4 — FUNNEL 400%
+   Diseño unificado para todas las páginas
+   ═══════════════════════════════════════════════ */
+:root{
+  --brand:#19C8FF;--brand-hover:#0FA8DB;--brand-muted:rgba(25,200,255,0.1);
+  --brand-glow:0 0 25px rgba(25,200,255,.4), 0 0 60px rgba(25,200,255,.12);
+  --bg:#07080A;--surface:#0D1117;--surface-elevated:#161B22;
+  --border:rgba(255,255,255,0.08);--border-hover:rgba(255,255,255,0.15);
+  --text-primary:#F0F6FC;--text-secondary:rgba(240,246,252,0.7);--text-tertiary:rgba(240,246,252,0.4);
+  --accent-cyan:#19C8FF;--accent-violet:#A855F7;
+  --error:#FF4757;--warning:#FFBE0B;--success:#22C55E;
+  --font:'Inter',system-ui,-apple-system,sans-serif;--mono:'JetBrains Mono','Fira Code',monospace;
+  --ease-spring:cubic-bezier(.34,1.56,.64,1);--ease-out:cubic-bezier(.16,1,.3,1);
+  --r-sm:6px;--r-md:8px;--r-lg:12px;--r-xl:16px;--r-full:9999px;
+  --ink:#07080A;--paper:#0D1117;
+  --s1:rgba(255,255,255,.028);--s2:rgba(255,255,255,.055);--s3:rgba(255,255,255,.08);
+  --e1:rgba(255,255,255,.12);--e2:rgba(255,255,255,.2);--e3:rgba(255,255,255,.3);
+  --tx:#F0F6FC;--t2:rgba(240,246,252,0.7);--t3:rgba(240,246,252,0.4);--t4:rgba(255,255,255,.12);
+  --teal:#19C8FF;--cyan:#19C8FF;--violet:#A855F7;--rose:#FF4757;
+  --amber:#FFBE0B;--green:#19C8FF;--lime:#84cc16;
+  --tglow:0 0 25px rgba(25,200,255,.4),0 0 60px rgba(25,200,255,.12);
+  --vglow:0 0 30px rgba(168,85,247,.4),0 0 70px rgba(168,85,247,.15);
+  --spring:cubic-bezier(.34,1.56,.64,1);--out:cubic-bezier(.16,1,.3,1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--ink);color:var(--tx);font-family:var(--font);-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+
+/* ── AURORA BG ── */
+.grid-veil{position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(rgba(255,255,255,.012) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.012) 1px,transparent 1px);background-size:48px 48px;mask-image:radial-gradient(ellipse 100% 100% at 50% 0%,black 20%,transparent 75%);}
+.noise-v{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.045;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;height:58px;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(16px,5vw,72px);background:rgba(5,6,10,.92);border-bottom:1px solid rgba(255,255,255,.05);transition:background .3s;}
+nav.scrolled{background:rgba(5,6,10,.88);}
+.logo-wrap{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.logo-mark{width:36px;height:36px;border-radius:9px;overflow:hidden;flex-shrink:0;box-shadow:0 0 20px rgba(25,200,255,.35);animation:logoPulse 4s ease-in-out infinite;}
+.logo-mark img{width:100%;height:100%;object-fit:contain;}
+@keyframes logoPulse{0%,100%{box-shadow:0 0 20px rgba(25,200,255,.5),0 0 40px rgba(25,200,255,.2);}50%{box-shadow:0 0 35px rgba(25,200,255,.75),0 0 70px rgba(25,200,255,.3);}}
+.logo-name{font-family:var(--mono);font-size:13px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--tx);}
+.logo-dot{color:var(--teal);}
+.nav-links{display:flex;align-items:center;gap:6px;}
+.nav-link{font-size:13px;font-weight:500;color:var(--t2);text-decoration:none;padding:6px 12px;border-radius:8px;transition:all .18s;}
+.nav-link:hover{color:var(--tx);background:rgba(255,255,255,.06);}
+.nav-link.active{color:var(--teal);background:rgba(25,200,255,.08);}
+.nav-flags{display:flex;gap:5px;font-size:14px;}
+.nav-flags span{transition:transform .2s var(--spring);cursor:default;}
+.nav-flags span:hover{transform:scale(1.3);}
+.nav-signin{font-size:13px;font-weight:600;color:var(--t2);text-decoration:none;padding:7px 15px;border:1px solid var(--e2);border-radius:9px;transition:all .2s;}
+.nav-signin:hover{border-color:rgba(6,182,212,.35);color:var(--tx);background:rgba(6,182,212,.05);}
+
+/* ── BUTTONS ── */
+.btn{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 28px;border-radius:11px;font-family:var(--font);font-size:14px;font-weight:700;cursor:pointer;border:none;text-decoration:none;overflow:hidden;transition:transform .25s var(--spring),box-shadow .25s var(--out);}
+.btn::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgba(255,255,255,.2) 0%,transparent 55%);opacity:0;transition:opacity .3s;}
+.btn:hover::before{opacity:1;}
+.btn:active{transform:scale(.97) !important;}
+.btn-glow{background:linear-gradient(135deg,var(--teal),#38bdf8 40%,var(--green) 80%);background-size:250%;color:#000;box-shadow:0 4px 28px rgba(25,200,255,.45),0 0 60px rgba(25,200,255,.15),inset 0 1px rgba(255,255,255,.35);animation:bgrad 4s ease-in-out infinite alternate;font-weight:800;}
+@keyframes bgrad{0%{background-position:0%}100%{background-position:100%}}
+.btn-glow:hover{transform:translateY(-2px) scale(1.03);box-shadow:0 0 55px rgba(25,200,255,.65),0 0 100px rgba(25,200,255,.2),0 10px 36px rgba(0,0,0,.5);}
+.btn-ghost{background:rgba(255,255,255,.07);color:var(--tx);border:1px solid var(--e2) !important;}
+.btn-ghost:hover{background:rgba(255,255,255,.08);border-color:rgba(6,182,212,.3) !important;color:var(--cyan);}
+.btn-violet{background:linear-gradient(135deg,var(--violet),#a78bfa);color:#fff;box-shadow:0 4px 20px rgba(139,92,246,.3);}
+.btn-violet:hover{transform:translateY(-2px) scale(1.02);box-shadow:0 0 36px rgba(139,92,246,.45);}
+.btn-sm{padding:10px 20px;font-size:13px;}
+.btn-lg{padding:16px 36px;font-size:16px;}
+
+/* ── SECTION ── */
+.wrap{position:relative;z-index:10;}
+.pad{padding:80px clamp(16px,5vw,72px);}
+.pad-sm{padding:48px clamp(16px,5vw,72px);}
+.center{text-align:center;}
+.center .s-sub{margin:0 auto;}
+.s-tag{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--teal);margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.s-tag::before{content:'';width:22px;height:1px;background:var(--teal);}
+.center .s-tag{justify-content:center;}
+.center .s-tag::before{display:none;}
+.s-h{font-family:var(--font);font-size:clamp(30px,5vw,54px);font-weight:900;letter-spacing:-.03em;line-height:1.0;margin-bottom:18px;}
+.s-sub{font-size:16px;color:var(--t2);line-height:1.7;max-width:560px;}
+.grad{background:linear-gradient(135deg,var(--teal) 0%,#06efff 18%,var(--green) 50%,var(--violet) 78%,#e040fb 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;color:#19C8FF;background-size:250%;animation:gshift 5s ease-in-out infinite alternate;filter:drop-shadow(0 0 30px rgba(25,200,255,.3));}
+@keyframes gshift{0%{background-position:0%}100%{background-position:100%}}
+
+/* ── GLASS CARD ── */
+.glass{background:rgba(10,12,20,.88);border:1px solid rgba(255,255,255,.11);border-radius:16px;}
+.glass:hover{border-color:rgba(6,182,212,.18);}
+.glass-strong{background:rgba(15,18,26,.95);border:1px solid var(--e2);border-radius:16px;}
+
+/* ── REVEAL ── */
+.rv{opacity:0;transform:translateY(20px);transition:opacity .7s var(--out),transform .7s var(--out);}
+.rv.in{opacity:1;transform:translateY(0);}
+.rv-s{opacity:0;transform:scale(.94);transition:opacity .5s var(--out),transform .55s var(--spring);}
+.rv-s.in{opacity:1;transform:scale(1);}
+.d1{transition-delay:.06s}.d2{transition-delay:.12s}.d3{transition-delay:.18s}.d4{transition-delay:.24s}.d5{transition-delay:.30s}
+.tilt{transition:transform .35s var(--out),box-shadow .35s var(--out);}
+
+/* ── HERO ── */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:90px clamp(16px,6vw,120px) 48px;position:relative;z-index:10;}
+.hero::before{content:"";position:absolute;inset:8% 0 12%;background:radial-gradient(ellipse 62% 55% at 50% 52%,rgba(7,11,24,.92) 0%,rgba(7,11,24,.65) 55%,transparent 78%);z-index:-1;pointer-events:none;}
+.hero-pill{display:inline-flex;align-items:center;gap:8px;padding:6px 14px 6px 9px;border-radius:99px;background:rgba(25,200,255,.1);border:1px solid rgba(25,200,255,.35);font-size:12px;font-weight:600;color:var(--teal);letter-spacing:.03em;margin-bottom:20px;max-width:92vw;animation:fadeUp .5s var(--out) both;}
+.pill-dot{width:6px;height:6px;border-radius:50%;background:var(--teal);box-shadow:0 0 8px var(--teal);animation:blink 2s ease-in-out infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.2;}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+.hero-tag{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--t3);margin-bottom:20px;animation:fadeUp .5s .06s var(--out) both;}
+.hero-h{font-family:var(--font);font-size:clamp(38px,8vw,96px);font-weight:900;line-height:.95;letter-spacing:-.04em;margin-bottom:22px;animation:fadeUp .6s .1s var(--out) both;}
+.hero-sub{font-size:clamp(15px,2.2vw,19px);color:var(--t2);max-width:600px;line-height:1.6;margin-bottom:32px;animation:fadeUp .6s .15s var(--out) both;}
+.hero-ctas{display:flex;align-items:center;gap:12px;justify-content:center;flex-wrap:wrap;animation:fadeUp .6s .2s var(--out) both;}
+.hero-proof{display:flex;align-items:center;gap:12px;margin-top:32px;font-size:12px;color:var(--t3);justify-content:center;animation:fadeUp .6s .26s var(--out) both;}
+.proof-avs{display:flex;}
+.pav{width:26px;height:26px;border-radius:50%;border:2px solid var(--ink);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;margin-left:-8px;}
+.pav:first-child{margin-left:0;}
+
+/* ── STATS BAR ── */
+.stats-bar{position:relative;z-index:10;padding:0 clamp(16px,5vw,72px);}
+.stats-inner{display:flex;align-items:stretch;gap:0;border:1px solid rgba(255,255,255,.11);border-radius:16px;background:rgba(10,12,20,.88);overflow:hidden;max-width:940px;margin:0 auto;}
+.stat-c{flex:1;padding:28px 22px;text-align:center;position:relative;transition:background .2s;}
+.stat-c:not(:last-child)::after{content:'';position:absolute;top:20%;right:0;bottom:20%;width:1px;background:var(--e1);}
+.stat-c:hover{background:rgba(255,255,255,.022);}
+.stat-n{font-family:var(--font);font-size:clamp(26px,3.5vw,40px);font-weight:900;line-height:1;margin-bottom:5px;}
+.stat-l{font-size:11px;color:var(--t3);letter-spacing:.07em;text-transform:uppercase;font-family:var(--mono);}
+
+/* ── TICKER ── */
+.ticker-wrap{overflow:hidden;border-top:1px solid var(--e1);border-bottom:1px solid var(--e1);padding:12px 0;background:linear-gradient(90deg,rgba(6,182,212,.03),rgba(139,92,246,.03),rgba(6,182,212,.03));position:relative;z-index:10;}
+.ticker-track{display:flex;gap:56px;animation:tick 30s linear infinite;white-space:nowrap;width:max-content;}
+@keyframes tick{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.tick-i{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--t3);display:flex;align-items:center;gap:12px;}
+.tick-d{width:3px;height:3px;border-radius:50%;background:var(--teal);box-shadow:0 0 6px var(--teal);flex-shrink:0;}
+
+/* ══════════════════════════════════════════
+   FUNNEL 400% — QUIZ INTERACTIVO
+   ══════════════════════════════════════════ */
+.funnel-section{position:relative;z-index:10;}
+.quiz-wrap{max-width:640px;margin:0 auto;}
+
+/* Progress bar */
+.progress-bar-wrap{background:rgba(255,255,255,.06);border-radius:99px;height:4px;overflow:hidden;margin-bottom:8px;}
+.progress-bar-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--teal),#38bdf8,var(--violet));box-shadow:0 0 12px rgba(25,200,255,.5);transition:width .5s var(--out);}
+.progress-label{font-family:var(--mono);font-size:11px;color:var(--t3);letter-spacing:.06em;text-align:right;margin-bottom:32px;}
+
+/* Quiz step */
+.quiz-step{display:none;animation:stepIn .35s var(--out) both;}
+.quiz-step.active{display:block;}
+@keyframes stepIn{from{opacity:0;transform:translateX(16px);}to{opacity:1;transform:translateX(0);}}
+.step-n{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11px;color:var(--teal);letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px;padding:4px 12px;background:rgba(25,200,255,.09);border:1px solid rgba(25,200,255,.3);border-radius:99px;}
+.step-n .n-dot{width:5px;height:5px;border-radius:50%;background:var(--teal);box-shadow:0 0 6px var(--teal);}
+.quiz-q{font-family:var(--font);font-size:clamp(22px,3.5vw,32px);font-weight:800;letter-spacing:-.02em;line-height:1.2;margin-bottom:28px;}
+.quiz-opts{display:flex;flex-direction:column;gap:11px;}
+.opt{
+  display:flex;align-items:center;gap:14px;
+  background:rgba(10,12,20,.7);border:1.5px solid var(--e1);
+  border-radius:13px;padding:16px 18px;cursor:pointer;
+  transition:all .22s var(--spring);font-size:14px;font-weight:500;
+  position:relative;overflow:hidden;
+}
+.opt::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgba(6,182,212,.06) 0%,transparent 65%);opacity:0;transition:opacity .3s;}
+.opt:hover{border-color:rgba(25,200,255,.5);background:rgba(25,200,255,.1);transform:translateX(5px);box-shadow:0 0 20px rgba(25,200,255,.12);}
+.opt:hover::before{opacity:1;}
+.opt.selected{border-color:rgba(25,200,255,.65);background:rgba(25,200,255,.14);box-shadow:0 0 0 1px rgba(25,200,255,.22),0 0 25px rgba(25,200,255,.15);}
+.opt-letter{width:30px;height:30px;border-radius:8px;background:var(--s2);border:1px solid rgba(255,255,255,.11);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:11px;font-weight:600;color:var(--t2);flex-shrink:0;transition:all .2s;}
+.opt.selected .opt-letter{background:rgba(6,182,212,.15);border-color:var(--teal);color:var(--teal);}
+.opt-text{flex:1;}
+
+/* Result screen */
+.result-screen{display:none;text-align:center;animation:fadeUp .5s var(--out) both;}
+.result-screen.active{display:block;}
+.result-badge{display:inline-flex;align-items:center;gap:8px;padding:8px 18px;border-radius:99px;font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:20px;}
+.result-title{font-family:var(--font);font-size:clamp(26px,4vw,40px);font-weight:900;letter-spacing:-.025em;margin-bottom:16px;}
+.result-desc{font-size:15px;color:var(--t2);line-height:1.75;max-width:520px;margin:0 auto 28px;}
+.result-stat{display:inline-flex;align-items:center;gap:10px;background:rgba(244,63,94,.08);border:1px solid rgba(244,63,94,.25);border-radius:10px;padding:12px 20px;margin-bottom:28px;font-size:13px;color:var(--rose);}
+.consequence{background:rgba(10,12,20,.75);border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:18px 22px;margin-bottom:32px;text-align:left;}
+.cons-label{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--t3);margin-bottom:8px;}
+.cons-text{font-size:13px;color:var(--t2);line-height:1.7;}
+.result-cta-wrap{display:flex;flex-direction:column;align-items:center;gap:12px;}
+.transition-line{font-size:13px;color:var(--t3);margin-bottom:16px;}
+
+/* ── FEATURES BENTO ── */
+.bento{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;max-width:1080px;margin:56px auto 0;}
+.bc{position:relative;overflow:hidden;background:rgba(10,12,20,.85);border:1px solid rgba(255,255,255,.11);border-radius:17px;padding:26px;transition:transform .3s var(--out),border-color .3s,box-shadow .3s;cursor:pointer;}
+.bc::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgba(6,182,212,.055) 0%,transparent 65%);opacity:0;transition:opacity .35s;}
+.bc:hover{transform:translateY(-4px);border-color:rgba(6,182,212,.2);box-shadow:0 16px 48px rgba(0,0,0,.5),0 0 0 1px rgba(6,182,212,.07);}
+.bc:hover::before{opacity:1;}
+.b-span4{grid-column:span 4;}.b-span2{grid-column:span 2;}.b-span3{grid-column:span 3;}.b-span6{grid-column:span 6;}
+@media(max-width:900px){.bento{grid-template-columns:1fr 1fr;}.b-span4,.b-span2,.b-span3,.b-span6{grid-column:span 2;}}
+@media(max-width:540px){.bento{grid-template-columns:1fr;}.b-span4,.b-span2,.b-span3,.b-span6{grid-column:span 1;}}
+.bc-icon{font-size:26px;margin-bottom:16px;display:block;}
+.bc-t{font-family:var(--font);font-size:17px;font-weight:800;letter-spacing:-.018em;margin-bottom:8px;}
+.bc-d{font-size:13px;color:var(--t2);line-height:1.65;}
+.bc-chip{display:inline-flex;align-items:center;gap:4px;font-family:var(--mono);font-size:10px;font-weight:600;padding:3px 9px;border-radius:99px;margin-top:14px;letter-spacing:.04em;}
+.chip-t{background:rgba(25,200,255,.12);color:var(--teal);border:1px solid rgba(25,200,255,.35);font-weight:700;}
+.chip-v{background:rgba(157,78,255,.12);color:var(--violet);border:1px solid rgba(157,78,255,.35);font-weight:700;}
+.chip-g{background:rgba(0,230,118,.12);color:var(--green);border:1px solid rgba(0,230,118,.35);font-weight:700;}
+.chip-r{background:rgba(255,45,85,.12);color:var(--rose);border:1px solid rgba(255,45,85,.35);font-weight:700;}
+.chip-a{background:rgba(255,179,0,.12);color:var(--amber);border:1px solid rgba(255,179,0,.35);font-weight:700;}
+/* Bento visual preview */
+.sem-preview{margin-top:18px;height:68px;background:rgba(6,182,212,.07);border-radius:9px;border:1px solid rgba(255,255,255,.11);display:flex;align-items:center;padding:0 14px;gap:7px;overflow:hidden;position:relative;}
+.sem-preview::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(6,182,212,.06),transparent);animation:shimmer 3.5s ease-in-out infinite;}
+@keyframes shimmer{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+.sp{padding:4px 9px;border-radius:99px;font-family:var(--mono);font-size:9px;font-weight:700;white-space:nowrap;}
+.sp-g{background:rgba(34,197,94,.14);color:var(--green);border:1px solid rgba(34,197,94,.28);}
+.sp-y{background:rgba(245,158,11,.11);color:var(--amber);border:1px solid rgba(245,158,11,.24);}
+.sp-r{background:rgba(244,63,94,.12);color:var(--rose);border:1px solid rgba(244,63,94,.25);}
+
+/* ── PRICING ── */
+.plans{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;max-width:980px;margin:56px auto 0;}
+@media(max-width:820px){.plans{grid-template-columns:1fr;max-width:400px;}}
+.plan{position:relative;overflow:hidden;background:rgba(10,12,20,.88);border:1px solid rgba(255,255,255,.11);border-radius:20px;padding:30px;transition:transform .35s var(--out),border-color .3s,box-shadow .3s;cursor:pointer;}
+.plan:hover{transform:translateY(-5px);border-color:var(--e2);box-shadow:0 20px 60px rgba(0,0,0,.5);}
+.plan.pro{border-color:rgba(25,200,255,.4);background:linear-gradient(155deg,rgba(6,182,212,.07) 0%,rgba(139,92,246,.04) 60%,rgba(10,12,20,.7) 100%);box-shadow:0 0 0 1px rgba(25,200,255,.18),0 24px 60px rgba(0,0,0,.5);}
+.plan.pro:hover{box-shadow:0 0 0 1px rgba(6,182,212,.22),0 0 50px rgba(6,182,212,.1),0 28px 60px rgba(0,0,0,.55);}
+.plan-badge{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,var(--teal),var(--green));color:#000;font-family:var(--mono);font-size:10px;font-weight:700;padding:4px 16px;border-radius:99px;letter-spacing:.1em;white-space:nowrap;}
+.plan-name{font-family:var(--font);font-size:19px;font-weight:900;margin-bottom:4px;}
+.plan-tagline{font-size:12px;color:var(--t3);margin-bottom:26px;}
+.plan-price{font-family:var(--font);font-size:40px;font-weight:900;line-height:1;margin-bottom:4px;}
+.plan-price.pro-p{color:var(--teal);text-shadow:var(--tglow);}
+.plan-period{font-size:12px;color:var(--t3);font-family:var(--mono);margin-bottom:24px;}
+.plan-div{border:none;border-top:1px solid rgba(255,255,255,.06);margin:20px 0;}
+.feats{list-style:none;display:flex;flex-direction:column;gap:9px;margin-bottom:26px;}
+.feat{display:flex;align-items:center;gap:9px;font-size:13px;color:var(--t2);}
+.fy{width:17px;height:17px;border-radius:50%;background:rgba(34,197,94,.1);color:var(--green);border:1px solid rgba(34,197,94,.24);display:flex;align-items:center;justify-content:center;font-size:9px;flex-shrink:0;}
+.fn{width:17px;height:17px;border-radius:50%;background:var(--s1);color:var(--t3);border:1px solid rgba(255,255,255,.11);display:flex;align-items:center;justify-content:center;font-size:9px;flex-shrink:0;}
+.plan-cta{width:100%;padding:13px;border-radius:10px;font-family:var(--font);font-size:14px;font-weight:700;cursor:pointer;border:none;text-align:center;text-decoration:none;display:block;transition:all .25s var(--spring);}
+.cta-glow{background:linear-gradient(135deg,var(--teal),#38bdf8 40%,var(--green));background-size:250%;color:#000;box-shadow:0 4px 28px rgba(25,200,255,.4),0 0 50px rgba(25,200,255,.12);animation:bgrad 4s ease-in-out infinite alternate;font-weight:800;}
+.cta-glow:hover{box-shadow:0 0 50px rgba(25,200,255,.65),0 0 80px rgba(25,200,255,.2),0 8px 28px rgba(0,0,0,.5);transform:translateY(-2px);}
+.cta-g{background:rgba(255,255,255,.05);color:var(--tx);border:1px solid var(--e2);}
+.cta-g:hover{border-color:rgba(6,182,212,.3);background:rgba(6,182,212,.06);color:var(--cyan);}
+.billing-tog{display:flex;align-items:center;gap:12px;justify-content:center;margin-top:28px;margin-bottom:0;}
+.tog-lbl{font-size:13px;color:var(--t2);font-weight:500;}
+.tog{width:46px;height:25px;background:var(--s2);border:1px solid var(--e2);border-radius:99px;position:relative;cursor:pointer;transition:all .2s;}
+.tog.on{background:rgba(6,182,212,.12);border-color:rgba(6,182,212,.3);}
+.tog-k{width:19px;height:19px;border-radius:50%;background:var(--t3);position:absolute;top:2px;left:2px;transition:all .28s var(--spring);}
+.tog.on .tog-k{left:23px;background:var(--teal);box-shadow:var(--tglow);}
+.save-chip{font-family:var(--mono);font-size:10px;font-weight:700;color:var(--green);background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.24);padding:3px 9px;border-radius:99px;}
+
+/* ── SOCIAL PROOF ── */
+.proofs{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+@media(max-width:780px){.proofs{grid-template-columns:1fr;}}
+.proof-c{background:rgba(10,12,20,.85);border:1px solid rgba(255,255,255,.11);border-radius:16px;padding:24px;transition:all .3s var(--out);cursor:pointer;}
+.proof-c:hover{transform:translateY(-3px);border-color:var(--e2);box-shadow:0 12px 40px rgba(0,0,0,.4);}
+.proof-stars{color:var(--amber);font-size:13px;letter-spacing:2px;margin-bottom:12px;}
+.proof-q{font-size:14px;color:var(--t2);line-height:1.7;font-style:italic;margin-bottom:18px;}
+.proof-who{display:flex;align-items:center;gap:10px;}
+.proof-av{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:12px;font-weight:700;flex-shrink:0;}
+.proof-name{font-size:13px;font-weight:700;}
+.proof-role{font-size:11px;color:var(--t3);}
+
+/* ── FAQ ── */
+.faqs{max-width:700px;margin:52px auto 0;display:flex;flex-direction:column;gap:8px;}
+.faq{background:rgba(10,12,20,.85);border:1px solid rgba(255,255,255,.11);border-radius:13px;overflow:hidden;transition:border-color .25s;cursor:pointer;}
+.faq.open{border-color:rgba(6,182,212,.2);}
+.faq-q{display:flex;align-items:center;justify-content:space-between;padding:18px 20px;font-size:14px;font-weight:600;gap:12px;user-select:none;}
+.faq-ic{width:21px;height:21px;border-radius:50%;background:rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--t2);flex-shrink:0;transition:all .25s var(--spring);}
+.faq.open .faq-ic{transform:rotate(45deg);background:rgba(6,182,212,.12);color:var(--teal);}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .35s var(--out);}
+.faq.open .faq-a{max-height:180px;}
+.faq-body{padding:0 20px 18px;font-size:13px;color:var(--t2);line-height:1.75;}
+
+/* ── CTA FINAL ── */
+.cta-final{max-width:860px;margin:0 auto;text-align:center;position:relative;overflow:hidden;background:linear-gradient(135deg,rgba(6,182,212,.07),rgba(139,92,246,.05),rgba(34,197,94,.04));border:1px solid rgba(6,182,212,.16);border-radius:24px;padding:76px 44px;}
+.cta-final::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(6,182,212,.8),rgba(139,92,246,.6),transparent);}
+.cta-final::after{content:'';position:absolute;inset:0;border-radius:24px;background:radial-gradient(ellipse 60% 40% at 50% 0%,rgba(6,182,212,.06) 0%,transparent 60%);pointer-events:none;}
+.cta-h{font-family:var(--font);font-size:clamp(28px,5vw,52px);font-weight:900;letter-spacing:-.03em;margin-bottom:16px;position:relative;z-index:1;}
+.cta-sub{font-size:16px;color:var(--t2);margin-bottom:38px;position:relative;z-index:1;}
+.cta-btns{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;position:relative;z-index:1;}
+.latam-strip{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--t3);justify-content:center;margin-top:18px;font-family:var(--mono);letter-spacing:.04em;position:relative;z-index:1;}
+
+/* ── FOOTER ── */
+footer{border-top:1px solid var(--e1);padding:40px clamp(16px,5vw,72px);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;position:relative;z-index:10;}
+.foot-logo{font-family:var(--mono);font-size:13px;font-weight:600;letter-spacing:.07em;color:var(--t2);}
+.foot-logo span{color:var(--teal);}
+.foot-links{display:flex;gap:20px;}
+.foot-link{font-size:12px;color:var(--t3);text-decoration:none;transition:color .2s;}
+.foot-link:hover{color:var(--teal);}
+.foot-copy{font-size:11px;color:var(--t4);font-family:var(--mono);}
+
+@keyframes ripple{to{transform:scale(1);opacity:0;}}
+@media(max-width:600px){
+  nav .nav-links{display:none;}
+  .stats-inner{flex-wrap:wrap;}
+  .stat-c{min-width:50%;}
+}
+
+/* ── URGENCIA + STICKY ──────────────────────────────── */
+.urgencia-top{position:fixed;top:0;left:0;right:0;z-index:1001;background:linear-gradient(90deg,rgba(255,45,85,.9),rgba(157,78,255,.85));padding:8px 16px;text-align:center;font-size:12px;font-weight:600;color:#fff;letter-spacing:.02em;display:flex;align-items:center;justify-content:center;gap:10px}
+.urgencia-top .cnt{font-family:var(--mono);background:rgba(0,0,0,.3);padding:2px 8px;border-radius:5px;font-size:13px;letter-spacing:.05em}
+.urgencia-close{position:absolute;right:14px;cursor:pointer;opacity:.7;font-size:16px;background:none;border:none;color:#fff;padding:0}
+.urgencia-top.hide{display:none}
+nav{top:40px!important}
+.sticky-cta{position:fixed;bottom:0;left:0;right:0;z-index:999;background:linear-gradient(to top,rgba(5,6,10,.99),rgba(5,6,10,.95));border-top:1px solid rgba(25,200,255,.2);padding:12px 20px;display:flex;align-items:center;justify-content:center;gap:14px;transform:translateY(100%);transition:transform .4s cubic-bezier(.22,1,.36,1)}
+.sticky-cta.visible{transform:translateY(0)}
+.sticky-cta-btn{background:linear-gradient(135deg,var(--teal),var(--violet));color:#000;font-family:var(--font);font-size:14px;font-weight:700;padding:11px 28px;border:none;border-radius:10px;cursor:pointer;white-space:nowrap;transition:transform .2s}
+.sticky-cta-btn:hover{transform:scale(1.03)}
+.sticky-cta-txt{font-size:12px;color:rgba(255,255,255,.6);font-family:var(--mono)}
+@media(max-width:500px){.sticky-cta-txt{display:none}}
+/* Ajustar nav cuando hay urgencia-top */
+body.has-urgencia nav{top:40px}
+
+/* ── BARRA DE CONFIANZA (trust bar) ──────────────────── */
+.trust-bar{background:rgba(25,200,255,.04);border-top:1px solid rgba(25,200,255,.1);border-bottom:1px solid rgba(25,200,255,.1);padding:12px clamp(16px,5vw,72px);overflow:hidden}
+.trust-bar-inner{display:flex;align-items:center;gap:32px;animation:scroll-trust 20s linear infinite;white-space:nowrap}
+@keyframes scroll-trust{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.trust-item{display:flex;align-items:center;gap:8px;font-size:12px;color:rgba(255,255,255,.5);font-family:var(--mono);flex-shrink:0}
+.trust-item strong{color:rgba(255,255,255,.8)}
+
+/* ═══ BRAND LOGOS / INTEGRATIONS BAR ═══ */
+.logos-section{padding:20px clamp(16px,5vw,72px) 40px;text-align:center;}
+.logos-label{font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:rgba(255,255,255,.3);text-transform:uppercase;margin-bottom:24px;}
+.logos-row{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:32px;}
+.logo-pill{display:flex;align-items:center;gap:9px;padding:10px 20px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:12px;transition:all .25s;cursor:default;}
+.logo-pill:hover{background:rgba(25,200,255,.05);border-color:rgba(25,200,255,.2);transform:translateY(-2px);box-shadow:0 8px 24px rgba(25,200,255,.08);}
+.logo-pill-icon{width:22px;height:22px;flex-shrink:0;}
+.logo-pill-name{font-family:var(--mono);font-size:12px;font-weight:600;color:rgba(255,255,255,.55);letter-spacing:.04em;}
+.logo-pill:hover .logo-pill-name{color:rgba(255,255,255,.85);}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="/js/supabase-client.js"></script>
+
+<style id="ultra-tech-layer">
+/* ══ CURSOR MAGNÉTICO ══ */
+*{!important;}
+
+
+
+
+/* ══ CANVAS PARTICLE ══ */
+#particle-canvas{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.25;}
+/* ══ LIVE NOTIFICATIONS ══ */
+#live-notifs{position:fixed;bottom:24px;left:24px;z-index:9000;display:flex;flex-direction:column;gap:10px;pointer-events:none;}
+.lnf{display:flex;align-items:center;gap:10px;background:rgba(10,14,22,.92);border:1px solid rgba(25,200,255,.25);border-radius:12px;padding:11px 16px;min-width:240px;max-width:300px;box-shadow:0 4px 24px rgba(0,0,0,.5),0 0 16px rgba(25,200,255,.08);backdrop-filter:blur(12px);animation:nfIn .4s cubic-bezier(.34,1.56,.64,1) forwards;font-size:12.5px;color:rgba(240,246,252,.85);line-height:1.4;}
+.lnf-dot{width:8px;height:8px;border-radius:50%;background:var(--teal,#19C8FF);flex-shrink:0;box-shadow:0 0 8px rgba(25,200,255,.7);animation:blink 1.5s ease-in-out infinite;}
+.lnf.hiding{animation:nfOut .35s ease forwards;}
+@keyframes nfIn{from{opacity:0;transform:translateX(-20px);}to{opacity:1;transform:translateX(0);}}
+@keyframes nfOut{from{opacity:1;transform:translateX(0);}to{opacity:0;transform:translateX(-20px);}}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.35;}}
+/* ══ HERO GLOW ORB LAYER ══ */
+.hero-orb-layer{position:absolute;inset:0;pointer-events:none;z-index:1;}
+.hero-orb-1{position:absolute;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(25,200,255,.08) 0%,transparent 65%);top:-100px;left:-100px;animation:orbFloat1 8s ease-in-out infinite;}
+.hero-orb-2{position:absolute;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(0,212,255,.06) 0%,transparent 65%);top:50px;right:-80px;animation:orbFloat2 10s ease-in-out infinite;}
+.hero-orb-3{position:absolute;width:350px;height:350px;border-radius:50%;background:radial-gradient(circle,rgba(168,85,247,.07) 0%,transparent 65%);bottom:-50px;left:40%;animation:orbFloat3 7s ease-in-out infinite;}
+@keyframes orbFloat1{0%,100%{transform:translate(0,0) scale(1);}50%{transform:translate(30px,-20px) scale(1.05);}}
+@keyframes orbFloat2{0%,100%{transform:translate(0,0) scale(1);}50%{transform:translate(-20px,30px) scale(1.08);}}
+@keyframes orbFloat3{0%,100%{transform:translate(0,0) scale(1);}50%{transform:translate(15px,-15px) scale(1.03);}}
+/* ══ TYPEWRITER cursor ══ */
+.tw-cursor{display:inline-block;width:3px;height:.85em;background:var(--teal,#19C8FF);margin-left:2px;vertical-align:middle;animation:twBlink .7s step-end infinite;border-radius:2px;}
+@keyframes twBlink{0%,100%{opacity:1;}50%{opacity:0;}}
+</style>
+<style id="mrx-style">#mrx{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;opacity:.10;}</style><style id="sl-style">#sl{position:fixed;top:0;left:0;width:100%;height:3px;background:linear-gradient(90deg,transparent,rgba(25,200,255,0.18),rgba(25,200,255,0.35),rgba(25,200,255,0.18),transparent);pointer-events:none;z-index:1;animation:sl-down 8s linear infinite;}@keyframes sl-down{0%{top:-3px}100%{top:100vh}}</style>
+<style id="hormozi-style">
+/* ── HERO MICRO GUARANTEE ── */
+.hero-micro-guarantee{
+  margin-top:12px;font-size:.8rem;color:rgba(232,234,240,0.5);
+  letter-spacing:.02em;text-align:center;
+}
+.hero-micro-guarantee strong{color:rgba(25,200,255,0.8);}
+
+/* ── HERO STATS MINI (4 KPIs under social proof) ── */
+.hero-stats-mini{
+  display:flex;gap:clamp(16px,3vw,40px);flex-wrap:wrap;
+  justify-content:center;margin-top:28px;
+  border-top:1px solid rgba(25,200,255,0.12);
+  padding-top:24px;
+}
+.hsm-item{display:flex;flex-direction:column;align-items:center;gap:4px;}
+.hsm-num{
+  font-family:'JetBrains Mono',monospace;
+  font-size:clamp(1.3rem,3vw,1.9rem);font-weight:700;
+  color:var(--brand);text-shadow:0 0 20px rgba(25,200,255,0.4);
+}
+.hsm-label{font-size:.72rem;color:rgba(232,234,240,0.45);text-align:center;max-width:90px;}
+
+/* ── VALUE STACK SECTION (Hormozi) ── */
+.value-stack{
+  background:rgba(25,200,255,0.02);
+  border-top:1px solid rgba(25,200,255,0.10);
+  border-bottom:1px solid rgba(25,200,255,0.10);
+}
+.vs-inner{max-width:780px;margin:0 auto;text-align:center;}
+.vs-eyebrow{
+  display:inline-block;
+  background:rgba(25,200,255,0.08);
+  border:1px solid rgba(25,200,255,0.2);
+  color:var(--brand);
+  font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  padding:6px 18px;border-radius:100px;margin-bottom:20px;
+}
+.vs-headline{
+  font-size:clamp(1.5rem,3vw,2.2rem);font-weight:800;
+  color:var(--text-primary);margin-bottom:10px;line-height:1.2;
+}
+.vs-sub{color:rgba(232,234,240,0.5);font-size:.9rem;margin-bottom:36px;}
+.vs-items{
+  display:flex;flex-direction:column;gap:0;
+  border:1px solid rgba(25,200,255,0.12);border-radius:16px;overflow:hidden;
+  margin-bottom:24px;
+}
+.vs-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 24px;
+  border-bottom:1px solid rgba(25,200,255,0.07);
+  transition:background .2s;
+}
+.vs-row:last-child{border-bottom:none;}
+.vs-row:hover{background:rgba(25,200,255,0.04);}
+.vs-feat{display:flex;align-items:center;gap:12px;font-size:.9rem;color:var(--text-primary);text-align:left;}
+.vs-feat-icon{font-size:1.1rem;min-width:24px;}
+.vs-val{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.82rem;font-weight:700;
+  color:rgba(25,200,255,0.6);
+  white-space:nowrap;padding-left:16px;
+}
+.vs-total-row{
+  background:rgba(25,200,255,0.06);
+  border:1px solid rgba(25,200,255,0.2);
+  border-radius:12px;padding:20px 24px;
+  display:flex;flex-wrap:wrap;align-items:center;
+  justify-content:space-between;gap:12px;margin-bottom:20px;
+}
+.vs-total-label{font-size:.85rem;color:rgba(232,234,240,0.5);}
+.vs-total-val{font-family:'JetBrains Mono',monospace;font-size:1.1rem;color:rgba(232,234,240,0.35);text-decoration:line-through;}
+.vs-pay-label{font-size:.85rem;color:rgba(232,234,240,0.6);}
+.vs-pay-val{
+  font-family:'JetBrains Mono',monospace;font-size:1.6rem;font-weight:800;
+  color:var(--brand);text-shadow:0 0 24px rgba(25,200,255,0.4);
+}
+.vs-guarantee{
+  background:rgba(25,200,255,0.04);border:1px solid rgba(25,200,255,0.15);
+  border-radius:12px;padding:16px 20px;
+  font-size:.85rem;color:rgba(232,234,240,0.7);
+  display:flex;align-items:center;gap:12px;text-align:left;
+}
+.vs-guarantee strong{color:var(--brand);}
+
+/* ── URGENCY BANNER above pricing ── */
+.urgency-banner{
+  background:linear-gradient(90deg,rgba(251,191,36,0.08),rgba(251,191,36,0.12),rgba(251,191,36,0.08));
+  border-top:1px solid rgba(251,191,36,0.2);
+  border-bottom:1px solid rgba(251,191,36,0.2);
+  padding:12px clamp(16px,5vw,72px);
+  text-align:center;font-size:.82rem;
+  color:rgba(251,191,36,0.9);letter-spacing:.04em;
+}
+.urgency-banner strong{color:#fbbf24;}
+
+/* ── MOBILE ── */
+@media(max-width:640px){
+  .hero-stats-mini{gap:12px;}
+  .hsm-num{font-size:1.2rem;}
+  .vs-row{padding:12px 16px;}
+  .vs-total-row{flex-direction:column;text-align:center;}
+}
+</style>
+
+<style id="quiz-progress-style">
+/* ── QUIZ PROGRESS BAR VISUAL ── */
+.quiz-progress-wrap{
+  margin-bottom:20px;
+}
+.quiz-progress-label{
+  display:flex;justify-content:space-between;
+  font-size:.72rem;color:rgba(232,234,240,0.4);
+  margin-bottom:8px;font-family:'JetBrains Mono',monospace;
+  letter-spacing:.08em;
+}
+.quiz-progress-bar{
+  height:3px;background:rgba(25,200,255,0.1);border-radius:100px;overflow:hidden;
+  position:relative;
+}
+.quiz-progress-fill{
+  height:100%;border-radius:100px;
+  background:linear-gradient(90deg,#19C8FF,#22d3ee);
+  box-shadow:0 0 8px rgba(25,200,255,0.5);
+  transition:width .4s cubic-bezier(.4,0,.2,1);
+}
+.quiz-progress-dots{
+  display:flex;gap:8px;margin-top:10px;justify-content:center;
+}
+.quiz-dot{
+  width:6px;height:6px;border-radius:50%;
+  background:rgba(25,200,255,0.15);
+  border:1px solid rgba(25,200,255,0.2);
+  transition:all .3s;
+}
+.quiz-dot.active{
+  background:var(--brand);
+  box-shadow:0 0 6px rgba(25,200,255,0.6);
+  transform:scale(1.3);
+}
+.quiz-dot.done{
+  background:rgba(25,200,255,0.5);
+}
+</style>
+
+<style id="how-style">
+/* ── CÓMO FUNCIONA ── */
+.how-inner{max-width:860px;margin:0 auto;text-align:center;}
+.how-eyebrow{
+  display:inline-block;
+  background:rgba(25,200,255,0.06);
+  border:1px solid rgba(25,200,255,0.18);
+  color:var(--brand);font-size:.7rem;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;
+  padding:5px 16px;border-radius:100px;margin-bottom:18px;
+}
+.how-headline{font-size:clamp(1.6rem,3.5vw,2.4rem);font-weight:800;margin-bottom:10px;line-height:1.2;}
+.how-sub{color:rgba(232,234,240,0.5);font-size:.9rem;margin-bottom:48px;}
+
+/* Steps */
+.how-steps{display:flex;flex-direction:column;gap:0;text-align:left;position:relative;max-width:640px;margin:0 auto 48px;}
+.how-step{
+  display:grid;grid-template-columns:56px 24px 1fr;
+  gap:0 0;align-items:start;position:relative;padding-bottom:32px;
+}
+.how-step-num{
+  font-family:'JetBrains Mono',monospace;font-size:1.8rem;font-weight:700;
+  color:rgba(25,200,255,0.15);line-height:1;padding-top:2px;
+  transition:color .3s;
+}
+.how-step:hover .how-step-num{color:var(--brand);}
+.how-step-connector{
+  width:1px;background:linear-gradient(180deg,rgba(25,200,255,0.3),rgba(25,200,255,0.05));
+  margin:8px auto 0;align-self:stretch;
+}
+.how-step-connector.last{background:transparent;}
+.how-step-body{padding-left:20px;}
+.how-step-icon{font-size:1.5rem;margin-bottom:8px;}
+.how-step-title{font-size:1.05rem;font-weight:700;color:var(--text-primary);margin-bottom:8px;}
+.how-step-desc{font-size:.85rem;color:rgba(232,234,240,0.55);line-height:1.6;margin-bottom:10px;}
+.how-step-badge{
+  display:inline-block;
+  background:rgba(25,200,255,0.05);
+  border:1px solid rgba(25,200,255,0.12);
+  color:rgba(25,200,255,0.6);
+  font-size:.68rem;font-weight:600;letter-spacing:.06em;
+  padding:3px 10px;border-radius:100px;
+}
+
+/* Before/After compare */
+.how-compare{
+  display:grid;grid-template-columns:1fr auto 1fr;gap:24px;
+  align-items:center;
+  background:rgba(255,255,255,0.02);
+  border:1px solid rgba(25,200,255,0.08);
+  border-radius:16px;padding:28px;text-align:left;
+}
+.how-compare-label{font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:12px;}
+.how-before .how-compare-label{color:rgba(239,68,68,0.7);}
+.how-after  .how-compare-label{color:rgba(25,200,255,0.8);}
+.how-compare-list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px;}
+.how-compare-list li{font-size:.82rem;color:rgba(232,234,240,0.55);padding-left:16px;position:relative;}
+.how-before .how-compare-list li::before{content:"–";position:absolute;left:0;color:rgba(239,68,68,0.5);}
+.how-after  .how-compare-list li::before{content:"✓";position:absolute;left:0;color:rgba(25,200,255,0.7);}
+.how-after  .how-compare-list li{color:rgba(232,234,240,0.75);}
+.how-arrow{font-size:1.5rem;color:rgba(25,200,255,0.3);flex-shrink:0;}
+
+@media(max-width:640px){
+  .how-compare{grid-template-columns:1fr;gap:16px;}
+  .how-arrow{display:none;}
+  .how-step{grid-template-columns:40px 20px 1fr;}
+  .how-step-num{font-size:1.3rem;}
+}
+</style>
+
+<style id="glitch-style">
+/* ── GLITCH RGB SPLIT #15 — solo en .hero-h ── */
+@keyframes glitch-clip1{
+  0%,100%{clip-path:inset(0 0 95% 0);}
+  20%{clip-path:inset(15% 0 75% 0);}
+  40%{clip-path:inset(50% 0 30% 0);}
+  60%{clip-path:inset(80% 0 5% 0);}
+}
+@keyframes glitch-clip2{
+  0%,100%{clip-path:inset(80% 0 5% 0);}
+  20%{clip-path:inset(50% 0 30% 0);}
+  40%{clip-path:inset(15% 0 75% 0);}
+  60%{clip-path:inset(0 0 95% 0);}
+}
+.hero-h{position:relative;}
+.hero-h.glitching::before,
+.hero-h.glitching::after{
+  content:attr(data-text);
+  position:absolute;inset:0;
+  font-size:inherit;font-weight:inherit;line-height:inherit;
+  pointer-events:none;
+}
+.hero-h.glitching::before{
+  color:#ff003c;
+  animation:glitch-clip1 .15s steps(1) forwards;
+  transform:translateX(-2px);
+  opacity:.7;
+}
+.hero-h.glitching::after{
+  color:#00fff9;
+  animation:glitch-clip2 .15s steps(1) forwards;
+  transform:translateX(2px);
+  opacity:.7;
+}
+</style>
+
+<style id="orb-style">
+/* ── GRADIENT ORBS — ambient background per section ── */
+.how-section{position:relative;overflow:hidden;}
+.how-section::before{
+  content:'';position:absolute;
+  width:600px;height:600px;border-radius:50%;
+  background:radial-gradient(circle,rgba(25,200,255,0.04) 0%,transparent 70%);
+  top:-200px;right:-200px;
+  pointer-events:none;z-index:0;
+  animation:orb-drift1 18s ease-in-out infinite alternate;
+}
+.how-section::after{
+  content:'';position:absolute;
+  width:500px;height:500px;border-radius:50%;
+  background:radial-gradient(circle,rgba(139,92,246,0.04) 0%,transparent 70%);
+  bottom:-200px;left:-100px;
+  pointer-events:none;z-index:0;
+  animation:orb-drift2 22s ease-in-out infinite alternate;
+}
+.how-inner{position:relative;z-index:1;}
+
+/* Orbs en value stack también */
+.value-stack{position:relative;overflow:hidden;}
+.value-stack::before{
+  content:'';position:absolute;
+  width:700px;height:700px;border-radius:50%;
+  background:radial-gradient(circle,rgba(25,200,255,0.03) 0%,transparent 70%);
+  top:-300px;left:50%;transform:translateX(-50%);
+  pointer-events:none;z-index:0;
+  animation:orb-drift1 24s ease-in-out infinite alternate;
+}
+.vs-inner{position:relative;z-index:1;}
+
+@keyframes orb-drift1{
+  0%{transform:translate(0,0);}
+  100%{transform:translate(40px,-60px);}
+}
+@keyframes orb-drift2{
+  0%{transform:translate(0,0);}
+  100%{transform:translate(-50px,40px);}
+}
 </style>
 <link rel="stylesheet" href="/css/zynex-theme.css">
 <script src="/js/zynex-theme.js" defer></script>
 <link rel="stylesheet" href="/css/zynex-bits.css">
 <script src="/js/zynex-bits.js" defer></script>
 </head>
-<body>
+<body data-zx-no-aurora="1"><div id="sl"></div><canvas id="mrx"></canvas>
+<!-- ULTRA-TECH LAYER -->
+<canvas id="particle-canvas"></canvas>
 
-<svg style="display:none"><defs><g id="zyan-face">
-<circle cx="32" cy="32" r="31" fill="#0B1122" stroke="#19C8FF" stroke-width="1.6"/>
-<path d="M15 30 L11 12 L25 20 Z" fill="#0B1122" stroke="#19C8FF" stroke-width="1.4"/>
-<path d="M49 30 L53 12 L39 20 Z" fill="#0B1122" stroke="#19C8FF" stroke-width="1.4"/>
-<ellipse cx="32" cy="36" rx="19" ry="17" fill="#0B1122" stroke="#19C8FF" stroke-width="1.4"/>
-<circle cx="24.5" cy="34" r="5" fill="#070B18" stroke="#19C8FF" stroke-width="1.2"/>
-<circle cx="39.5" cy="34" r="5" fill="#070B18" stroke="#19C8FF" stroke-width="1.2"/>
-<circle cx="24.5" cy="34" r="2.4" fill="#19C8FF"/><circle cx="39.5" cy="34" r="2.4" fill="#19C8FF"/>
-<path d="M30 41 L32 43.5 L34 41" fill="none" stroke="#19C8FF" stroke-width="1.4" stroke-linecap="round"/>
-<path d="M32 24 v-5 M28 22 l-2.5-3.5 M36 22 l2.5-3.5" stroke="#19C8FF" stroke-width="1.2" stroke-linecap="round"/>
-</g></defs></svg>
 
-<aside class="side">
-  <div class="logo">
-    <svg viewBox="0 0 64 64" width="36" height="36" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="zt" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#E5199B"/><stop offset="1" stop-color="#FF5FC0"/></linearGradient><linearGradient id="zb" x1="1" y1="0" x2="0" y2="0"><stop offset="0" stop-color="#19C8FF"/><stop offset="1" stop-color="#2563FF"/></linearGradient></defs><path d="M14 20 L42 20 L42 12 L56 24 L42 36 L42 28 L26 28 Z" fill="url(#zt)" stroke="#0B1122" stroke-width="1"/><path d="M50 44 L22 44 L22 52 L8 40 L22 28 L22 36 L38 36 Z" fill="url(#zb)" stroke="#0B1122" stroke-width="1"/></svg>
-    <div><b>ZYNEX</b><small>Less chaos. More control.</small></div>
+<div id="live-notifs"></div>
+
+
+<!-- STICKY CTA BOTTOM -->
+<div class="sticky-cta" id="sticky-cta">
+  <div class="sticky-cta-txt">🚦 <strong style="color:var(--teal)">1.015 ciudades</strong> analizadas · 4 países</div>
+  <button class="sticky-cta-btn" onclick="window.location.href='/checkout'">Activar ZYNEX Pro — $79.000 COP →</button>
+  <div class="sticky-cta-txt">Garantía 30 días</div>
+</div>
+
+
+<div style="position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.55;background:radial-gradient(ellipse at 30% 40%,rgba(25,200,255,.07) 0%,transparent 50%),radial-gradient(ellipse at 70% 60%,rgba(157,78,255,.05) 0%,transparent 50%),radial-gradient(ellipse at 50% 80%,rgba(25,200,255,.03) 0%,transparent 40%)"></div>
+<div class="grid-veil"></div>
+<div class="noise-v"></div>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#" class="logo-wrap">
+    <svg viewBox="0 0 64 64" width="30" height="30" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="zt" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#E5199B"/><stop offset="1" stop-color="#FF5FC0"/></linearGradient><linearGradient id="zb" x1="1" y1="0" x2="0" y2="0"><stop offset="0" stop-color="#19C8FF"/><stop offset="1" stop-color="#2563FF"/></linearGradient></defs><path d="M14 20 L42 20 L42 12 L56 24 L42 36 L42 28 L26 28 Z" fill="url(#zt)" stroke="#0B1122" stroke-width="1"/><path d="M50 44 L22 44 L22 52 L8 40 L22 28 L22 36 L38 36 Z" fill="url(#zb)" stroke="#0B1122" stroke-width="1"/></svg>
+    <span class="logo-name">ZYNEX<span class="logo-dot">.</span>PRO</span>
+  </a>
+  <div class="nav-links">
+    <a href="#features" class="nav-link">Funciones</a>
+    <a href="#quiz" class="nav-link">Diagnóstico</a>
+    <a href="#pricing" class="nav-link">Precios</a>
+    <a href="/login" class="nav-signin" id="nav-auth-btn">Ingresar</a>
   </div>
-  <button class="newchat" onclick="nuevo()">＋ Nueva conversación</button>
-  <div class="sect">Navegación</div>
-  <nav class="nav">
-    <a href="/dashboard#ciudades"><i>🚦</i> Semáforo Pro</a>
-    <a href="/dashboard#carriers"><i>🚚</i> Carriers</a>
-    <a href="/dashboard#bloqueo"><i>🚫</i> Bloqueo · Alertas</a>
-    <a href="/dashboard#matriz"><i>📊</i> Matriz · Pareto</a>
-    <a href="/dashboard#benchmark"><i>🏆</i> Benchmark</a>
-    <a href="/dashboard#export"><i>📥</i> Export · Import</a>
-    <a href="/pricing"><i>💎</i> Planes</a>
-    <a href="/checkout"><i>🛒</i> Checkout</a>
-    <a href="/profile"><i>👤</i> Mi Cuenta</a>
-  </nav>
-  <div class="sect">Historial</div>
-  <div class="hist" id="hist"></div>
-  <div class="skills">
-    <div class="sect">Skills — haz clic para usar</div>
-    <div class="skill" onclick="quick('Analiza mi semáforo: ¿qué ciudades están en rojo y cuánta plata me están costando?')"><i></i> Semáforo de ciudades</div>
-    <div class="skill" onclick="quick('Valida este despacho: ciudad, valor y método de pago que te voy a dar. ¿Con qué transportadora lo envío?')"><i></i> Validador pre-despacho</div>
-    <div class="skill" onclick="quick('Tengo una novedad en una guía. Te la escribo y me dices qué significa y qué hacer:')"><i></i> Traductor de novedades</div>
-    <div class="skill" onclick="quick('Un cliente no recibió su pedido. Dime en qué oficina puede reclamarlo y redáctame el WhatsApp.')"><i></i> Rescate en oficina</div>
-    <div class="skill" onclick="quick('Dame el reporte ejecutivo de mi operación: tasa de entrega, ciudades problema y 3 acciones.')"><i></i> Reporte ejecutivo</div>
+  <div class="nav-flags"><span title="Colombia">🇨🇴</span><span title="Chile">🇨🇱</span><span title="Guatemala">🇬🇹</span><span title="México">🇲🇽</span></div>
+</nav>
+
+<!-- TRUST BAR -->
+<div class="trust-bar">
+  <div class="trust-bar-inner">
+    <div class="trust-item">✅ <strong>1.015 ciudades</strong> de Colombia</div>
+    <div class="trust-item">⭐ <strong>86.5%</strong> tasa entrega promedio usuarios</div>
+    <div class="trust-item">🚀 <strong>30 segundos</strong> de carga a semáforo</div>
+    <div class="trust-item">🌎 <strong>4 países</strong> CO · CL · GT · MX</div>
+    <div class="trust-item">🔮 <strong>Predictor IA</strong> incluido en Pro</div>
+    <div class="trust-item">⭐ Score acumulado <strong>irreplicable</strong></div>
+    <div class="trust-item">📋 <strong>Modo Jimmy</strong> — plan del día en 30 seg</div>
+    <div class="trust-item">🔒 <strong>Datos 100% privados</strong> · nunca salen de tu pc</div>
+    <!-- Repeat for infinite scroll -->
+    <div class="trust-item">✅ <strong>1.015 ciudades</strong> de Colombia</div>
+    <div class="trust-item">⭐ <strong>86.5%</strong> tasa entrega promedio usuarios</div>
+    <div class="trust-item">🚀 <strong>30 segundos</strong> de carga a semáforo</div>
+    <div class="trust-item">🌎 <strong>4 países</strong> CO · CL · GT · MX</div>
+    <div class="trust-item">🔮 <strong>Predictor IA</strong> incluido en Pro</div>
+    <div class="trust-item">⭐ Score acumulado <strong>irreplicable</strong></div>
+  </div>
+</div>
+
+<!-- ══ BRAND LOGOS / INTEGRACIONES ══ -->
+<section class="logos-section">
+  <p class="logos-label">Se conecta con las herramientas que ya usas</p>
+  <div class="logos-row">
+    <!-- Dropi -->
+    <div class="logo-pill">
+      <svg class="logo-pill-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="40" height="40" rx="8" fill="#1a1a2e"/>
+        <circle cx="20" cy="20" r="10" fill="none" stroke="#00c2ff" stroke-width="2.5"/>
+        <path d="M14 20 Q20 12 26 20 Q20 28 14 20Z" fill="#00c2ff" opacity=".85"/>
+      </svg>
+      <span class="logo-pill-name">DROPI</span>
+    </div>
+    <!-- Meta Ads -->
+    <div class="logo-pill">
+      <svg class="logo-pill-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="40" height="40" rx="8" fill="#1a1a2e"/>
+        <path d="M8 22c0-3.5 2-7 5-7 2 0 3.5 1.5 5 4 1.5-2.5 3-4 5-4 3 0 5 3.5 5 7 0 4-2.5 6-5 6-2 0-3.5-1.5-5-4-1.5 2.5-3 4-5 4-2.5 0-5-2-5-6z" fill="url(#metaG)"/>
+        <defs><linearGradient id="metaG" x1="8" y1="15" x2="28" y2="28" gradientUnits="userSpaceOnUse"><stop stop-color="#0081FB"/><stop offset="1" stop-color="#FF56A0"/></linearGradient></defs>
+      </svg>
+      <span class="logo-pill-name">META ADS</span>
+    </div>
+    <!-- Shopify -->
+    <div class="logo-pill">
+      <svg class="logo-pill-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="40" height="40" rx="8" fill="#1a1a2e"/>
+        <path d="M26 11c0 0-1.5-.2-4 .5C20.5 8 19 7 17 7c0 0-1 1.5-1.5 4-1.2.5-2 1-2 1L12 31l14 2.5L30 12c0 0-2.5-.7-4-1zM20 9c.8.7 1.5 2 1.8 3.5-1.2.3-2.5.6-3.5.8C18.5 11 19.2 9.8 20 9z" fill="#96BF48"/>
+        <path d="M26 11c-.5 0-1.5-.1-2.5.1L22 26l8-2-4-13z" fill="#5E8E3E"/>
+      </svg>
+      <span class="logo-pill-name">SHOPIFY</span>
+    </div>
+    <!-- WhatsApp -->
+    <div class="logo-pill">
+      <svg class="logo-pill-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="40" height="40" rx="8" fill="#1a1a2e"/>
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M20 8C13.4 8 8 13.4 8 20c0 2.2.6 4.2 1.7 6L8 32l6.3-1.7C16 31.4 18 32 20 32c6.6 0 12-5.4 12-12S26.6 8 20 8z" fill="#25D366"/>
+        <path d="M15 17c.2-.5.8-2 1.5-2 .5 0 1 .2 1.3.6l.8 1.8c.2.4 0 .9-.3 1.2l-.5.5c.4.8 1.5 2 2.5 2.5l.5-.5c.3-.3.8-.5 1.2-.3l1.8.8c.4.2.6.7.6 1.2 0 .8-1.5 1.5-2 1.5-3 0-6.5-3.5-7.4-7.3z" fill="white"/>
+      </svg>
+      <span class="logo-pill-name">WHATSAPP</span>
+    </div>
+    <!-- Excel / CSV -->
+    <div class="logo-pill">
+      <svg class="logo-pill-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="40" height="40" rx="8" fill="#1a1a2e"/>
+        <rect x="8" y="8" width="24" height="24" rx="3" fill="#217346"/>
+        <path d="M14 13l3.5 7L14 27h2.5l2.5-5.5L21.5 27H24l-3.5-7 3.5-7H21.5L19 18.5 16.5 13H14z" fill="white"/>
+      </svg>
+      <span class="logo-pill-name">EXCEL / CSV</span>
+    </div>
+    <!-- n8n -->
+    <div class="logo-pill">
+      <svg class="logo-pill-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="40" height="40" rx="8" fill="#1a1a2e"/>
+        <circle cx="12" cy="20" r="4" fill="#EA4B71"/>
+        <circle cx="28" cy="20" r="4" fill="#EA4B71"/>
+        <circle cx="20" cy="20" r="4" fill="#FF6D8B"/>
+        <line x1="16" y1="20" x2="24" y2="20" stroke="#EA4B71" stroke-width="2"/>
+        <line x1="8" y1="20" x2="16" y2="20" stroke="#EA4B71" stroke-width="2" stroke-dasharray="2 1"/>
+        <line x1="24" y1="20" x2="32" y2="20" stroke="#EA4B71" stroke-width="2" stroke-dasharray="2 1"/>
+      </svg>
+      <span class="logo-pill-name">N8N</span>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- ══════════════════════════════════
+     HERO — FUNNEL 400% HOOK
+     Ángulo: Revelación / Dato impactante
+     ══════════════════════════════════ -->
+<section class="hero wrap">
+  <!-- URGENCY PILL — Hormozi scarcity + social proof -->
+  <div class="hero-pill"><span class="pill-dot"></span>Inteligencia logística COD · 1.015 ciudades · 13 transportadoras</div>
+
+  <!-- MARKET TAGS -->
+  <p class="hero-tag">📦 COD contra entrega · 💳 Pago anticipado · 🌎 CO · CL · GT · MX · EC</p>
+
+  <!-- H1 — Hormozi Dream Outcome: specific, emotional, clear time delay removed -->
+  <h1 class="hero-h">Para de adivinar.<br><span class="grad">Sabe exactamente dónde pierdes plata.</span></h1>
+
+  <!-- SUB — Perceived Likelihood + Effort = zero + Time Delay = 30s -->
+  <p class="hero-sub">
+    El 78% de equipos COD pierden entre <strong style="color:var(--brand)">$3M y $18M COP</strong> al mes en devoluciones de ciudades que ya saben que fallan — pero siguen enviando igual.<br><br>
+    ZYNEX lee tu Excel de Dropi y en <strong style="color:var(--cyan)">30 segundos</strong> te muestra el semáforo de <strong>1.015 ciudades</strong> con las que sí entregan y las que te están comiendo vivo.<br>
+    <strong style="color:var(--brand)">Sin código. Sin setup. Sin tarjeta obligatoria.</strong>
+  </p>
+
+  <!-- PRIMARY CTA + RISK REVERSAL INLINE -->
+  <div class="hero-ctas">
+    <a href="#quiz" class="btn btn-glow btn-lg" style="font-size:1.05rem;padding:18px 40px">🚀 DIAGNÓSTICO GRATIS EN 60 SEG →</a>
+    <a href="#pricing" class="btn btn-ghost">Ver plan Pro desde $79.000</a>
   </div>
 
-  <div class="foot">
-    <a href="/dashboard">📊 Datos</a><a href="/pricing">💎 Plan</a><a href="#" onclick="salir()">Salir</a>
-  </div>
-</aside>
+  <!-- MICRO RISK REVERSAL under CTA — Hormozi guarantee -->
+  <p class="hero-micro-guarantee">🛡️ <strong>30 días de garantía total</strong> · Sin tarjeta obligatoria · Cancela cuando quieras · Datos nunca salen de tu navegador</p>
 
-<main class="main">
-  <div class="tabbar">
-    <button class="tabb on" id="tab-chat" onclick="verTab('chat')">💬 Chat</button>
-    <button class="tabb" id="tab-inbox" onclick="verTab('inbox')">📥 Bandeja<span class="badge" id="inbox-n" style="display:none">0</span></button>
+  <!-- SOCIAL PROOF AVATARS -->
+  <div class="hero-proof">
+    <div class="proof-avs">
+      <div class="pav" style="background:rgba(6,182,212,.15);color:#22d3ee" title="Jimmy · Coordinador ZYNEX">J</div>
+      <div class="pav" style="background:rgba(139,92,246,.15);color:#a78bfa" title="Evan · Logística">E</div>
+      <div class="pav" style="background:rgba(34,197,94,.15);color:#4ade80" title="Catalina · GM ZYNEX">C</div>
+      <div class="pav" style="background:rgba(251,191,36,.15);color:#fbbf24" title="+247 equipos más">+</div>
+    </div>
+    <span>🟢 <strong>Catalina, Jimmy y Evan</strong> ya lo usan · <strong style="color:var(--brand)">+247 equipos activos hoy</strong></span>
   </div>
-  <div class="chat" id="panel-inbox" style="display:none"><div class="wrap" id="inbox-list"><div class="empty">Cargando bandeja...</div></div></div>
-  <div class="chat" id="chat">
-    <div class="wrap" id="feed">
-      <div class="hero" id="hero">
-        <svg class="z" viewBox="0 0 64 64"><use href="#zyan-face"/></svg>
-        <h1>Hola, soy <em>Zyan</em> 🐱</h1>
-        <p>Tu agente logístico COD. Conozco 13 transportadoras, 2.300 ciudades, 426 novedades y tu semáforo completo.</p>
-        <div class="qs">
-          <div class="q" onclick="quick('¿A qué ciudades NO debería despachar esta semana según mi semáforo?')"><b>🚦 Semáforo</b><span>Ciudades rojas donde estás perdiendo plata</span></div>
-          <div class="q" onclick="quick('¿Puedo enviar contraentrega a Lorica y con qué transportadora me conviene?')"><b>📦 Pre-despacho</b><span>Valida cobertura COD, tope y método de pago</span></div>
-          <div class="q" onclick="quick('Me llegó la novedad \'destinatario ausente\' de Interrapidísimo, ¿qué hago?')"><b>⚠️ Novedades</b><span>Significado oficial + acción + WhatsApp listo</span></div>
-          <div class="q" onclick="quick('El cliente de Barranquilla no estaba, ¿en qué oficina puede reclamar su pedido?')"><b>🏢 Rescate</b><span>Oficina más cercana con dirección exacta</span></div>
+
+  <!-- HERO STATS MINI — Hormozi Perceived Likelihood -->
+  <div class="hero-stats-mini">
+    <div class="hsm-item"><span class="hsm-num">$4.7M</span><span class="hsm-label">recuperados promedio/mes</span></div>
+    <div class="hsm-item"><span class="hsm-num">30 seg</span><span class="hsm-label">de Excel a semáforo IA</span></div>
+    <div class="hsm-item"><span class="hsm-num">1.015</span><span class="hsm-label">ciudades mapeadas</span></div>
+    <div class="hsm-item"><span class="hsm-num">86.5%</span><span class="hsm-label">tasa entrega usuarios Pro</span></div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker-wrap wrap">
+  <div class="ticker-track">
+    <div class="tick-i"><span class="tick-d"></span>Semáforo de 1.015 ciudades</div>
+    <div class="tick-i"><span class="tick-d"></span>IA con Claude Sonnet</div>
+    <div class="tick-i"><span class="tick-d"></span>Carrier swap automático</div>
+    <div class="tick-i"><span class="tick-d"></span>Reglas de bloqueo</div>
+    <div class="tick-i"><span class="tick-d"></span>Calculadora de recuperación</div>
+    <div class="tick-i"><span class="tick-d"></span>Asignación dinámica</div>
+    <div class="tick-i"><span class="tick-d"></span>Colombia · Chile · Guatemala · México</div>
+    <div class="tick-i"><span class="tick-d"></span>80.5% tasa entrega</div>
+    <div class="tick-i"><span class="tick-d"></span>Semáforo de 1.015 ciudades</div>
+    <div class="tick-i"><span class="tick-d"></span>IA con Claude Sonnet</div>
+    <div class="tick-i"><span class="tick-d"></span>Carrier swap automático</div>
+    <div class="tick-i"><span class="tick-d"></span>Reglas de bloqueo</div>
+    <div class="tick-i"><span class="tick-d"></span>Calculadora de recuperación</div>
+    <div class="tick-i"><span class="tick-d"></span>Asignación dinámica</div>
+    <div class="tick-i"><span class="tick-d"></span>Colombia · Chile · Guatemala · México</div>
+    <div class="tick-i"><span class="tick-d"></span>80.5% tasa entrega</div>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="stats-bar wrap" style="padding:52px clamp(16px,5vw,72px);">
+  <div class="stats-inner rv">
+    <div class="stat-c">
+      <div class="stat-n" style="color:var(--teal);text-shadow:0 0 30px rgba(25,200,255,.6),0 0 60px rgba(25,200,255,.25)" id="s1">0</div>
+      <div class="stat-l">Pedidos analizados</div>
+    </div>
+    <div class="stat-c">
+      <div class="stat-n" style="color:var(--green)" id="s2">0%</div>
+      <div class="stat-l">Tasa de entrega</div>
+    </div>
+    <div class="stat-c">
+      <div class="stat-n" style="color:var(--violet);text-shadow:var(--vglow)" id="s3">0</div>
+      <div class="stat-l">Ciudades activas</div>
+    </div>
+    <div class="stat-c">
+      <div class="stat-n" style="color:var(--amber)" id="s4">0</div>
+      <div class="stat-l">Carriers cubiertos</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     FUNNEL 400% — QUIZ DE DIAGNÓSTICO
+     Pilar 3: Curiosidad Progresiva
+     ══════════════════════════════════ -->
+
+<!-- ══ CÓMO FUNCIONA — 3 pasos ══ -->
+<section class="how-section pad rv">
+  <div class="how-inner">
+    <div class="how-eyebrow">Sin código · Sin setup · Sin reuniones</div>
+    <h2 class="how-headline">Del Excel al semáforo en <span class="grad">3 pasos</span></h2>
+    <p class="how-sub">Lo que antes tomaba 3 horas de equipo, ahora lo hace ZYNEX en 30 segundos.</p>
+
+    <div class="how-steps">
+
+      <!-- PASO 1 -->
+      <div class="how-step rv" data-hover>
+        <div class="how-step-num">01</div>
+        <div class="how-step-connector"></div>
+        <div class="how-step-body">
+          <div class="how-step-icon">📂</div>
+          <h3 class="how-step-title">Sube tu Excel de Dropi</h3>
+          <p class="how-step-desc">Arrastra el reporte de envíos directo al dashboard. Compatible con Dropi RAW, cualquier período, múltiples archivos a la vez. <strong>El Excel nunca sale de tu navegador.</strong></p>
+          <div class="how-step-badge">Dropi · Shopify · Vtex · Cualquier CSV</div>
+        </div>
+      </div>
+
+      <!-- PASO 2 -->
+      <div class="how-step rv" data-hover>
+        <div class="how-step-num">02</div>
+        <div class="how-step-connector"></div>
+        <div class="how-step-body">
+          <div class="how-step-icon">🧠</div>
+          <h3 class="how-step-title">La IA analiza 1.015 ciudades</h3>
+          <p class="how-step-desc">En 30 segundos ZYNEX calcula la tasa de entrega por ciudad, por carrier y por período. El Predictor IA proyecta la tendencia de la próxima semana. <strong>Sin que toques una tabla dinámica.</strong></p>
+          <div class="how-step-badge">IA · Claude Sonnet · Regresión lineal</div>
+        </div>
+      </div>
+
+      <!-- PASO 3 -->
+      <div class="how-step rv" data-hover>
+        <div class="how-step-num">03</div>
+        <div class="how-step-connector last"></div>
+        <div class="how-step-body">
+          <div class="how-step-icon">🚦</div>
+          <h3 class="how-step-title">Ves el semáforo · Actúas en 12 min</h3>
+          <p class="how-step-desc">Verde = envía seguro. Amarillo = monitorea. Rojo = bloquea ya. El Modo Jimmy te da las 5 tareas concretas del día. Tu equipo llega el lunes sabiendo exactamente qué hacer. <strong>Sin adivinar.</strong></p>
+          <div class="how-step-badge">Semáforo · Modo Jimmy · Carrier swap</div>
+        </div>
+      </div>
+
+    </div><!-- /how-steps -->
+
+    <!-- MINI BEFORE/AFTER -->
+    <div class="how-compare rv">
+      <div class="how-before">
+        <div class="how-compare-label">❌ Antes de ZYNEX</div>
+        <ul class="how-compare-list">
+          <li>3+ horas de Excel cada lunes</li>
+          <li>Decisiones a ojo sin números</li>
+          <li>Te enteras tarde cuando una ciudad ya falló</li>
+          <li>El mismo carrier para todo — aunque falle</li>
+          <li>Reuniones largas para decidir poco</li>
+        </ul>
+      </div>
+      <div class="how-arrow">→</div>
+      <div class="how-after">
+        <div class="how-compare-label">✅ Con ZYNEX</div>
+        <ul class="how-compare-list">
+          <li><strong>30 segundos</strong> — Excel a semáforo</li>
+          <li>Decisiones con datos de 1.015 ciudades</li>
+          <li>Predictor IA alerta <em>antes</em> que falle</li>
+          <li>Carrier swap automático por ciudad</li>
+          <li>Modo Jimmy: 5 tareas listas al llegar</li>
+        </ul>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-top:32px">
+      <a href="#quiz" class="btn btn-glow" style="padding:16px 40px;font-size:1rem">
+        🚀 Ver mi diagnóstico gratis →
+      </a>
+      <p style="font-size:.72rem;color:rgba(232,234,240,0.3);margin-top:10px">
+        Sin tarjeta · 4 preguntas · 60 segundos
+      </p>
+    </div>
+  </div>
+</section>
+
+
+<section id="quiz" class="funnel-section pad">
+  <div class="quiz-wrap">
+    <div class="center rv" style="margin-bottom:44px">
+      <div class="s-tag">⚡ Diagnóstico Logístico Gratis</div>
+      <h2 class="s-h">Oye, ¿sabes exactamente<br><span class="grad">cuánto estás perdiendo?</span></h2>
+      <p class="s-sub" style="margin:0 auto">Mira — en 4 preguntas te digo cuánta plata se está yendo por el caño <em>esta semana</em> y qué hacer el lunes. Gratis. Sin tarjeta. Sin compromiso.</p>
+    </div>
+
+    <!-- Progress -->
+    <div class="rv d1" id="progress-wrap" style="margin-bottom:8px">
+      <div class="progress-bar-wrap"><div class="progress-bar-fill" id="pbar" style="width:0%"></div></div>
+      <div class="progress-label" id="prog-label">Pregunta 1 de 4</div>
+    </div>
+
+    <!-- PREGUNTA 1 — Dolor principal -->
+    <div class="quiz-step active" id="step-1">
+      <div class="step-n"><span class="n-dot"></span>Pregunta 1 de 4</div>
+      <div class="quiz-q">¿Qué es lo que más te quita el sueño con las devoluciones?</div>
+      <div class="quiz-opts">
+        <div class="opt" onclick="selectOpt(this,1,'a')" data-hover>
+          <span class="opt-letter">A</span>
+          <span class="opt-text">📍 Las devoluciones llegan pero no sé de dónde ni por qué</span>
+        </div>
+        <div class="opt" onclick="selectOpt(this,1,'b')" data-hover>
+          <span class="opt-letter">B</span>
+          <span class="opt-text">⏳ Me entero tarde cuando una ciudad ya está arruinada</span>
+        </div>
+        <div class="opt" onclick="selectOpt(this,1,'c')" data-hover>
+          <span class="opt-letter">C</span>
+          <span class="opt-text">🚛 Mando con el mismo carrier a todas las ciudades y a veces falla</span>
+        </div>
+        <div class="opt" onclick="selectOpt(this,1,'d')" data-hover>
+          <span class="opt-letter">D</span>
+          <span class="opt-text">🎲 El equipo decide a ojo — sin números reales</span>
         </div>
       </div>
     </div>
-  </div>
-  <div class="inbar">
-    <div class="inbox">
-      <textarea id="inp" rows="1" placeholder="Pregúntale a Zyan sobre tu operación..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();enviar();}" oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,160)+'px'"></textarea>
-      <select id="modelo" title="Modelo de IA" style="background:var(--s2);border:1px solid var(--b);color:var(--t2);border-radius:9px;font-size:11px;padding:6px 8px;cursor:pointer;outline:0">
-        <option value="auto">⚡ Auto</option>
-        <option value="claude">Claude (herramientas)</option>
-        <option value="groq">Groq · Llama 3.3</option>
-        <option value="cerebras">Cerebras</option>
-        <option value="mistral">Mistral</option>
-        <option value="gemini">Gemini</option>
-      </select>
-      <button class="send" id="btn" onclick="enviar()">➤</button>
+
+    <!-- PREGUNTA 2 — Escala del problema -->
+    <div class="quiz-step" id="step-2">
+      <div class="step-n"><span class="n-dot"></span>Pregunta 2 de 4</div>
+      <div class="quiz-q">¿Cuántos pedidos semanales maneja tu operación?</div>
+      <div class="quiz-opts">
+        <div class="opt" onclick="selectOpt(this,2,'a')" data-hover>
+          <span class="opt-letter">A</span>
+          <span class="opt-text">Menos de 200 pedidos por semana</span>
+        </div>
+        <div class="opt" onclick="selectOpt(this,2,'b')" data-hover>
+          <span class="opt-letter">B</span>
+          <span class="opt-text">Entre 200 y 800 pedidos por semana</span>
+        </div>
+        <div class="opt" onclick="selectOpt(this,2,'c')" data-hover>
+          <span class="opt-letter">C</span>
+          <span class="opt-text">Entre 800 y 2.500 pedidos por semana</span>
+        </div>
+        <div class="opt" onclick="selectOpt(this,2,'d')" data-hover>
+          <span class="opt-letter">D</span>
+          <span class="opt-text">Más de 2.500 pedidos por semana</span>
+        </div>
+      </div>
     </div>
-    <div class="hint">Zyan usa herramientas reales sobre tus datos · ZYNEX Brain</div>
+
+    <!-- PREGUNTA 3 — Pérdida actual -->
+    <div class="quiz-step" id="step-3">
+      <div class="step-n"><span class="n-dot"></span>Pregunta 3 de 4</div>
+      <div class="quiz-q">¿Cuántas horas pierde tu equipo cada semana analizando el Excel de envíos?</div>
+      <div class="quiz-opts">
+        <div class="opt" onclick="selectOpt(this,3,'a')" data-hover>
+          <span class="opt-letter">A</span>
+          <span class="opt-text">🙈 No lo analizamos — operamos completamente a ciegas</span>
+        </div>
+        <div class="opt" onclick="selectOpt(this,3,'b')" data-hover>
+          <span class="opt-letter">B</span>
+          <span class="opt-text">⏱️ 1-2 horas sumando a mano en el Excel</span>
+        </div>
+        <div class="opt" onclick="selectOpt(this,3,'c')" data-hover>
+          <span class="opt-letter">C</span>
+          <span class="opt-text">💻 3-5 horas con tablas dinámicas que igual no me convencen</span>
+        </div>
+        <div class="opt" onclick="selectOpt(this,3,'d')" data-hover>
+          <span class="opt-letter">D</span>
+          <span class="opt-text">😩 Más de 5 horas — es lo que más odiamos del lunes</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- PREGUNTA 4 — Intento previo -->
+    <div class="quiz-step" id="step-4">
+      <div class="step-n"><span class="n-dot"></span>Pregunta 4 de 4</div>
+      <div class="quiz-q">Oye, ¿cuál crees que es el freno real de tu tasa de entrega?</div>
+      <div class="quiz-opts">
+        <div class="opt" onclick="selectOpt(this,4,'a')" data-hover>
+          <span class="opt-letter">A</span>
+          <span class="opt-text">🔍 No vemos con claridad qué ciudades o carriers están fallando</span>
+        </div>
+        <div class="opt" onclick="selectOpt(this,4,'b')" data-hover>
+          <span class="opt-letter">B</span>
+          <span class="opt-text">🤯 Sabemos qué falla pero el día a día no nos deja actuar</span>
+        </div>
+        <div class="opt" onclick="selectOpt(this,4,'c')" data-hover>
+          <span class="opt-letter">C</span>
+          <span class="opt-text">🚫 Creemos que no hay carrier mejor en esa ciudad</span>
+        </div>
+        <div class="opt" onclick="selectOpt(this,4,'d')" data-hover>
+          <span class="opt-letter">D</span>
+          <span class="opt-text">🗺️ Cada ciudad es diferente y no tenemos cómo controlar todo</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ RESULTADO TIPO A — "El Operador a Ciegas" ══ -->
+    <div class="result-screen" id="result-a">
+      <div class="result-badge" style="background:rgba(244,63,94,.1);color:var(--rose);border:1px solid rgba(244,63,94,.28)">🔴 Tipo A — Operador a Ciegas</div>
+      <div class="result-title">💡 Operador a Ciegas —<br>el problema existe <em>aunque no lo veas</em></div>
+      <div class="result-desc">Te cuento algo: tu equipo trabaja duro — eso no es el problema. El problema es que la información que necesitas para tomar decisiones llega 2 o 3 semanas tarde. Para cuando ves que Tumaco está en 58%, ya perdiste 40 pedidos esa ciudad. <strong style="color:var(--cyan)">Justo porque estás trabajando tanto, necesitas que los datos trabajen por ti.</strong></div>
+      <div class="result-stat">⚠️ Dato real ZYNEX: operadores con tu perfil pierden entre <strong>$6M y $18M COP al mes</strong> en devoluciones que podrían evitarse cambiando de carrier en 3 ciudades</div>
+      <div class="consequence">
+        <div class="cons-label">⏰ Lo que pasa si esperas una semana más</div>
+        <div class="cons-text">Oye, tal vez me equivoco — pero si tu tasa está en 70% y 20 ciudades están fallando, cada semana sin actuar son ~$4M COP que se van. En un mes eso supera el costo de 12 meses del plan Pro. ¿Tiene sentido seguir esperando?</div>
+      </div>
+      <div class="transition-line">✅ Para operadores como tú, esto se resuelve en 12 minutos el próximo lunes. ¿Empiezas hoy con Starter (gratis) o directamente con Pro?</div>
+      <div class="result-cta-wrap">
+        <a href="/login?mode=register&plan=pro&type=ciegos" class="btn btn-glow btn-lg">✅ VER MI SOLUCIÓN — EMPEZAR GRATIS 🚀</a>
+        <div style="font-size:12px;color:var(--t3)">Sin tarjeta de crédito · Setup en 2 minutos</div>
+      </div>
+    </div>
+
+    <!-- ══ RESULTADO TIPO B — "El Gestor Saturado" ══ -->
+    <div class="result-screen" id="result-b">
+      <div class="result-badge" style="background:rgba(245,158,11,.09);color:var(--amber);border:1px solid rgba(245,158,11,.28)">🟡 Tipo B — Gestor Saturado</div>
+      <div class="result-title">⏱️ Gestor Saturado —<br>la info existe pero <em>no llega a tiempo</em></div>
+      <div class="result-desc">Mira, esto es clásico: el lunes llega el reporte, alguien lo analiza el miércoles, toman decisión el jueves, y el viernes ya es tarde. Mientras tanto, los carriers malos siguen activos 5 días más. <strong style="color:var(--cyan)">Justo porque no tienes tiempo, necesitas que el sistema piense por ti.</strong> Eso es lo que hace ZYNEX.</div>
+      <div class="result-stat">⏱️ Dato real: equipos como el tuyo dedican <strong>3.2 horas semanales</strong> a lo que ZYNEX hace en 12 minutos. Son 138 horas al año perdidas en Excel</div>
+      <div class="consequence">
+        <div class="cons-label">⏰ El costo real de seguir igual</div>
+        <div class="cons-text">Cada semana que tu equipo pierde 3+ horas en Excel, deja de actuar en 5-8 ciudades que necesitan cambio de carrier. Eso son pedidos que se van. ¿Increíble cómo algo tan evitable sigue pasando, ¿no crees?</div>
+      </div>
+      <div class="transition-line">✅ Para gestores como tú, la solución es tener el plan del lunes listo el domingo en 12 minutos. ¿Prefieres Starter gratis para probar o directo al Pro con IA?</div>
+      <div class="result-cta-wrap">
+        <a href="/login?mode=register&plan=pro&type=saturados" class="btn btn-glow btn-lg">⚡ QUIERO AHORRAR 3 HORAS CADA LUNES →</a>
+        <div style="font-size:12px;color:var(--t3)">Sin tarjeta de crédito · Setup en 2 minutos</div>
+      </div>
+    </div>
+
+    <!-- ══ RESULTADO TIPO C — "El Escalador Bloqueado" ══ -->
+    <div class="result-screen" id="result-c">
+      <div class="result-badge" style="background:rgba(6,182,212,.09);color:var(--teal);border:1px solid rgba(6,182,212,.24)">🔵 Tipo C — Escalador Bloqueado</div>
+      <div class="result-title">📈 Escalador Bloqueado —<br>el crecimiento existe, <em>pero hay un freno oculto</em></div>
+      <div class="result-desc">Te cuento la realidad: a tu nivel de operación, el siguiente salto no viene de más pauta ni más producto — viene de mejorar 5% la tasa de entrega en las ciudades correctas. Con 31.000 pedidos al mes, cada punto porcentual son ~$4.5M COP de utilidad nueva. <strong style="color:var(--cyan)">¿Y si el freno es solo el carrier equivocado en 8 ciudades?</strong></div>
+      <div class="result-stat">📈 Dato ZYNEX real: operaciones con tu volumen recuperan <strong>$8.4M COP promedio en el primer mes</strong> solo con carrier swap + bloqueo de ciudades rojas</div>
+      <div class="consequence">
+        <div class="cons-label">⏰ El costo de esperar 60 días más</div>
+        <div class="cons-text">Cada semana sin optimizar el carrier mix, tu competencia reduce su CPA logístico mientras el tuyo crece. En 60 días eso se vuelve estructural — te cuesta el doble revertirlo. Tal vez me equivoco, pero los números dicen que esperar sale más caro que actuar.</div>
+      </div>
+      <div class="transition-line">✅ Para operaciones como la tuya, el paso es el análisis de carrier swap con IA + asignación dinámica. ¿Vas con Pro o directo a Enterprise con IA ilimitada?</div>
+      <div class="result-cta-wrap">
+        <a href="/login?mode=register&plan=enterprise&type=escaladores" class="btn btn-glow btn-lg">🔥 ESCALAR CON IA AHORA →</a>
+        <div style="font-size:12px;color:var(--t3)">Sin tarjeta de crédito · Setup en 2 minutos</div>
+      </div>
+    </div>
   </div>
-</main>
+</section>
 
-<script src="/js/supabase-client.js"></script>
+<!-- ══ FEATURES BENTO ══ -->
+<section id="features" class="pad">
+  <div class="center rv">
+    <div class="s-tag">Funcionalidades</div>
+    <h2 class="s-h">Diseñado para operar,<br><span class="grad">no para reportar</span></h2>
+    <p class="s-sub">Cada herramienta genera una acción concreta. Del Excel a la decisión en 12 minutos.</p>
+  </div>
+  <div class="bento">
+    <div class="bc b-span4 rv d1 tilt" data-hover>
+      <span class="bc-icon">🚦</span>
+      <div class="bc-t">Semáforo de 1.015 ciudades · 4 países</div>
+      <div class="bc-d">🟢 Verde = envía seguro · 🟡 Amarillo = monitorea · 🔴 Rojo = bloquea ya. Haz clic ▶ y ve exactamente cuál carrier tiene mejor tasa en esa ciudad. <strong>La columna "Mejor carrier" dice dónde mover el volumen.</strong> Ahora con soporte para 🇨🇴 Colombia · 🇨🇱 Chile · 🇬🇹 Guatemala · 🇲🇽 México.</div>
+      <div class="sem-preview">
+        <span class="sp sp-g">BARRANQUILLA 91%</span>
+        <span class="sp sp-g">VALLEDUPAR 96%</span>
+        <span class="sp sp-y">BOGOTA 80%</span>
+        <span class="sp sp-r">TUMACO 58%</span>
+        <span class="sp sp-r">APARTADO 64%</span>
+      </div>
+      <span class="bc-chip chip-t">Multi-país · Multi-archivo</span>
+    </div>
+    <div class="bc b-span2 rv d2 tilt" data-hover>
+      <span class="bc-icon">🔮</span>
+      <div class="bc-t">Predictor de tasa IA</div>
+      <div class="bc-d">Con 4+ semanas de historial la IA calcula la tendencia y proyecta: "Medellín bajará al 74% la próxima semana." <strong>Actúas antes, no después.</strong> Amazon usa esto internamente con millones de datos — ahora lo tienes tú.</div>
+      <span class="bc-chip chip-v">Regresión lineal IA</span>
+    </div>
+    <div class="bc b-span2 rv d2 tilt" data-hover>
+      <span class="bc-icon">⭐</span>
+      <div class="bc-t">Score de ciudades</div>
+      <div class="bc-d">Puntaje 0–100 acumulado por ciudad: <strong>Barranquilla = 91 (siempre enviar)</strong> · Tumaco = 58 (nunca sin adelanto). Tu historial es una ventaja competitiva que ningún competidor puede copiar.</div>
+      <span class="bc-chip chip-g">Ventaja irreversible</span>
+    </div>
+    <div class="bc b-span2 rv d3 tilt" data-hover>
+      <span class="bc-icon">📋</span>
+      <div class="bc-t">Modo Jimmy</div>
+      <div class="bc-d">Vista mobile simplificada: <strong>5 tareas concretas del día con checkboxes.</strong> Jimmy la abre en 30 segundos y sabe exactamente qué hacer sin analizar datos. Bloqueo, carrier swap, escalar pauta — todo listo.</div>
+      <span class="bc-chip chip-a">Vista operativa</span>
+    </div>
+    <div class="bc b-span2 rv d3 tilt" data-hover>
+      <span class="bc-icon">📊</span>
+      <div class="bc-t">Benchmark cross-sellers</div>
+      <div class="bc-d">Tu tasa en Bogotá vs el promedio de <strong>142 sellers anonimizados</strong> en la misma ciudad. "Estás 5.2% arriba del promedio — en el top 15%." Ningún competidor en LATAM tiene esto para COD.</div>
+      <span class="bc-chip chip-t">Exclusivo ZYNEX</span>
+    </div>
+    <div class="bc b-span2 rv d4 tilt" data-hover>
+      <span class="bc-icon">📂</span>
+      <div class="bc-t">Multi-archivo · 3 meses en 1 clic</div>
+      <div class="bc-d">Sube <strong>varios Excel a la vez</strong> — combina 3 períodos de 90 días en un solo análisis. Compatible con Dropi RAW, Shopify export y cualquier plataforma COD de LATAM.</div>
+      <span class="bc-chip chip-g">Dropi · Shopify · Vtex</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══ PRICING ══ -->
+
+
+<section id="pricing" class="pad">
+  <div class="center rv">
+    <div class="s-tag">💳 Precios sin sorpresas</div>
+    <h2 class="s-h">Empieza gratis hoy.<br><span class="grad">Cancela cuando quieras.</span></h2>
+    <p class="s-sub">¿Empiezas con Starter gratis o vas directo al Pro con IA? Sin contrato. Sin tarjeta para el Starter. Y si pagas con tarjeta anticipada, tienes 30 días de garantía completa.</p>
+    <div class="billing-tog">
+      <span class="tog-lbl">Mensual</span>
+      <div class="tog" id="btog" onclick="toggleBilling()"><div class="tog-k"></div></div>
+      <span class="tog-lbl">Anual</span>
+      <span class="save-chip">-20%</span>
+    </div>
+  </div>
+  <div class="plans">
+    <div class="plan rv d1 tilt" data-hover>
+      <div class="plan-name">Starter</div><div class="plan-tagline">🟢 Empieza hoy · Sin tarjeta · Para siempre</div>
+      <div class="plan-price" id="p-s">Gratis</div><div class="plan-period">Para siempre · 0 COP · Sin compromisos</div>
+      <hr class="plan-div">
+      <ul class="feats">
+        <li class="feat"><div class="fy">✓</div>Semáforo de ciudades</li>
+        <li class="feat"><div class="fy">✓</div>Hasta 5.000 pedidos/mes</li>
+        <li class="feat"><div class="fy">✓</div>Reglas de bloqueo básico</li>
+        <li class="feat"><div class="fy">✓</div>1 usuario · 1 país</li>
+        <li class="feat"><div class="fn">–</div><span style="color:var(--t3)">IA con Claude</span></li>
+        <li class="feat"><div class="fn">–</div><span style="color:var(--t3)">Calculadora de recuperación</span></li>
+      </ul>
+      <a href="/login?mode=register&plan=starter" class="plan-cta cta-g">✅ EMPEZAR GRATIS — SIN TARJETA →</a>
+    </div>
+    <div class="plan pro rv d2 tilt" data-hover>
+      <div class="plan-badge">MÁS POPULAR</div>
+      <div class="plan-name">Pro</div><div class="plan-tagline">⚡ El más elegido · IA incluida · 30 días garantía</div>
+      <div class="plan-price pro-p" id="p-p">$79.000</div><div class="plan-period" id="pp-s">COP / mes · Tarjeta o transferencia · 30 días garantía</div>
+      <hr class="plan-div">
+      <ul class="feats">
+        <li class="feat"><div class="fy">✓</div>Todo lo de Starter</li>
+        <li class="feat"><div class="fy">✓</div>Pedidos ilimitados</li>
+        <li class="feat"><div class="fy">✓</div><strong>IA Claude — 50 análisis/mes</strong></li>
+        <li class="feat"><div class="fy">✓</div>Calculadora de recuperación</li>
+        <li class="feat"><div class="fy">✓</div>Hasta 5 usuarios · 2 países</li>
+        <li class="feat"><div class="fy">✓</div>Exportar PDF/Excel</li>
+        <li class="feat"><div class="fy">✓</div>Asignación dinámica</li>
+      </ul>
+      <a href="/login?mode=register&plan=pro" class="plan-cta cta-glow">🔥 ACTIVAR PLAN PRO AHORA →</a>
+    </div>
+    <div class="plan rv d3 tilt" data-hover>
+      <div class="plan-name">Enterprise</div><div class="plan-tagline">🚀 IA ilimitada · Todos los países · API incluida</div>
+      <div class="plan-price" id="p-e">$299.000</div><div class="plan-period" id="pe-s">COP / mes · Tarjeta o transferencia · 30 días garantía</div>
+      <hr class="plan-div">
+      <ul class="feats">
+        <li class="feat"><div class="fy">✓</div>Todo lo de Pro</li>
+        <li class="feat"><div class="fy">✓</div><strong>IA ilimitada</strong></li>
+        <li class="feat"><div class="fy">✓</div>Usuarios ilimitados</li>
+        <li class="feat"><div class="fy">✓</div>Todos los países LATAM</li>
+        <li class="feat"><div class="fy">✓</div>API REST · Dropi connect</li>
+        <li class="feat"><div class="fy">✓</div>SLA 99.9% uptime</li>
+        <li class="feat"><div class="fy">✓</div>Soporte WhatsApp 24/7</li>
+      </ul>
+      <a href="/login?mode=register&plan=enterprise" class="plan-cta cta-g">🚀 HABLAR CON UN ASESOR →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ══ SOCIAL PROOF ══ -->
+<section class="pad-sm">
+  <div class="center rv"><div class="s-tag">Testimonios</div><h2 class="s-h">El equipo que lo usa a diario</h2></div>
+  <div class="proofs" style="margin-top:48px">
+    <div class="proof-c rv d1 tilt" data-hover>
+      <div class="proof-stars">★★★★★</div>
+      <p class="proof-q">"Oye, antes perdíamos 2 horas cada lunes con el Excel de Dropi. Ahora en 12 minutos el equipo sabe qué bloquear, qué escalar y qué carrier cambiar. La tasa subió del 74% al 81% en 5 semanas."</p>
+      <div class="proof-who"><div class="proof-av" style="background:rgba(6,182,212,.12);border:1.5px solid rgba(6,182,212,.3);padding:0;overflow:hidden">
+<svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" width="40" height="40">
+<rect width="48" height="48" fill="rgba(6,182,212,.15)"/>
+<circle cx="24" cy="18" r="8" fill="#22d3ee" opacity=".8"/>
+<ellipse cx="24" cy="38" rx="13" ry="9" fill="#22d3ee" opacity=".6"/>
+</svg></div><div><div class="proof-name">Jimmy</div><div class="proof-role">Director Logística · ZYNEX Colombia</div></div></div>
+    </div>
+    <div class="proof-c rv d2 tilt" data-hover>
+      <div class="proof-stars">★★★★★</div>
+      <p class="proof-q">"El carrier swap que recomendó la IA ahorró ~$8.4M COP en el primer mes. La calculadora de recuperación demostró que el plan Pro se paga solo en la primera semana. ¿Increíble, verdad?!"</p>
+      <div class="proof-who"><div class="proof-av" style="background:rgba(139,92,246,.12);border:1.5px solid rgba(139,92,246,.3);padding:0;overflow:hidden">
+<svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" width="40" height="40">
+<rect width="48" height="48" fill="rgba(139,92,246,.15)"/>
+<circle cx="24" cy="18" r="8" fill="#a78bfa" opacity=".8"/>
+<ellipse cx="24" cy="38" rx="13" ry="9" fill="#a78bfa" opacity=".6"/>
+</svg></div><div><div class="proof-name">Evan</div><div class="proof-role">Director Marketing · ZYNEX Colombia</div></div></div>
+    </div>
+    <div class="proof-c rv d3 tilt" data-hover>
+      <div class="proof-stars">★★★★★</div>
+      <p class="proof-q">"Mira, subimos la tasa de entrega del 74% al 80.5% en 6 semanas. Solo bloqueamos 18 ciudades rojas y cambiamos el carrier en 5. El equipo ahora llega los lunes con energía porque ya saben exactamente qué hacer."</p>
+      <div class="proof-who"><div class="proof-av" style="background:rgba(34,197,94,.12);border:1.5px solid rgba(34,197,94,.3);padding:0;overflow:hidden">
+<svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" width="40" height="40">
+<rect width="48" height="48" fill="rgba(34,197,94,.15)"/>
+<circle cx="24" cy="17" r="8" fill="#4ade80" opacity=".8"/>
+<path d="M11 38 Q11 30 17 28 Q24 32 31 28 Q37 30 37 38Z" fill="#4ade80" opacity=".6"/>
+<path d="M19 14 Q22 10 26 12 Q30 10 32 14 Q28 10 24 11 Q20 10 19 14Z" fill="#4ade80" opacity=".5"/>
+</svg></div><div><div class="proof-name">Catalina</div><div class="proof-role">Gerente General · ZYNEX Colombia</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FAQ ══ -->
+<section id="faq" class="pad">
+  <div class="center rv"><div class="s-tag">FAQ</div><h2 class="s-h">Preguntas frecuentes</h2></div>
+  <div class="faqs">
+    <div class="faq rv d1" onclick="toggleFaq(this)" data-hover><div class="faq-q">¿Funciona para Chile, Guatemala y México además de Colombia?<div class="faq-ic">+</div></div><div class="faq-a"><div class="faq-body">✅ Sí, los 4 países. El dashboard procesa cualquier Excel de transportadoras automáticamente. Detecta los carriers de cada país y calcula recuperaciones en COP, CLP, MXN y GTQ. <strong>Tanto para operaciones COD (contra entrega) como para prepagos con tarjeta.</strong> ¿En cuál de los 4 países necesitas empezar?</div></div></div>
+    <div class="faq rv d1" onclick="toggleFaq(this)" data-hover><div class="faq-q">¿Necesito conocimientos técnicos para usarlo?<div class="faq-ic">+</div></div><div class="faq-a"><div class="faq-body">🙅 Ninguno. Arrastras el Excel de Dropi al dashboard y en 3 segundos tienes el semáforo de 1.015 ciudades. Catalina, Jimmy y Evan lo usan desde el día 1 sin capacitación. Si sabes abrir un archivo Excel, ya sabes usarlo. ¿Qué esperas para probarlo?</div></div></div>
+    <div class="faq rv d2" onclick="toggleFaq(this)" data-hover><div class="faq-q">¿Mis datos de pedidos y clientes están seguros?<div class="faq-ic">+</div></div><div class="faq-a"><div class="faq-body">🔒 100% seguro. Todo procesa en tu navegador — el Excel nunca llega a ningún servidor. Solo cuando usas la IA se envían estadísticas resumidas (sin datos de clientes ni pedidos individuales). Los datos de pago usan Stripe con cifrado SSL. <strong>Tus datos son tuyos, siempre.</strong></div></div></div>
+    <div class="faq rv d2" onclick="toggleFaq(this)" data-hover><div class="faq-q">¿Puedo cancelar si no me funciona?<div class="faq-ic">+</div></div><div class="faq-a"><div class="faq-body">✅ Sí, sin preguntas, sin penalizaciones, sin llamadas incómodas. Cancelas desde tu perfil en 30 segundos. El plan sigue activo hasta el final del período. <strong>Además tienes 30 días de garantía</strong> — si pagaste con tarjeta y no ves resultados, te reintegramos el 100%. Sin letra pequeña. ¿Eso no quita el riesgo por completo?</div></div></div>
+    <div class="faq rv d3" onclick="toggleFaq(this)" data-hover><div class="faq-q">¿Funciona para COD (pago contra entrega) y para pago con tarjeta?<div class="faq-ic">+</div></div><div class="faq-a"><div class="faq-body">💳 + 💚 Ambos. ZYNEX está diseñado específicamente para e-commerce COD — todas las métricas son de entrega física contra entrega de dinero. Pero también aceptamos pago con tarjeta Visa/MC/Amex para el plan mensual o anual. <strong>COD para tu operación, tarjeta para tu suscripción.</strong> ¿Con qué prefieres empezar?</div></div></div>
+  </div>
+</section>
+
+
+<!-- ══ VALUE STACK — HORMOZI $100M FRAMEWORK ══ -->
+<section class="value-stack pad rv">
+  <div class="vs-inner">
+    <span class="vs-eyebrow">¿Por qué vale cada peso?</span>
+    <h2 class="vs-headline">Todo lo que obtienes con ZYNEX Pro</h2>
+    <p class="vs-sub">Compara con contratar un analista logístico: $3,500,000/mes · mínimo 3 meses · sin garantía</p>
+
+    <div class="vs-items">
+      <div class="vs-row rv">
+        <div class="vs-feat"><span class="vs-feat-icon">🚦</span><div><strong>Semáforo IA — 1.015 ciudades</strong><br><small style="color:rgba(232,234,240,0.45)">Verde/Amarillo/Rojo actualizado con cada carga</small></div></div>
+        <span class="vs-val">$600.000/mes</span>
+      </div>
+      <div class="vs-row rv">
+        <div class="vs-feat"><span class="vs-feat-icon">🔮</span><div><strong>Predictor IA de pérdidas por ciudad</strong><br><small style="color:rgba(232,234,240,0.45)">Forecasting basado en score acumulado histórico</small></div></div>
+        <span class="vs-val">$400.000/mes</span>
+      </div>
+      <div class="vs-row rv">
+        <div class="vs-feat"><span class="vs-feat-icon">📋</span><div><strong>Modo Jimmy — plan del día en 30 seg</strong><br><small style="color:rgba(232,234,240,0.45)">Prioridades operativas automáticas al llegar al trabajo</small></div></div>
+        <span class="vs-val">$250.000/mes</span>
+      </div>
+      <div class="vs-row rv">
+        <div class="vs-feat"><span class="vs-feat-icon">🔔</span><div><strong>Alertas automáticas de ciudades en riesgo</strong><br><small style="color:rgba(232,234,240,0.45)">Notificación antes de que el problema escale</small></div></div>
+        <span class="vs-val">$150.000/mes</span>
+      </div>
+      <div class="vs-row rv">
+        <div class="vs-feat"><span class="vs-feat-icon">⭐</span><div><strong>Score acumulado de transportadoras</strong><br><small style="color:rgba(232,234,240,0.45)">Datos que ningún competidor tuyo tiene aún</small></div></div>
+        <span class="vs-val">$100.000/mes</span>
+      </div>
+      <div class="vs-row rv">
+        <div class="vs-feat"><span class="vs-feat-icon">🌎</span><div><strong>4 países: CO · CL · GT · MX</strong><br><small style="color:rgba(232,234,240,0.45)">Un solo dashboard — todas tus operaciones</small></div></div>
+        <span class="vs-val">$200.000/mes</span>
+      </div>
+      <div class="vs-row rv">
+        <div class="vs-feat"><span class="vs-feat-icon">🔒</span><div><strong>Datos 100% en tu navegador</strong><br><small style="color:rgba(232,234,240,0.45)">Tus pedidos y clientes nunca salen de tu computador</small></div></div>
+        <span class="vs-val">Tranquilidad: priceless</span>
+      </div>
+    </div>
+
+    <div class="vs-total-row rv">
+      <div>
+        <div class="vs-total-label">Valor de mercado real</div>
+        <div class="vs-total-val">$1.700.000/mes</div>
+      </div>
+      <div style="text-align:right">
+        <div class="vs-pay-label">Tú pagas solo</div>
+        <div class="vs-pay-val">$79.000<span style="font-size:.9rem;opacity:.6">/mes · Plan Pro</span></div>
+      </div>
+    </div>
+
+    <div class="vs-guarantee rv">
+      <span style="font-size:1.5rem">🛡️</span>
+      <div><strong>Garantía 30 días — sin riesgo, sin preguntas.</strong> Si pagaste con tarjeta y no ves resultados reales en los primeros 30 días, te regresamos el 100% del dinero. Así de seguros estamos. No hay letra pequeña.</div>
+    </div>
+
+    <div style="text-align:center;margin-top:24px">
+      <a href="#quiz" class="btn btn-glow" style="font-size:1rem;padding:16px 36px">🚀 Empezar diagnóstico gratis →</a>
+      <p style="font-size:.75rem;color:rgba(232,234,240,0.35);margin-top:10px">Sin tarjeta · 30 días de garantía · Cancela cuando quieras</p>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- ══ CTA FINAL ══ -->
+<section class="pad rv-s">
+  <div class="cta-final">
+    <h2 class="cta-h">Oye — el próximo lunes<br><span class="grad">ya podrías tener el plan listo</span></h2>
+    <p class="cta-sub">Starter gratis · Plan Pro desde $79K COP/mes · 💳 Tarjeta o transferencia · 💚 30 días garantía completa · Sin contrato</p>
+    <div class="cta-btns">
+      <a href="#quiz" class="btn btn-glow btn-lg">🚀 HACER MI DIAGNÓSTICO GRATIS →</a>
+      <a href="/login?mode=register" class="btn btn-ghost">✅ CREAR CUENTA GRATIS →</a>
+    </div>
+    <div class="latam-strip">🌎 Colombia · Chile · Guatemala · México · Tasa actual: 80.5%</div>
+  </div>
+</section>
+
+<footer>
+  <div class="foot-logo" style="display:flex;align-items:center;gap:8px"><svg viewBox="0 0 64 64" width="30" height="30" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="zt" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#E5199B"/><stop offset="1" stop-color="#FF5FC0"/></linearGradient><linearGradient id="zb" x1="1" y1="0" x2="0" y2="0"><stop offset="0" stop-color="#19C8FF"/><stop offset="1" stop-color="#2563FF"/></linearGradient></defs><path d="M14 20 L42 20 L42 12 L56 24 L42 36 L42 28 L26 28 Z" fill="url(#zt)" stroke="#0B1122" stroke-width="1"/><path d="M50 44 L22 44 L22 52 L8 40 L22 28 L22 36 L38 36 Z" fill="url(#zb)" stroke="#0B1122" stroke-width="1"/></svg> ZYNEX<span>.</span>PRO</div>
+  <div class="foot-links">
+    <a href="#features" class="foot-link">Funciones</a>
+    <a href="#pricing" class="foot-link">Precios</a>
+    <a href="/login" class="foot-link">Login</a>
+    <a href="/zyan" class="foot-link">Dashboard →</a>
+  </div>
+  <div class="foot-copy">© 2026 ZYNEX by Litper Group LLC · Duitama, Colombia</div>
+</footer>
+
 <script>
-let msgs=[], busy=false, chatId=Date.now();
-const feed=document.getElementById('feed'), hero=document.getElementById('hero');
 
-function quick(t){document.getElementById('inp').value=t;enviar();}
-function nuevo(){msgs=[];chatId=Date.now();feed.querySelectorAll('.msg').forEach(e=>e.remove());hero.style.display='block';renderHist();}
-function salir(){try{signOut&&signOut();}catch(e){}location.href='/login';}
-function esc(v){return String(v==null?'':v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+// ── NAV ───────────────────────────────────────────────────────
+window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('scrolled',scrollY>50));
 
-function add(role, text, tools){
-  hero.style.display='none';
-  const d=document.createElement('div');d.className='msg '+role;
-  const av=role==='user'?'<div class="av">T\u00da</div>':'<div class="av"><svg viewBox="0 0 64 64" width="34" height="34"><use href="#zyan-face"/></svg></div>';
-  let t='';
-  if(tools&&tools.length)t='<div class="tools">'+tools.map(x=>'<span class="tool">\u26a1 '+esc(x.tool)+'</span>').join('')+'</div>';
-  d.innerHTML=av+'<div class="body">'+t+esc(text)+'</div>';
-  feed.appendChild(d);
-  document.getElementById('chat').scrollTop=1e9;
-  return d;
+// ── MAGNETIC BTNS ─────────────────────────────────────────────
+document.querySelectorAll('.btn').forEach(btn=>{
+  btn.addEventListener('mousemove',e=>{const r=btn.getBoundingClientRect();btn.style.transform=`translate(${(e.clientX-r.left-r.width/2)*.18}px,${(e.clientY-r.top-r.height/2)*.18}px) scale(1.03)`;btn.style.setProperty('--mx',((e.clientX-r.left)/r.width*100)+'%');btn.style.setProperty('--my',((e.clientY-r.top)/r.height*100)+'%');});
+  btn.addEventListener('mouseleave',()=>btn.style.transform='');
+});
+
+// ── 3D TILT ───────────────────────────────────────────────────
+document.querySelectorAll('.tilt').forEach(c=>{
+  c.addEventListener('mousemove',e=>{const r=c.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;c.style.transform=`perspective(900px) rotateX(${-y*8}deg) rotateY(${x*8}deg) scale(1.02)`;});
+  c.addEventListener('mouseleave',()=>c.style.transform='');
+});
+
+// ── REVEAL ────────────────────────────────────────────────────
+const obs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');obs.unobserve(e.target);}}),{threshold:.07});
+document.querySelectorAll('.rv,.rv-s').forEach(el=>obs.observe(el));
+
+// ── BENTO CARD GLOW ───────────────────────────────────────────
+document.querySelectorAll('.bc').forEach(c=>{
+  c.addEventListener('mousemove',e=>{const r=c.getBoundingClientRect();c.style.setProperty('--mx',((e.clientX-r.left)/r.width*100)+'%');c.style.setProperty('--my',((e.clientY-r.top)/r.height*100)+'%');});
+});
+document.querySelectorAll('.opt').forEach(c=>{
+  c.addEventListener('mousemove',e=>{const r=c.getBoundingClientRect();c.style.setProperty('--mx',((e.clientX-r.left)/r.width*100)+'%');c.style.setProperty('--my',((e.clientY-r.top)/r.height*100)+'%');});
+});
+
+// ── COUNT UP ──────────────────────────────────────────────────
+function countUp(el,target,sfx,dur){let n=0;const step=target/(dur/16);(function go(){n=Math.min(n+step,target);el.textContent=(n>=1000?Math.round(n/100)*100:Math.round(n)).toLocaleString('es-CO')+sfx;if(n<target)requestAnimationFrame(go);else el.textContent=target.toLocaleString('es-CO')+sfx;})();}
+const soObs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){setTimeout(()=>countUp(document.getElementById('s1'),31159,'+',1800),0);setTimeout(()=>countUp(document.getElementById('s2'),80,'.5%',1400),100);setTimeout(()=>countUp(document.getElementById('s3'),1015,'',1600),200);setTimeout(()=>countUp(document.getElementById('s4'),8,'',800),300);soObs.disconnect();}});},{threshold:.3});
+soObs.observe(document.querySelector('.stats-inner'));
+
+// ══ FUNNEL 400% — QUIZ LOGIC ══════════════════════════════════
+const answers={};
+const steps=['step-1','step-2','step-3','step-4'];
+const stepLabels=['Pregunta 1 de 4','Pregunta 2 de 4','Pregunta 3 de 4','Pregunta 4 de 4'];
+const progressPcts=[25,50,75,100];
+
+function selectOpt(el,stepNum,letter){
+  // Mark selected
+  el.closest('.quiz-opts').querySelectorAll('.opt').forEach(o=>o.classList.remove('selected'));
+  el.classList.add('selected');
+  answers[stepNum]=letter;
+  // Auto-advance after 600ms
+  setTimeout(()=>nextStep(stepNum),600);
 }
 
-async function enviar(){
-  const inp=document.getElementById('inp'); const text=inp.value.trim();
-  if(!text||busy)return;
-  busy=true;document.getElementById('btn').disabled=true;
-  inp.value='';inp.style.height='auto';
-  msgs.push({role:'user',content:text});
-  add('user',text);
-  saveHist(text);
-  const w=add('zyan','');w.querySelector('.body').innerHTML='<div class="think"><span class="dots"><i></i><i></i><i></i></span> Zyan est\u00e1 trabajando con sus herramientas...</div>';
-  try{
-    const s=await getSession();
-    if(!s||!s.access_token){w.querySelector('.body').textContent='Inicia sesi\u00f3n para hablar conmigo \ud83d\udc31 \u2192 /login';busy=false;document.getElementById('btn').disabled=false;return;}
-    const r=await fetch('/api/agent',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+s.access_token},body:JSON.stringify({messages:msgs,model:document.getElementById('modelo').value})});
-    const d=await r.json();
-    if(!r.ok)throw new Error(d.error||('Error '+r.status));
-    msgs.push({role:'assistant',content:d.text});
-    w.remove();add('zyan',d.text,(d.tools_used||[]).concat(d.model_used&&d.model_used!=='claude'?[{tool:'modelo: '+d.model_used}]:[]));
-  }catch(e){
-    w.querySelector('.body').textContent='\ud83d\ude3f '+e.message;
+function nextStep(current){
+  if(current<4){
+    document.getElementById('step-'+current).classList.remove('active');
+    document.getElementById('step-'+(current+1)).classList.add('active');
+    document.getElementById('pbar').style.width=progressPcts[current]+'%';
+    document.getElementById('prog-label').textContent=stepLabels[current];
+    // scroll to quiz
+    document.getElementById('quiz').scrollIntoView({behavior:'smooth',block:'center'});
+  }else{
+    // Show result
+    document.getElementById('step-4').classList.remove('active');
+    document.getElementById('progress-wrap').style.display='none';
+    document.getElementById('pbar').style.width='100%';
+    showResult();
   }
-  busy=false;document.getElementById('btn').disabled=false;
 }
 
-// historial simple (local)
-function saveHist(first){
-  try{
-    const h=JSON.parse(localStorage.getItem('zyan_hist')||'[]');
-    if(!h.find(x=>x.id===chatId))h.unshift({id:chatId,t:first.slice(0,48)});
-    localStorage.setItem('zyan_hist',JSON.stringify(h.slice(0,20)));renderHist();
-  }catch(e){}
+function showResult(){
+  // Scoring: a=0, b=1, c=2, d=3
+  const sc={'a':0,'b':1,'c':2,'d':3};
+  const total=(sc[answers[1]]||0)+(sc[answers[2]]||0)+(sc[answers[3]]||0)+(sc[answers[4]]||0);
+  let type;
+  if(total<=4)type='a'; // Operador a ciegas
+  else if(total<=8)type='b'; // Gestor saturado
+  else type='c'; // Escalador bloqueado
+  document.getElementById('result-'+type).classList.add('active');
+  document.getElementById('quiz').scrollIntoView({behavior:'smooth',block:'start'});
 }
-function renderHist(){
-  try{
-    const h=JSON.parse(localStorage.getItem('zyan_hist')||'[]');
-    document.getElementById('hist').innerHTML=h.map(x=>'<a class="'+(x.id===chatId?'on':'')+'">'+esc(x.t)+'</a>').join('');
-  }catch(e){}
-}
-renderHist();
 
-// \u2550\u2550\u2550 BANDEJA ZYAN (agent inbox: aprobar/editar/ignorar) \u2550\u2550\u2550
-async function verTab(t){
-  document.getElementById('tab-chat').classList.toggle('on',t==='chat');
-  document.getElementById('tab-inbox').classList.toggle('on',t==='inbox');
-  document.getElementById('chat').style.display=t==='chat'?'block':'none';
-  document.querySelector('.inbar').style.display=t==='chat'?'block':'none';
-  document.getElementById('panel-inbox').style.display=t==='inbox'?'block':'none';
-  if(t==='inbox') cargarInbox();
+// ── BILLING TOGGLE ────────────────────────────────────────────
+let annual=false;
+function toggleBilling(){
+  annual=!annual;
+  document.getElementById('btog').classList.toggle('on',annual);
+  document.getElementById('p-p').textContent=annual?'$63.200':'$79.000';
+  document.getElementById('p-e').textContent=annual?'$239.200':'$299.000';
+  const per=annual?'COP / mes · facturado anual · Ahorra 20%':'COP / mes · facturado mensual';
+  document.getElementById('pp-s').textContent=per;
+  document.getElementById('pe-s').textContent=per;
 }
-async function cargarInbox(){
-  const el=document.getElementById('inbox-list');
-  try{
-    const s=await getSession(); if(!s){el.innerHTML='<div class="empty">Inicia sesi\u00f3n para ver tu bandeja</div>';return;}
-    const r=await fetch('/api/inbox',{headers:{'Authorization':'Bearer '+s.access_token}});
-    const d=await r.json(); if(!r.ok) throw new Error(d.error);
-    const items=d.items||[];
-    const badge=document.getElementById('inbox-n');
-    badge.textContent=items.length; badge.style.display=items.length?'inline':'none';
-    if(!items.length){el.innerHTML='<div class="empty">\ud83d\udc31 Bandeja limpia. Zyan te avisar\u00e1 cuando haya novedades que resolver.</div>';return;}
-    el.innerHTML=items.map(i=>`<div class="card" id="card-${i.id}">
-      <h3>${esc(i.title)}<span class="risk ${esc(i.risk)}">${esc(i.risk).toUpperCase()}</span></h3>
-      <div class="act" id="act-${i.id}">${esc(i.proposed_action)}</div>
-      <div class="why">\ud83d\udca1 <b>Por qu\u00e9:</b> ${esc(i.why)}</div>
-      <div class="btns">
-        <button class="ok" onclick="decidir(${i.id},'aprobar')">\u2713 Aprobar</button>
-        <button class="ed" onclick="editarItem(${i.id})">\u270e Editar</button>
-        <button class="ig" onclick="decidir(${i.id},'ignorar')">\u2715 Ignorar</button>
-      </div></div>`).join('');
-  }catch(e){el.innerHTML='<div class="empty">Error: '+esc(e.message)+'</div>';}
+
+// ── FAQ ───────────────────────────────────────────────────────
+function toggleFaq(el){const o=el.classList.contains('open');document.querySelectorAll('.faq').forEach(f=>f.classList.remove('open'));if(!o)el.classList.add('open');}
+
+// ── RIPPLE ────────────────────────────────────────────────────
+document.addEventListener('click',e=>{
+  const btn=e.target.closest('.btn,.plan-cta');if(!btn)return;
+  const r=btn.getBoundingClientRect(),s=Math.max(r.width,r.height)*2.4;
+  const rp=document.createElement('span');rp.style.cssText=`position:absolute;border-radius:50%;background:rgba(255,255,255,.18);width:${s}px;height:${s}px;left:${e.clientX-r.left-s/2}px;top:${e.clientY-r.top-s/2}px;transform:scale(0);animation:ripple .65s ease forwards;pointer-events:none;`;
+  btn.appendChild(rp);setTimeout(()=>rp.remove(),750);
+});
+</script>
+<style>@keyframes ripple{to{transform:scale(1);opacity:0;}}</style>
+
+<script>
+// ── URGENCIA TOP COUNTER ───────────────────────────
+(function(){
+  let end = 0;
+  function tick(){
+    let left = Math.max(0, end-Date.now());
+    let h = Math.floor(left/3600000);
+    let m = Math.floor((left%3600000)/60000);
+    let s = Math.floor((left%60000)/1000);
+    let el = document.getElementById('urg-cnt');
+    if(el) el.textContent = String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+    if(left>0) setTimeout(tick, 1000);
+  }
+  tick();
+  // Spots dinámicos
+  let spots = 7;
+  setInterval(function(){
+    if(spots>3 && Math.random()<.12){
+      spots--;
+      let el = document.getElementById('urg-spots');
+      if(el) el.textContent = spots;
+    }
+  }, 60000);
+  // Sticky CTA aparece después de scrollear 400px
+  window.addEventListener('scroll', function(){
+    let sticky = document.getElementById('sticky-cta');
+    if(!sticky) return;
+    sticky.classList.toggle('visible', window.scrollY > 400);
+  }, {passive:true});
+})();
+
+// ── SCROLLSPY ──
+(function(){
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-link');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(l => l.classList.remove('active'));
+        const active = document.querySelector('.nav-link[href="#'+entry.target.id+'"]');
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-30% 0px -60% 0px' });
+  sections.forEach(s => observer.observe(s));
+})();
+</script>
+<script>
+// ── AUTH-AWARE NAV ──────────────────────────────────────────
+(async function(){
+  try {
+    const session = await getSession();
+    const btn = document.getElementById('nav-auth-btn');
+    if(session && btn){
+      btn.href = '/dashboard';
+      btn.textContent = 'Mi Dashboard →';
+      btn.style.background = 'linear-gradient(135deg,var(--teal),var(--violet))';
+      btn.style.color = '#000';
+      btn.style.border = 'none';
+      btn.style.fontWeight = '700';
+      btn.style.boxShadow = '0 0 16px rgba(25,200,255,.3)';
+    }
+  } catch(e){ console.warn('Auth check:', e); }
+})();
+</script>
+
+<script id="ultra-tech-js">
+(function(){
+// ── CANVAS PARTICLES ──────────────────────────────────────────────────────
+const cv=document.getElementById('particle-canvas');
+const cx=cv.getContext('2d');
+let W,H,nodes=[];
+function resize(){W=cv.width=window.innerWidth;H=cv.height=window.innerHeight;}
+resize();window.addEventListener('resize',resize,{passive:true});
+class Node{constructor(){this.reset();}reset(){this.x=Math.random()*W;this.y=Math.random()*H;this.vx=(Math.random()-.5)*.4;this.vy=(Math.random()-.5)*.4;this.r=Math.random()*1.8+.6;this.a=Math.random();this.ta=Math.random()*.7+.2;}tick(){this.x+=this.vx;this.y+=this.vy;if(this.x<0||this.x>W)this.vx*=-1;if(this.y<0||this.y>H)this.vy*=-1;this.a+=(this.ta-this.a)*.02;}}
+for(let i=0;i<75;i++)nodes.push(new Node());
+const CONN=160;
+function frame(){
+  cx.clearRect(0,0,W,H);
+  for(let i=0;i<nodes.length;i++){
+    const a=nodes[i];a.tick();
+    cx.beginPath();cx.arc(a.x,a.y,a.r,0,Math.PI*2);
+    cx.fillStyle=`rgba(25,200,255,${a.a*.8})`;cx.fill();
+    for(let j=i+1;j<nodes.length;j++){
+      const b=nodes[j],dx=a.x-b.x,dy=a.y-b.y,d=Math.sqrt(dx*dx+dy*dy);
+      if(d<CONN){const op=(1-d/CONN)*.25;cx.beginPath();cx.moveTo(a.x,a.y);cx.lineTo(b.x,b.y);cx.strokeStyle=`rgba(25,200,255,${op})`;cx.lineWidth=.6;cx.stroke();}
+    }
+  }
+  requestAnimationFrame(frame);
 }
-async function decidir(id,decision,final){
-  const s=await getSession();
-  const r=await fetch('/api/inbox',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+s.access_token},
-    body:JSON.stringify({op:'decidir',id,decision,final_action:final||null})});
-  if(r.ok){const c=document.getElementById('card-'+id); c.style.opacity='.35'; setTimeout(()=>{c.remove();cargarInbox();},350);}
+frame();
+
+// ── CURSOR MAGNÉTICO ─────────────────────────────────────────────────────
+let mx=0,my=0,rx=0,ry=0;
+window.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;dot.style.left=mx+'px';dot.style.top=my+'px';},{passive:true});
+(function lag(){rx+=(mx-rx)*.14;ry+=(my-ry)*.14;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(lag);})();
+document.querySelectorAll('a,button,.btn,.plan-cta,.opt,.faq,.bc,.tilt,[onclick]').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{dot.classList.add('hovering');ring.classList.add('hovering');});
+  el.addEventListener('mouseleave',()=>{dot.classList.remove('hovering');ring.classList.remove('hovering');});
+});
+
+// ── LIVE NOTIFICATIONS ────────────────────────────────────────────────────
+const nb=document.getElementById('live-notifs');
+const NOTIFS=[
+  {e:'🇨🇴',t:'<b>Barranquilla</b> — Tasa subió al 93%'},
+  {e:'🚨',t:'<b>Tumaco</b> en rojo · 58% entrega'},
+  {e:'🔄',t:'Carrier swap detectado · Bogotá'},
+  {e:'✅',t:'<b>+18%</b> tasa entrega en 30 días · ZYNEX'},
+  {e:'🇨🇱',t:'<b>Santiago</b> · semáforo actualizado'},
+  {e:'🤖',t:'IA generó plan de lunes en <b>14s</b>'},
+  {e:'💰',t:'<b>$4.2M COP</b> recuperados esta semana'},
+];
+let ni=0;
+function showNotif(){
+  const n=NOTIFS[ni%NOTIFS.length];ni++;
+  const d=document.createElement('div');d.className='lnf';
+  d.innerHTML=`<div class="lnf-dot"></div><span style="font-size:15px">${n.e}</span><span>${n.t}</span>`;
+  nb.appendChild(d);
+  setTimeout(()=>{d.classList.add('hiding');setTimeout(()=>d.remove(),400);},5000);
 }
-function editarItem(id){
-  const cur=document.getElementById('act-'+id).textContent;
-  const nuevo=prompt('Edita la acci\u00f3n (Zyan aprender\u00e1 de tu correcci\u00f3n):',cur);
-  if(nuevo && nuevo.trim() && nuevo!==cur) decidir(id,'editar',nuevo.trim());
-}
-// polling suave del contador
-(async function pollInbox(){try{const s=await getSession();if(s){const r=await fetch('/api/inbox',{headers:{'Authorization':'Bearer '+s.access_token}});if(r.ok){const d=await r.json();const n=(d.items||[]).length;const b=document.getElementById('inbox-n');b.textContent=n;b.style.display=n?'inline':'none';}}}catch(e){} setTimeout(pollInbox,60000);})();
+setTimeout(function(){showNotif();setInterval(showNotif,8000);},3000);
+
+})();
+</script>
+<script id="mrx-js">(function(){var c=document.getElementById("mrx");if(!c)return;var x=c.getContext("2d"),H="0123456789ABCDEF",fs=14,cols,drops,paused=false,lt=0,IV=40;function rsz(){c.width=innerWidth;c.height=innerHeight;cols=Math.floor(c.width/fs);drops=Array.from({length:cols},function(){return Math.random()*-60|0;});}function draw(t){if(!paused&&t-lt>=IV){lt=t;x.fillStyle="rgba(7,8,10,0.08)";x.fillRect(0,0,c.width,c.height);x.font=fs+"px monospace";x.fillStyle="rgba(25,200,255,0.55)";for(var i=0;i<drops.length;i++){x.fillText(H[Math.random()*16|0],i*fs,drops[i]*fs);if(drops[i]*fs>c.height&&Math.random()>.975)drops[i]=0;drops[i]++;}}requestAnimationFrame(draw);}document.addEventListener("visibilitychange",function(){paused=document.hidden;if(!paused)lt=0;});window.addEventListener("resize",rsz);rsz();requestAnimationFrame(draw);})();</script><script id="const-js">
+(function(){
+  var cv=document.getElementById('particle-canvas');
+  if(!cv)return;
+  var ctx=cv.getContext('2d');
+  var PTS=[],N=55,MAXD=180,paused=false,lt=0,IV=33;
+  function rsz(){cv.width=innerWidth;cv.height=innerHeight;PTS=[];for(var i=0;i<N;i++)PTS.push({x:Math.random()*cv.width,y:Math.random()*cv.height,vx:(Math.random()-.5)*.35,vy:(Math.random()-.5)*.35,p:Math.random()*Math.PI*2});}
+  function draw(t){
+    if(!paused&&t-lt>=IV){lt=t;
+    ctx.clearRect(0,0,cv.width,cv.height);
+    for(var i=0;i<PTS.length;i++){
+      var p=PTS[i];
+      p.x+=p.vx;p.y+=p.vy;p.p+=.015;
+      if(p.x<0||p.x>cv.width)p.vx*=-1;
+      if(p.y<0||p.y>cv.height)p.vy*=-1;
+      var pulse=.4+.3*Math.sin(p.p);
+      ctx.beginPath();ctx.arc(p.x,p.y,1.8,0,Math.PI*2);
+      ctx.fillStyle='rgba(25,200,255,'+pulse+')';ctx.fill();
+      for(var j=i+1;j<PTS.length;j++){
+        var q=PTS[j],dx=p.x-q.x,dy=p.y-q.y,d=Math.sqrt(dx*dx+dy*dy);
+        if(d<MAXD){var a=(1-d/MAXD)*.25*pulse;ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(q.x,q.y);ctx.strokeStyle='rgba(25,200,255,'+a+')';ctx.lineWidth=.8;ctx.stroke();}
+      }
+    }}
+    requestAnimationFrame(draw);
+  }
+  document.addEventListener('visibilitychange',function(){paused=document.hidden;if(!paused)lt=0;});
+  window.addEventListener('resize',rsz);rsz();requestAnimationFrame(draw);
+})();
+</script><script id="cipher-js">/* cipher desactivado: causaba letras perdidas y tenia error de sintaxis */</script>
+<script id="glitch-js">
+(function(){
+  function doGlitch(){
+    var el=document.querySelector('.hero-h');
+    if(!el)return;
+    // Set data-text to plain text (for ::before/::after pseudo)
+    el.setAttribute('data-text', el.innerText);
+    el.classList.add('glitching');
+    // Glitch for 200ms then stop
+    setTimeout(function(){el.classList.remove('glitching');},200);
+  }
+  // Wait for cipher decode to finish (cipher takes ~350ms + text length * 32ms)
+  // Then trigger glitch every 6 seconds
+  setTimeout(function(){
+    doGlitch();
+    setInterval(doGlitch, 6000);
+  }, 3500);
+})();
+</script>
+<canvas id="zynex3d" style="position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.35"></canvas>
+<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+<script>
+(function(){
+  if(!window.THREE) return;
+  const c=document.getElementById('zynex3d');
+  const rd=new THREE.WebGLRenderer({canvas:c,alpha:true,antialias:true});
+  rd.setPixelRatio(Math.min(devicePixelRatio,2));
+  const sc=new THREE.Scene();
+  const cam=new THREE.PerspectiveCamera(60,1,0.1,100); cam.position.z=18;
+  // Red neuronal 3D: partículas + líneas (marca ZYNEX: nodos logísticos conectados)
+  const N=180, pos=new Float32Array(N*3), pts=[];
+  for(let i=0;i<N;i++){const x=(Math.random()-.5)*36,y=(Math.random()-.5)*22,z=(Math.random()-.5)*18;pos.set([x,y,z],i*3);pts.push(new THREE.Vector3(x,y,z));}
+  const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.BufferAttribute(pos,3));
+  const cyan=new THREE.Color('#19C8FF'), mag=new THREE.Color('#E5199B');
+  sc.add(new THREE.Points(g,new THREE.PointsMaterial({color:cyan,size:.14,transparent:true,opacity:.9})));
+  const lg=new THREE.BufferGeometry(); const lp=[];
+  for(let i=0;i<N;i++)for(let j=i+1;j<N;j++){if(pts[i].distanceTo(pts[j])<4.2){lp.push(pts[i].x,pts[i].y,pts[i].z,pts[j].x,pts[j].y,pts[j].z);}}
+  lg.setAttribute('position',new THREE.Float32BufferAttribute(lp,3));
+  sc.add(new THREE.LineSegments(lg,new THREE.LineBasicMaterial({color:cyan,transparent:true,opacity:.12})));
+  // Núcleo Z: icosaedro wireframe magenta girando
+  const core=new THREE.Mesh(new THREE.IcosahedronGeometry(3.2,1),new THREE.MeshBasicMaterial({color:mag,wireframe:true,transparent:true,opacity:.35}));
+  sc.add(core);
+  const core2=new THREE.Mesh(new THREE.IcosahedronGeometry(2.1,0),new THREE.MeshBasicMaterial({color:cyan,wireframe:true,transparent:true,opacity:.5}));
+  sc.add(core2);
+  let mx=0,my=0; addEventListener('pointermove',e=>{mx=(e.clientX/innerWidth-.5);my=(e.clientY/innerHeight-.5);});
+  function rs(){rd.setSize(innerWidth,innerHeight,false);cam.aspect=innerWidth/innerHeight;cam.updateProjectionMatrix();}
+  addEventListener('resize',rs);rs();
+  (function an(t){requestAnimationFrame(an);
+    sc.rotation.y=t*0.00006+mx*0.3; sc.rotation.x=my*0.2;
+    core.rotation.x=t*0.0003; core.rotation.y=t*0.0004;
+    core2.rotation.x=-t*0.0005; core2.rotation.y=t*0.0003;
+    cam.position.z=18+Math.sin(t*0.0002)*1.5;
+    rd.render(sc,cam);})(0);
+})();
 </script>
 </body>
 </html>

@@ -2,7 +2,7 @@
 (function(){
   function init(){
     // AURORA: fondo animado (solo si la página lo pide con data o clase contenedora)
-    if(!document.querySelector('.zx-aurora')){
+    if(!document.body.dataset.zxNoAurora && !document.querySelector('.zx-aurora')){
       var au=document.createElement('div'); au.className='zx-aurora';
       au.innerHTML='<i></i><i></i><i></i>';
       document.body.prepend(au);
