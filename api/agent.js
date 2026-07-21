@@ -1,7 +1,7 @@
 // api/agent.js — ZYNEX Agent: agente autónomo con herramientas (estilo Claude)
 // Loop de tool-use con Claude API. Herramientas: condiciones de transportadora,
 // recomendación por ciudad, traducción de novedades, borrador de WhatsApp.
-import { setCors, verifyUser, consumeAIQuota } from './_lib.js';
+import { setCors, verifyUser, consumeAIQuota, callGroq, callCerebras, callMistral, callGemini } from './_lib.js';
 import { CARRIERS_CO, CARRIERS_PA, NOVEDADES, kbSummary } from './_kb.js';
 
 const SB_URL = process.env.SUPABASE_URL || 'https://gtsivwbnhcawvmsfujby.supabase.co';
@@ -192,15 +192,36 @@ export default async function handler(req, res) {
   const quota = await consumeAIQuota(user.id);
   if (!quota.ok) return res.status(quota.code || 429).json({ error: quota.error });
 
-  const key = process.env.ANTHROPIC_API_KEY || process.env.CLAUDE_API_KEY;
-  if (!key) return res.status(500).json({ error: 'ANTHROPIC_API_KEY no configurada en Vercel' });
-
-  const { messages } = req.body || {};
+  const { messages, model } = req.body || {};
   if (!Array.isArray(messages) || !messages.length) return res.status(400).json({ error: 'messages[] requerido' });
 
+  const hasClaude = !!(process.env.ANTHROPIC_API_KEY || process.env.CLAUDE_API_KEY);
   const authToken = (req.headers.authorization || '').replace('Bearer ', '').trim();
   try {
-    const out = await runZynexAgent(messages, authToken);
+    let out;
+    const wanted = (model || 'auto').toLowerCase();
+    if ((wanted === 'auto' && hasClaude) || wanted === 'claude') {
+      if (!hasClaude) return res.status(500).json({ error: 'ANTHROPIC_API_KEY no configurada en Vercel' });
+      out = await runZynexAgent(messages, authToken);
+      out.model_used = 'claude';
+    } else {
+      // Modo LLM directo: sin herramientas, pero con todo el conocimiento logístico en el prompt
+      const fns = { groq: callGroq, cerebras: callCerebras, mistral: callMistral, gemini: null };
+      const order = wanted === 'auto' ? ['groq', 'cerebras', 'mistral', 'gemini'] : [wanted];
+      let lastErr;
+      for (const name of order) {
+        try {
+          if (name === 'gemini') {
+            const text = messages.map(m => `${m.role}: ${m.content}`).join('\n');
+            out = { text: await callGemini(SYSTEM + '\n\n' + text), tools_used: [], model_used: 'gemini' };
+          } else if (fns[name]) {
+            out = { text: await fns[name](messages, SYSTEM), tools_used: [], model_used: name };
+          } else continue;
+          break;
+        } catch (e) { lastErr = e; }
+      }
+      if (!out) throw lastErr || new Error('Ningún modelo disponible — configura las API keys en Vercel');
+    }
     saveMemory(user.id, messages, out.text); // no bloquea la respuesta
     return res.status(200).json({ ...out, quota_remaining: quota.remaining });
   } catch (err) {

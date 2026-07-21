@@ -162,6 +162,14 @@ body{background:var(--bg);color:var(--tx);height:100vh;display:flex;overflow:hid
   <div class="inbar">
     <div class="inbox">
       <textarea id="inp" rows="1" placeholder="Pregúntale a Zyan sobre tu operación..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();enviar();}" oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,160)+'px'"></textarea>
+      <select id="modelo" title="Modelo de IA" style="background:var(--s2);border:1px solid var(--b);color:var(--t2);border-radius:9px;font-size:11px;padding:6px 8px;cursor:pointer;outline:0">
+        <option value="auto">⚡ Auto</option>
+        <option value="claude">Claude (herramientas)</option>
+        <option value="groq">Groq · Llama 3.3</option>
+        <option value="cerebras">Cerebras</option>
+        <option value="mistral">Mistral</option>
+        <option value="gemini">Gemini</option>
+      </select>
       <button class="send" id="btn" onclick="enviar()">➤</button>
     </div>
     <div class="hint">Zyan usa herramientas reales sobre tus datos · ZYNEX Brain</div>
@@ -202,11 +210,11 @@ async function enviar(){
   try{
     const s=await getSession();
     if(!s||!s.access_token){w.querySelector('.body').textContent='Inicia sesi\u00f3n para hablar conmigo \ud83d\udc31 \u2192 /login';busy=false;document.getElementById('btn').disabled=false;return;}
-    const r=await fetch('/api/agent',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+s.access_token},body:JSON.stringify({messages:msgs})});
+    const r=await fetch('/api/agent',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+s.access_token},body:JSON.stringify({messages:msgs,model:document.getElementById('modelo').value})});
     const d=await r.json();
     if(!r.ok)throw new Error(d.error||('Error '+r.status));
     msgs.push({role:'assistant',content:d.text});
-    w.remove();add('zyan',d.text,d.tools_used);
+    w.remove();add('zyan',d.text,(d.tools_used||[]).concat(d.model_used&&d.model_used!=='claude'?[{tool:'modelo: '+d.model_used}]:[]));
   }catch(e){
     w.querySelector('.body').textContent='\ud83d\ude3f '+e.message;
   }
