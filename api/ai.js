@@ -1,6 +1,6 @@
 // api/ai.js — ZYNEX AI proxy (una sola consulta)
 // Seguridad: sin API keys hardcodeadas; token verificado; quota descontada server-side.
-import { setCors, verifyUser, consumeAIQuota, callGemini, callGroq } from './_lib.js';
+import { setCors, verifyUser, consumeAIQuota, callAI } from './_lib.js';
 
 export default async function handler(req, res) {
   setCors(res, req.headers.origin);
@@ -30,8 +30,7 @@ export default async function handler(req, res) {
       if (!r.ok) throw new Error(`Claude ${r.status}`);
       result = (await r.json()).content?.[0]?.text || '';
     } else {
-      try { result = await callGemini(fullPrompt); }
-      catch (e1) { result = await callGroq(fullPrompt); }
+      result = await callAI(fullPrompt);
     }
     return res.status(200).json({ text: result, result, model, quota_remaining: quota.remaining });
   } catch (err) {

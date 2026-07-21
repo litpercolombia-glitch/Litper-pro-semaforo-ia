@@ -85,3 +85,49 @@ export async function callGroq(messages, sys) {
   if (!r.ok) throw new Error(`Groq ${r.status}`);
   return (await r.json()).choices?.[0]?.message?.content || '';
 }
+
+// Proveedores OpenAI-compatibles adicionales
+async function openaiCompat(url, key, model, messages, sys) {
+  const msgs = [];
+  if (sys) msgs.push({ role: 'system', content: sys });
+  (Array.isArray(messages) ? messages : [{ role: 'user', content: messages }])
+    .forEach(m => msgs.push({ role: m.role, content: m.content }));
+  const r = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${key}` },
+    body: JSON.stringify({ model, messages: msgs, max_tokens: 2048, temperature: 0.7 }),
+  });
+  if (!r.ok) throw new Error(`${model} ${r.status}`);
+  return (await r.json()).choices?.[0]?.message?.content || '';
+}
+
+export async function callCerebras(messages, sys) {
+  const key = process.env.CEREBRAS_API_KEY;
+  if (!key) throw new Error('CEREBRAS_API_KEY no configurada');
+  return openaiCompat('https://api.cerebras.ai/v1/chat/completions', key, 'llama-3.3-70b', messages, sys);
+}
+
+export async function callMistral(messages, sys) {
+  const key = process.env.MISTRAL_API_KEY;
+  if (!key) throw new Error('MISTRAL_API_KEY no configurada');
+  return openaiCompat('https://api.mistral.ai/v1/chat/completions', key, 'mistral-small-latest', messages, sys);
+}
+
+// Orquestador: GROQ es el proveedor predeterminado, con cascada de respaldo
+export async function callAI(messages, sys) {
+  const chain = [
+    ['groq', callGroq], ['cerebras', callCerebras], ['mistral', callMistral],
+  ];
+  let lastErr;
+  for (const [name, fn] of chain) {
+    try { return await fn(messages, sys); }
+    catch (e) { lastErr = e; console.warn(`[callAI] ${name} falló:`, e.message); }
+  }
+  // último recurso: Gemini (formato distinto)
+  try {
+    const text = (Array.isArray(messages) ? messages : [{ content: messages }])
+      .map(m => (typeof m === 'string' ? m : m.content)).join('\n');
+    return await callGemini((sys ? sys + '\n\n' : '') + text);
+  } catch (e) { lastErr = e; }
+  throw lastErr || new Error('Ningún proveedor de IA disponible');
+}

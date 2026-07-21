@@ -1,6 +1,6 @@
 // api/chat.js — ZYNEX multi-turn chat
 // Seguridad: sin API keys hardcodeadas; token verificado; quota descontada server-side.
-import { setCors, verifyUser, consumeAIQuota, callGemini, callGroq } from './_lib.js';
+import { setCors, verifyUser, consumeAIQuota, callAI } from './_lib.js';
 
 export default async function handler(req, res) {
   setCors(res, req.headers.origin);
@@ -32,10 +32,7 @@ export default async function handler(req, res) {
       if (!r.ok) throw new Error(`Claude ${r.status}`);
       result = (await r.json()).content?.[0]?.text || '';
     } else {
-      try {
-        const contents = messages.map(m => ({ role: m.role === 'assistant' ? 'model' : 'user', parts: [{ text: m.content }] }));
-        result = await callGemini(contents, sys);
-      } catch (e1) { result = await callGroq(messages, sys); }
+      result = await callAI(messages, sys); // Groq predeterminado → Cerebras → Mistral → Gemini
     }
     return res.status(200).json({ text: result, result, model, quota_remaining: quota.remaining });
   } catch (err) {
