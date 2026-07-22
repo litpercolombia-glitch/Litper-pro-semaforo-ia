@@ -223,7 +223,7 @@ nav.scrolled{background:rgba(5,6,10,.88);}
 .sp-r{background:rgba(244,63,94,.12);color:var(--rose);border:1px solid rgba(244,63,94,.25);}
 
 /* ── PRICING ── */
-.plans{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;max-width:980px;margin:56px auto 0;}
+.plans{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;max-width:980px;margin:56px auto 0;}
 @media(max-width:820px){.plans{grid-template-columns:1fr;max-width:400px;}}
 .plan{position:relative;overflow:hidden;background:rgba(10,12,20,.88);border:1px solid rgba(255,255,255,.11);border-radius:20px;padding:30px;transition:transform .35s var(--out),border-color .3s,box-shadow .3s;cursor:pointer;}
 .plan:hover{transform:translateY(-5px);border-color:var(--e2);box-shadow:0 20px 60px rgba(0,0,0,.5);}
@@ -664,6 +664,7 @@ body.has-urgencia nav{top:40px}
 <script src="/js/zynex-theme.js" defer></script>
 <link rel="stylesheet" href="/css/zynex-bits.css">
 <script src="/js/zynex-bits.js" defer></script>
+<script defer src="/_vercel/insights/script.js"></script>
 </head>
 <body data-zx-no-aurora="1"><div id="sl"></div><canvas id="mrx"></canvas>
 <!-- ULTRA-TECH LAYER -->
@@ -1217,6 +1218,20 @@ body.has-urgencia nav{top:40px}
         <li class="feat"><div class="fn">–</div><span style="color:var(--t3)">Calculadora de recuperación</span></li>
       </ul>
       <a href="/login?mode=register&plan=starter" class="plan-cta cta-g">✅ EMPEZAR GRATIS — SIN TARJETA →</a>
+    </div>
+    <div class="plan rv d2 tilt" data-hover>
+      <div class="plan-name">Básico</div><div class="plan-tagline">💠 Tu primer paso con IA · 30 días garantía</div>
+      <div class="plan-price" id="p-b">$39.000</div><div class="plan-period">COP / mes · Anual $374.400 (−20%) · 30 días garantía</div>
+      <hr class="plan-div">
+      <ul class="feats">
+        <li class="feat"><div class="fy">✓</div>Todo lo de Starter</li>
+        <li class="feat"><div class="fy">✓</div><strong>Zyan IA — 25 consultas/mes</strong></li>
+        <li class="feat"><div class="fy">✓</div>Bandeja de novedades</li>
+        <li class="feat"><div class="fy">✓</div>Hasta 2 usuarios · 1 país</li>
+        <li class="feat"><div class="fy">✓</div>Exportar PDF/Excel</li>
+        <li class="feat"><div class="fn">–</div><span style="color:var(--t3)">Asignación dinámica</span></li>
+      </ul>
+      <a href="/login?mode=register&plan=basico" class="plan-cta cta-g">💠 EMPEZAR CON BÁSICO →</a>
     </div>
     <div class="plan pro rv d2 tilt" data-hover>
       <div class="plan-badge">MÁS POPULAR</div>
