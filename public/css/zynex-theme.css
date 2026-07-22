@@ -74,3 +74,45 @@ body.light .msg.user .av{background:#F0F3F8;border-color:#D5DCE8;color:#0284C7;}
 body.light .hint,body.light .think{color:#8A94A6;}
 body.light .hero p{color:#4A5568;}
 body.light .empty{color:#8A94A6;}
+
+/* ═══════════════════════════════════════════════════════════════════
+   PARCHE DE CONTRASTE — MODO DÍA (auditoría 22-jul-2026)
+   Corrige texto claro sobre fondo claro en landing / perfil / checkout.
+   Todos los elementos abajo tenían color casi-blanco sobre superficie
+   clara -> ilegibles. Se fuerza texto oscuro legible en body.light.
+   No toca .grad (gradientes) ni modo noche.
+   ═══════════════════════════════════════════════════════════════════ */
+/* Texto principal legible (titulos, valores, features, planes, etc.) */
+body.light .trust-item,body.light .feat,body.light .faq-q,
+body.light .plan-name,body.light .plan-price,
+body.light .how-step-num,body.light .how-eyebrow,body.light .how-compare-label,
+body.light .proof-q,body.light .proof-name,
+body.light .vs-val,body.light .vs-total-val,body.light .vs-pay-val,
+body.light .vs-eyebrow,body.light .bc-t,body.light .s-tag,
+body.light .opt-text,body.light .pav,body.light .fn,
+body.light .pro-p,body.light .sticky-cta-txt,body.light .step-n,
+body.light .fy,body.light .tick-i,body.light .logo-name,
+body.light .logo-pill-name,body.light .nav-link,body.light .nav-signin,
+body.light .plan-tagline,body.light .latam-strip,body.light .hero-pill,
+body.light .how-step-badge{
+  color:#0B1324!important;
+}
+/* Texto secundario / descripciones (un tono mas suave pero legible) */
+body.light .faq-body,body.light .how-step-desc,body.light .how-sub,
+body.light .vs-sub,body.light .vs-pay-label,body.light .vs-total-label,
+body.light .bc-d,body.light .plan-period,body.light .foot-copy,
+body.light .logos-label,body.light .progress-label,body.light .hsm-label{
+  color:#4A5568!important;
+}
+/* <strong>, negritas y textos sin clase heredan el color del contenedor */
+body.light strong,body.light b{color:inherit!important;}
+/* Semaforo: en dia usar tonos mas oscuros para que se lean sobre blanco */
+body.light .sp-r{color:#DC2626!important;}
+body.light .sp-y{color:#B45309!important;}
+body.light .sp-g{color:#059669!important;}
+/* Barra superior de trust / marquee: fondo claro y borde sutil en dia */
+body.light .latam-strip,body.light .trust-strip,body.light .trust-bar{
+  background:#F0F3F8!important;border-color:#E4E9F1!important;
+}
+/* Iconos de badge de conectores: contorno legible */
+body.light .bc-icon{color:#0284C7!important;}
