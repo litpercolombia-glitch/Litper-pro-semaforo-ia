@@ -4,8 +4,10 @@ const SB_ANON = process.env.SUPABASE_ANON_KEY || '';
 const SB_SERVICE = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
 
 export function setCors(res, origin) {
-  const list = (process.env.ALLOWED_ORIGINS || 'https://litper-semaforo.vercel.app,https://litperpro.com')
-    .split(',').map(o => o.trim()).filter(Boolean);
+  // Dominios oficiales ZYNEX siempre permitidos + extras vía env
+  const BASE = ['https://zynexapp.com', 'https://www.zynexapp.com', 'https://litper-semaforo.vercel.app'];
+  const list = BASE.concat((process.env.ALLOWED_ORIGINS || '')
+    .split(',').map(o => o.trim()).filter(Boolean));
   const allowed = list.find(o => origin && origin.startsWith(o));
   if (allowed) res.setHeader('Access-Control-Allow-Origin', allowed);
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
