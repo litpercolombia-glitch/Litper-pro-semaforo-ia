@@ -146,8 +146,10 @@ body{background:var(--bg);color:var(--tx);height:100vh;display:flex;overflow:hid
   <div class="tabbar">
     <button class="tabb on" id="tab-chat" onclick="verTab('chat')">💬 Chat</button>
     <button class="tabb" id="tab-inbox" onclick="verTab('inbox')">📥 Bandeja<span class="badge" id="inbox-n" style="display:none">0</span></button>
+    <button class="tabb" id="tab-conn" onclick="verTab('conn')">🔌 Conexiones</button>
   </div>
   <div class="chat" id="panel-inbox" style="display:none"><div class="wrap" id="inbox-list"><div class="empty">Cargando bandeja...</div></div></div>
+  <div class="chat" id="panel-conn" style="display:none"><div class="wrap" id="conn-list"><div class="empty">Cargando conexiones...</div></div></div>
   <div class="chat" id="chat">
     <div class="wrap" id="feed">
       <div class="hero" id="hero">
@@ -166,6 +168,9 @@ body{background:var(--bg);color:var(--tx);height:100vh;display:flex;overflow:hid
   <div class="inbar">
     <div class="inbox">
       <textarea id="inp" rows="1" placeholder="Pregúntale a Zyan sobre tu operación..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();enviar();}" oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,160)+'px'"></textarea>
+      <input type="file" id="zx-file" style="display:none" accept=".txt,.csv,.json,.md" onchange="leerArchivo(this)">
+      <button class="send" style="background:var(--s2);color:var(--t2);border:1px solid var(--b)" title="Adjuntar archivo (txt/csv/json)" onclick="document.getElementById('zx-file').click()">📎</button>
+      <button class="send" id="zx-mic" style="background:var(--s2);color:var(--t2);border:1px solid var(--b)" title="Dictar por voz" onclick="dictar()">🎙</button>
       <select id="modelo" title="Modelo de IA" style="background:var(--s2);border:1px solid var(--b);color:var(--t2);border-radius:9px;font-size:11px;padding:6px 8px;cursor:pointer;outline:0">
         <option value="auto">⚡ Auto</option>
         <option value="claude">Claude (herramientas)</option>
@@ -207,7 +212,9 @@ async function enviar(){
   if(!text||busy)return;
   busy=true;document.getElementById('btn').disabled=true;
   inp.value='';inp.style.height='auto';
-  msgs.push({role:'user',content:text});
+  var contenidoFinal=text;
+  if(archivoCtx){contenidoFinal='['+archivoCtx.nombre+']\n'+archivoCtx.contenido+'\n\n---\nPregunta: '+text;archivoCtx=null;document.getElementById('inp').placeholder='Pregúntale a Zyan sobre tu operación...';}
+  msgs.push({role:'user',content:contenidoFinal});
   add('user',text);
   saveHist(text);
   const w=add('zyan','');w.querySelector('.body').innerHTML='<div class="think"><span class="dots"><i></i><i></i><i></i></span> Zyan est\u00e1 trabajando con sus herramientas...</div>';
@@ -243,13 +250,94 @@ renderHist();
 
 // \u2550\u2550\u2550 BANDEJA ZYAN (agent inbox: aprobar/editar/ignorar) \u2550\u2550\u2550
 async function verTab(t){
-  document.getElementById('tab-chat').classList.toggle('on',t==='chat');
-  document.getElementById('tab-inbox').classList.toggle('on',t==='inbox');
+  ['chat','inbox','conn'].forEach(function(x){
+    var tb=document.getElementById('tab-'+(x==='chat'?'chat':x==='inbox'?'inbox':'conn'));
+    if(tb) tb.classList.toggle('on',t===x);
+  });
   document.getElementById('chat').style.display=t==='chat'?'block':'none';
   document.querySelector('.inbar').style.display=t==='chat'?'block':'none';
   document.getElementById('panel-inbox').style.display=t==='inbox'?'block':'none';
+  document.getElementById('panel-conn').style.display=t==='conn'?'block':'none';
   if(t==='inbox') cargarInbox();
+  if(t==='conn') cargarConexiones();
 }
+
+// ── ADJUNTAR ARCHIVO: el contenido viaja como contexto del mensaje ──
+var archivoCtx=null;
+function leerArchivo(inp){
+  var f=inp.files[0]; if(!f) return;
+  if(f.size>150000){alert('Archivo muy grande (máx 150KB). Para archivos grandes usa Export·Import del dashboard.');return;}
+  var r=new FileReader();
+  r.onload=function(){
+    archivoCtx={nombre:f.name, contenido:String(r.result).slice(0,40000)};
+    var inpT=document.getElementById('inp');
+    inpT.placeholder='📎 '+f.name+' adjunto — escribe tu pregunta sobre el archivo...';
+    inpT.focus();
+  };
+  r.readAsText(f); inp.value='';
+}
+
+// ── DICTADO POR VOZ (es-CO) ──
+var recActivo=null;
+function dictar(){
+  var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){alert('Tu navegador no soporta dictado por voz. Usa Chrome.');return;}
+  var mic=document.getElementById('zx-mic');
+  if(recActivo){recActivo.stop();return;}
+  var rec=new SR(); rec.lang='es-CO'; rec.interimResults=true; rec.continuous=true;
+  var inp=document.getElementById('inp'); var base=inp.value;
+  rec.onresult=function(e){
+    var t=''; for(var i=0;i<e.results.length;i++) t+=e.results[i][0].transcript;
+    inp.value=(base?base+' ':'')+t;
+  };
+  rec.onend=function(){recActivo=null;mic.style.background='var(--s2)';mic.textContent='🎙';};
+  rec.onerror=function(){recActivo=null;mic.style.background='var(--s2)';mic.textContent='🎙';};
+  recActivo=rec; mic.style.background='var(--mg)'; mic.textContent='⏺'; rec.start();
+}
+
+// ── CONEXIONES: API keys por app para el ZYNEX Brain ──
+var APPS_CONN=[
+  {n:'Claude Desktop',e:'🤖',d:'Servidor MCP incluido (zynex-mcp). Zyan dentro de Claude.'},
+  {n:'ChatGPT',e:'💬',d:'Custom GPT con Action → POST /api/brain con tu key.'},
+  {n:'Dropi',e:'📦',d:'n8n toma tus novedades de Dropi y llena la Bandeja.'},
+  {n:'Chatea Pro',e:'🟢',d:'Sofía consulta al Brain para responder con datos reales.'},
+  {n:'Personalizada',e:'⚙️',d:'Cualquier app: HTTP POST con header x-zynex-key.'}
+];
+async function cargarConexiones(){
+  var el=document.getElementById('conn-list');
+  var s=await getSession(); if(!s){el.innerHTML='<div class="empty">Inicia sesión para gestionar conexiones</div>';return;}
+  var keys=[];
+  try{
+    var r=await fetch('https://gtsivwbnhcawvmsfujby.supabase.co/rest/v1/zynex_api_keys?select=id,app_name,api_key,active,created_at&order=created_at.desc',{headers:{apikey:SUPABASE_ANON_KEY,Authorization:'Bearer '+s.access_token}});
+    keys=await r.json(); if(!Array.isArray(keys))keys=[];
+  }catch(e){}
+  var endpoint='https://www.zynexapp.com/api/brain';
+  el.innerHTML='<h3 style="margin:6px 0 4px">🔌 Conecta tus apps al ZYNEX Brain</h3>'
+    +'<div class="why" style="margin-bottom:14px">API pública: <code style="color:var(--cy)">POST '+endpoint+'</code> · header <code style="color:var(--cy)">x-zynex-key: TU_KEY</code> · body <code>{"message":"..."}</code></div>'
+    +APPS_CONN.map(function(a){
+      var k=keys.find(function(x){return x.app_name===a.n && x.active;});
+      return '<div class="card"><h3>'+a.e+' '+a.n+(k?' <span class="risk bajo">CONECTADA</span>':'')+'</h3>'
+        +'<div class="why">'+a.d+'</div>'
+        +(k?'<div class="act" style="font-family:var(--mono);font-size:11.5px;word-break:break-all">'+esc(k.api_key)+'</div>'
+            +'<div class="btns"><button class="ed" onclick="copiarKey(\''+esc(k.api_key)+'\')">📋 Copiar key</button>'
+            +'<button class="ig" onclick="revocarKey('+k.id+')">✕ Revocar</button></div>'
+          :'<div class="btns"><button class="ok" onclick="crearKey(\''+a.n+'\')">＋ Generar API key</button></div>')
+        +'</div>';
+    }).join('');
+}
+function genKey(){var a='';var c='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';var arr=new Uint32Array(40);crypto.getRandomValues(arr);for(var i=0;i<40;i++)a+=c[arr[i]%c.length];return 'zx_'+a;}
+async function crearKey(app){
+  var s=await getSession(); if(!s)return;
+  var org=await getOrgId();
+  await fetch('https://gtsivwbnhcawvmsfujby.supabase.co/rest/v1/zynex_api_keys',{method:'POST',headers:{apikey:SUPABASE_ANON_KEY,Authorization:'Bearer '+s.access_token,'Content-Type':'application/json'},body:JSON.stringify({app_name:app,api_key:genKey(),org_id:org})});
+  cargarConexiones();
+}
+async function revocarKey(id){
+  var s=await getSession(); if(!s)return;
+  await fetch('https://gtsivwbnhcawvmsfujby.supabase.co/rest/v1/zynex_api_keys?id=eq.'+id,{method:'PATCH',headers:{apikey:SUPABASE_ANON_KEY,Authorization:'Bearer '+s.access_token,'Content-Type':'application/json'},body:JSON.stringify({active:false})});
+  cargarConexiones();
+}
+function copiarKey(k){navigator.clipboard.writeText(k);alert('Key copiada ✅');}
 async function cargarInbox(){
   const el=document.getElementById('inbox-list');
   try{

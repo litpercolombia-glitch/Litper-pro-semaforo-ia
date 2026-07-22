@@ -14,7 +14,22 @@ export default async function handler(req, res) {
   const validKeys = (process.env.ZYNEX_BRAIN_KEYS || '').split(',').map(k => k.trim()).filter(Boolean);
   let authToken = null;
 
-  if (appKey && validKeys.includes(appKey)) {
+  // Keys creadas por usuarios en la pestaña Conexiones (tabla zynex_api_keys)
+  let dbKeyOk = false;
+  if (appKey && !validKeys.includes(appKey)) {
+    try {
+      const svc = process.env.SUPABASE_SERVICE_ROLE_KEY;
+      const url = process.env.SUPABASE_URL || 'https://gtsivwbnhcawvmsfujby.supabase.co';
+      if (svc) {
+        const r = await fetch(`${url}/rest/v1/zynex_api_keys?api_key=eq.${encodeURIComponent(appKey)}&active=eq.true&select=id`, {
+          headers: { apikey: svc, Authorization: `Bearer ${svc}` }
+        });
+        dbKeyOk = r.ok && (await r.json()).length > 0;
+      }
+    } catch (e) { console.warn('[brain] key lookup:', e.message); }
+  }
+
+  if (appKey && (validKeys.includes(appKey) || dbKeyOk)) {
     authToken = process.env.SUPABASE_SERVICE_ROLE_KEY; // acceso pleno del cerebro
   } else {
     // 2) Usuario humano con sesión Supabase

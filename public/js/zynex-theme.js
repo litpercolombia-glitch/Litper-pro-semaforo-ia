@@ -1,3 +1,9 @@
+// Dominio canónico: unificar sesiones en www.zynexapp.com
+(function(){
+  if(location.hostname==='litper-semaforo.vercel.app'){
+    location.replace('https://www.zynexapp.com'+location.pathname+location.search+location.hash);
+  }
+})();
 // ═══ ZYNEX THEME — toggle día/noche unificado (clave compartida 'lp-theme') ═══
 (function(){
   var KEY='lp-theme';
