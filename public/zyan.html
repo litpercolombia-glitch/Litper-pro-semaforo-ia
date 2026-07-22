@@ -146,9 +146,11 @@ body{background:var(--bg);color:var(--tx);height:100vh;display:flex;overflow:hid
   <div class="tabbar">
     <button class="tabb on" id="tab-chat" onclick="verTab('chat')">💬 Chat</button>
     <button class="tabb" id="tab-inbox" onclick="verTab('inbox')">📥 Bandeja<span class="badge" id="inbox-n" style="display:none">0</span></button>
+    <button class="tabb" id="tab-conf" onclick="verTab('conf')">✅ Confirmaciones</button>
     <button class="tabb" id="tab-conn" onclick="verTab('conn')">🔌 Conexiones</button>
   </div>
   <div class="chat" id="panel-inbox" style="display:none"><div class="wrap" id="inbox-list"><div class="empty">Cargando bandeja...</div></div></div>
+  <div class="chat" id="panel-conf" style="display:none"><div class="wrap" id="conf-list"><div class="empty">Cargando confirmaciones...</div></div></div>
   <div class="chat" id="panel-conn" style="display:none"><div class="wrap" id="conn-list"><div class="empty">Cargando conexiones...</div></div></div>
   <div class="chat" id="chat">
     <div class="wrap" id="feed">
@@ -285,16 +287,48 @@ renderHist();
 
 // \u2550\u2550\u2550 BANDEJA ZYAN (agent inbox: aprobar/editar/ignorar) \u2550\u2550\u2550
 async function verTab(t){
-  ['chat','inbox','conn'].forEach(function(x){
-    var tb=document.getElementById('tab-'+(x==='chat'?'chat':x==='inbox'?'inbox':'conn'));
+  ['chat','inbox','conf','conn'].forEach(function(x){
+    var tb=document.getElementById('tab-'+x);
     if(tb) tb.classList.toggle('on',t===x);
   });
   document.getElementById('chat').style.display=t==='chat'?'block':'none';
   document.querySelector('.inbar').style.display=t==='chat'?'block':'none';
   document.getElementById('panel-inbox').style.display=t==='inbox'?'block':'none';
+  document.getElementById('panel-conf').style.display=t==='conf'?'block':'none';
   document.getElementById('panel-conn').style.display=t==='conn'?'block':'none';
   if(t==='inbox') cargarInbox();
+  if(t==='conf') cargarConfirmaciones();
   if(t==='conn') cargarConexiones();
+}
+
+// ── CONFIRMACIONES WHATSAPP PRE-DESPACHO ──
+async function cargarConfirmaciones(){
+  var el=document.getElementById('conf-list');
+  var s=await getSession(); if(!s){el.innerHTML='<div class="empty">Inicia sesión para ver confirmaciones</div>';return;}
+  try{
+    var r=await fetch('/api/confirmar',{headers:{Authorization:'Bearer '+s.access_token}});
+    if(!r.ok){el.innerHTML='<div class="empty">Error cargando ('+r.status+')</div>';return;}
+    var d=await r.json();
+    var cop=(d.cop_ahorrado||0).toLocaleString('es-CO');
+    var kpi=function(n,l,c){return '<div class="card" style="flex:1;min-width:110px;text-align:center;padding:14px"><div style="font-size:22px;font-weight:800;color:'+(c||'var(--cy)')+'">'+n+'</div><div style="font-size:11px;color:var(--t2)">'+l+'</div></div>';};
+    var html='<div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px">'
+      +kpi(d.enviados||0,'Esperando respuesta')
+      +kpi(d.confirmados||0,'Confirmados','#2ECC71')
+      +kpi(d.devoluciones_evitadas||0,'Devoluciones evitadas','#2ECC71')
+      +kpi('$'+cop,'COP ahorrado','#2ECC71')
+      +kpi((d.cambio_direccion||0)+(d.sin_respuesta||0),'En Bandeja','#F5A623')
+      +'</div>';
+    if(!d.items||!d.items.length){
+      html+='<div class="empty">🐱 Aún no hay confirmaciones. Cuando entren pedidos a ciudades rojas, Zyan enviará el WhatsApp de confirmación automáticamente.<br><br><span style="font-size:11px">Endpoint: POST https://www.zynexapp.com/api/confirmar</span></div>';
+    }else{
+      var ico={enviado:'⏳',confirmado:'✅',cancelado:'🛑',sin_respuesta:'😴',cambio_direccion:'📍',error:'⚠️',pendiente:'⏳'};
+      html+=d.items.map(function(x){
+        return '<div class="card" style="margin-bottom:8px"><b>'+(ico[x.estado]||'')+' '+esc(x.pedido_id)+'</b> — '+esc(x.ciudad||'')+' · '+esc(x.telefono||'')
+          +'<div class="why" style="font-size:11px;color:var(--t2)">'+esc(x.estado)+' · semáforo '+esc(x.semaforo||'?')+(x.producto?' · '+esc(x.producto):'')+(x.error?' · '+esc(x.error):'')+'</div></div>';
+      }).join('');
+    }
+    el.innerHTML=html;
+  }catch(e){el.innerHTML='<div class="empty">Error: '+esc(e.message)+'</div>';}
 }
 
 // ── ADJUNTAR ARCHIVO: el contenido viaja como contexto del mensaje ──

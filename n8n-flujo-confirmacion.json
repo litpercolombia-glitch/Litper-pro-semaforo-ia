@@ -1,0 +1,76 @@
+{
+  "name": "ZYNEX — Confirmación WhatsApp pre-despacho",
+  "nodes": [
+    {
+      "parameters": { "httpMethod": "POST", "path": "zynex-pedido-nuevo", "responseMode": "lastNode" },
+      "name": "Webhook Pedido Nuevo (Dropi/Shopify)",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [240, 300],
+      "webhookId": "zynex-pedido-nuevo"
+    },
+    {
+      "parameters": {
+        "functionCode": "// Normaliza el pedido de Dropi o Shopify al formato ZYNEX\nconst b = $json.body || $json;\nreturn [{ json: {\n  pedido_id: String(b.id || b.order_id || b.order_number || b.name || ''),\n  telefono: String(b.phone || b.telefono || (b.shipping_address && b.shipping_address.phone) || '').replace(/\\D/g,''),\n  nombre: b.first_name || b.nombre || (b.customer && b.customer.first_name) || '',\n  producto: b.product || b.producto || (b.line_items && b.line_items[0] && b.line_items[0].title) || '',\n  ciudad: b.city || b.ciudad || (b.shipping_address && b.shipping_address.city) || '',\n  carrier: b.carrier || b.transportadora || '',\n  valor_cod: Number(b.total_price || b.valor || b.total || 0)\n}}];"
+      },
+      "name": "Normalizar pedido",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "url": "https://www.zynexapp.com/api/confirmar",
+        "method": "POST",
+        "sendHeaders": true,
+        "headerParameters": { "parameters": [ { "name": "x-zynex-key", "value": "={{$env.ZYNEX_API_KEY}}" }, { "name": "Content-Type", "value": "application/json" } ] },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json) }}"
+      },
+      "name": "ZYNEX /api/confirmar",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [680, 300]
+    },
+    {
+      "parameters": { "httpMethod": "POST", "path": "zynex-respuesta-cliente", "responseMode": "lastNode" },
+      "name": "Webhook Respuesta Cliente (Chatea Pro)",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [240, 560],
+      "webhookId": "zynex-respuesta-cliente"
+    },
+    {
+      "parameters": {
+        "functionCode": "const b = $json.body || $json;\nreturn [{ json: {\n  telefono: String(b.user_id || b.phone || b.telefono || '').replace(/\\D/g,''),\n  respuesta: String(b.message || b.text || b.respuesta || '')\n}}];"
+      },
+      "name": "Normalizar respuesta",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [460, 560]
+    },
+    {
+      "parameters": {
+        "url": "https://www.zynexapp.com/api/confirmar-respuesta",
+        "method": "POST",
+        "sendHeaders": true,
+        "headerParameters": { "parameters": [ { "name": "x-zynex-key", "value": "={{$env.ZYNEX_API_KEY}}" }, { "name": "Content-Type", "value": "application/json" } ] },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json) }}"
+      },
+      "name": "ZYNEX /api/confirmar-respuesta",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [680, 560]
+    }
+  ],
+  "connections": {
+    "Webhook Pedido Nuevo (Dropi/Shopify)": { "main": [[{ "node": "Normalizar pedido", "type": "main", "index": 0 }]] },
+    "Normalizar pedido": { "main": [[{ "node": "ZYNEX /api/confirmar", "type": "main", "index": 0 }]] },
+    "Webhook Respuesta Cliente (Chatea Pro)": { "main": [[{ "node": "Normalizar respuesta", "type": "main", "index": 0 }]] },
+    "Normalizar respuesta": { "main": [[{ "node": "ZYNEX /api/confirmar-respuesta", "type": "main", "index": 0 }]] }
+  },
+  "settings": { "executionOrder": "v1" }
+}
