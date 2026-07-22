@@ -192,6 +192,37 @@ const feed=document.getElementById('feed'), hero=document.getElementById('hero')
 
 function quick(t){document.getElementById('inp').value=t;enviar();}
 function nuevo(){msgs=[];chatId=Date.now();feed.querySelectorAll('.msg').forEach(e=>e.remove());hero.style.display='block';renderHist();}
+
+// ── EXPORTAR RESPUESTAS: Word / Excel / PDF / HTML ──
+function zxMdHtml(t){
+  var x=esc(t);
+  x=x.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/^### (.*)$/gm,'<h3>$1</h3>').replace(/^## (.*)$/gm,'<h2>$1</h2>').replace(/^# (.*)$/gm,'<h1>$1</h1>').replace(/^- (.*)$/gm,'<li>$1</li>').replace(/\n/g,'<br>');
+  return x;
+}
+function zxDescargar(blob, nombre){
+  var a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=nombre; a.click();
+  setTimeout(function(){URL.revokeObjectURL(a.href);},2000);
+}
+function zxExport(fmt, idx){
+  var texto=(msgs[idx]&&msgs[idx].content)||'';
+  var fecha=new Date().toISOString().slice(0,10);
+  var head='<html xmlns:o="urn:schemas-microsoft-com:office:office"><head><meta charset="utf-8"><style>body{font-family:Calibri,Arial;line-height:1.6;max-width:700px}h1,h2,h3{color:#0B6FA4}</style></head><body>';
+  var doc=head+'<h1>ZYNEX · Reporte Zyan</h1><p style="color:#888">'+fecha+'</p><hr>'+zxMdHtml(texto)+'<hr><p style="font-size:11px;color:#999">Generado por Zyan · ZYNEX — zynexapp.com</p></body></html>';
+  if(fmt==='word'){ zxDescargar(new Blob(['\ufeff'+doc],{type:'application/msword'}),'zynex-reporte-'+fecha+'.doc'); }
+  else if(fmt==='html'){ zxDescargar(new Blob([doc],{type:'text/html'}),'zynex-reporte-'+fecha+'.html'); }
+  else if(fmt==='excel'){
+    var filas=texto.split('\n').filter(function(l){return l.trim();}).map(function(l){
+      return '<tr>'+l.split(/\s{2,}|\t|\|/).map(function(c){return '<td>'+esc(c.trim())+'</td>';}).join('')+'</tr>';
+    }).join('');
+    var xls=head+'<table border="1">'+filas+'</table></body></html>';
+    zxDescargar(new Blob(['\ufeff'+xls],{type:'application/vnd.ms-excel'}),'zynex-datos-'+fecha+'.xls');
+  }
+  else if(fmt==='pdf'){
+    var w=window.open('','_blank'); w.document.write(doc); w.document.close();
+    setTimeout(function(){w.print();},400);
+  }
+}
+
 function salir(){try{signOut&&signOut();}catch(e){}location.href='/login';}
 function esc(v){return String(v==null?'':v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 
@@ -225,7 +256,11 @@ async function enviar(){
     const d=await r.json();
     if(!r.ok)throw new Error(d.error||('Error '+r.status));
     msgs.push({role:'assistant',content:d.text});
-    w.remove();add('zyan',d.text,(d.tools_used||[]).concat(d.model_used&&d.model_used!=='claude'?[{tool:'modelo: '+d.model_used}]:[]));
+    w.remove();var nodo=add('zyan',d.text,(d.tools_used||[]).concat(d.model_used&&d.model_used!=='claude'?[{tool:'modelo: '+d.model_used}]:[]));
+    var mi=msgs.length-1;
+    var bar=document.createElement('div'); bar.className='tools'; bar.style.marginTop='8px';
+    bar.innerHTML='<span class="tool" style="cursor:pointer" onclick="zxExport(\'word\','+mi+')">📄 Word</span><span class="tool" style="cursor:pointer" onclick="zxExport(\'excel\','+mi+')">📊 Excel</span><span class="tool" style="cursor:pointer" onclick="zxExport(\'pdf\','+mi+')">🖨 PDF</span><span class="tool" style="cursor:pointer" onclick="zxExport(\'html\','+mi+')">🌐 HTML</span><span class="tool" style="cursor:pointer" onclick="navigator.clipboard.writeText(msgs['+mi+'].content)">📋 Copiar</span>';
+    nodo.querySelector('.body').appendChild(bar);
   }catch(e){
     w.querySelector('.body').textContent='\ud83d\ude3f '+e.message;
   }

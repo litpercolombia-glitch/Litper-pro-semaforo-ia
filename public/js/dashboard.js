@@ -819,12 +819,12 @@ async function runAI(){
   } catch(e){ /* continue if quota check fails */ }
 
   // Usar currentModel de la arquitectura existente del dashboard
-  const model = currentModel || 'gemini';
+  const model = currentModel || 'auto';
 
   const btn=document.getElementById('btn-ai'),sp=document.getElementById('ai-sp'),out=document.getElementById('ai-out');
   const prompt=buildPrompt(activeAI);
 
-  const modelNames={claude:'Claude Sonnet 4',chatgpt:'GPT-4o',gemini:'Gemini 2.0 Flash'};
+  const modelNames={auto:'ZYNEX IA (auto)',claude:'Claude Sonnet 4',chatgpt:'GPT-4o',gemini:'Gemini 2.0 Flash',groq:'Groq Llama 3.3'};
 
   btn.disabled=true; sp.style.display='inline-block';
   document.getElementById('ai-bt').textContent='Analizando...';
@@ -838,7 +838,7 @@ async function runAI(){
     // ── LLAMAR VÍA API PROXY (keys en servidor) ──────────────
     txt = await callAIProxy(model, prompt, 1200);
     
-    const icons={claude:'[C]',chatgpt:'[G]',gemini:'[Gem]'};
+    const icons={auto:'[Z]',claude:'[C]',chatgpt:'[G]',gemini:'[Gem]',groq:'[Q]'};
     out.className='aiout';
     out.textContent=icons[model]+' '+modelNames[model]+'\n'+'-'.repeat(40)+'\n\n'+txt;
 
@@ -1678,7 +1678,7 @@ function showToast(msg, type){
   document.body.appendChild(t);
   setTimeout(()=>{t.style.opacity='0';t.style.transform='translateY(8px)';setTimeout(()=>t.remove(),350);}, 2500);
 }
-let currentModel='gemini';
+let currentModel='auto';
 
 // ═══════════════════════════════════════════════════════════════
 // PREDICTOR DE TASA IA
