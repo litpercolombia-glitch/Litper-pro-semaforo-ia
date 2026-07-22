@@ -1,6 +1,7 @@
 // Dominio canónico: unificar sesiones en www.zynexapp.com
 (function(){
-  if(location.hostname==='litper-semaforo.vercel.app'){
+  var h=location.hostname;
+  if(h==='litper-semaforo.vercel.app' || h==='zynexapp.com'){
     location.replace('https://www.zynexapp.com'+location.pathname+location.search+location.hash);
   }
 })();
