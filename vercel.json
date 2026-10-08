@@ -17,6 +17,7 @@
     { "source": "/login",     "destination": "/login.html" },
     { "source": "/pricing",   "destination": "/pricing.html" },
     { "source": "/profile",   "destination": "/profile.html" },
+    { "source": "/semaforo-ciudades", "destination": "/semaforo-ciudades.html" },
     { "source": "/(.*)",      "destination": "/404.html" }
   ],
   "headers": [

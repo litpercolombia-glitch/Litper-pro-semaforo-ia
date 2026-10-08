@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Semáforo de ciudades · ZYNEX</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/zynex-theme.css">
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="/js/supabase-client.js"></script>
+<style>
+:root{--ok:#22C55E;--warn:#F59E0B;--bad:#EF4444;--na:#64748B}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg,#070B18);color:var(--tx,#E6EDF7);font-family:var(--font,Inter,system-ui,sans-serif);font-size:13px}
+.wrap{max-width:1400px;margin:0 auto;padding:16px}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+h1{font-size:18px;margin:0}
+.sub{color:var(--t3,#8B97AD);font-size:12px;margin-top:4px}
+a.back{color:var(--brand,#19C8FF);text-decoration:none;font-size:12px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:14px}
+.kpi{border:1px solid var(--b1,rgba(255,255,255,.08));border-radius:10px;padding:12px;background:rgba(255,255,255,.02)}
+.kpi .v{font-family:var(--mono,monospace);font-size:20px;font-weight:700}
+.kpi .l{font-size:11px;color:var(--t3,#8B97AD);margin-top:3px}
+.bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:10px}
+.bar input,.bar select,.bar button{background:rgba(255,255,255,.03);border:1px solid var(--b1,rgba(255,255,255,.12));color:inherit;border-radius:8px;padding:7px 10px;font:inherit}
+.bar button{cursor:pointer;border-color:var(--brand,#19C8FF);color:var(--brand,#19C8FF)}
+.bar label{font-size:11px;color:var(--t3,#8B97AD);display:flex;gap:6px;align-items:center}
+.bar input[type=number]{width:70px}
+.note{font-size:11px;border:1px solid rgba(245,158,11,.35);background:rgba(245,158,11,.08);border-radius:8px;padding:8px 10px;margin-bottom:10px}
+.tblw{overflow:auto;border:1px solid var(--b1,rgba(255,255,255,.08));border-radius:10px;max-height:70vh}
+table{border-collapse:collapse;width:100%;min-width:1500px}
+th,td{padding:7px 8px;border-bottom:1px solid var(--b1,rgba(255,255,255,.06));text-align:right;white-space:nowrap}
+th{position:sticky;top:0;background:var(--bg,#070B18);font-size:11px;color:var(--t3,#8B97AD);cursor:pointer;user-select:none;z-index:1}
+th:first-child,td:first-child,th:nth-child(2),td:nth-child(2){text-align:left}
+td:first-child{position:sticky;left:0;background:var(--bg,#070B18)}
+tr.city:hover td{background:rgba(25,200,255,.05)}
+tr.city{cursor:pointer}
+tr.sub td{font-size:12px;color:var(--t2,#B7C2D6);background:rgba(255,255,255,.015)}
+.pill{display:inline-block;padding:2px 8px;border-radius:99px;font-size:11px;font-weight:600}
+.VERDE{background:rgba(34,197,94,.15);color:var(--ok)} .AMARILLO{background:rgba(245,158,11,.15);color:var(--warn)}
+.ROJO{background:rgba(239,68,68,.15);color:var(--bad)} .SIN{background:rgba(100,116,139,.18);color:var(--na)}
+.neg{color:var(--bad)} .pos{color:var(--ok)}
+.act{text-align:left!important;white-space:normal;min-width:260px;font-size:12px}
+.err{color:var(--bad);padding:20px}
+@media (max-width:640px){.wrap{padding:12px}.kpi .v{font-size:17px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div>
+    <h1>Semáforo de ciudades · Colombia</h1>
+    <div class="sub" id="fresh">Cargando datos…</div>
+  </div>
+  <a class="back" href="/dashboard">← Volver al dashboard</a>
+</header>
+
+<div class="kpis" id="kpis"></div>
+<div class="note" id="dq">La tasa de entrega se calcula solo con pedidos cerrados (entregados + devueltos). Si la base no tiene estados al día, los meses recientes muestran muchos abiertos.</div>
+
+<div class="bar">
+  <input id="q" placeholder="Buscar ciudad…" aria-label="Buscar ciudad">
+  <select id="fsem" aria-label="Semáforo"><option value="">Todos los colores</option><option>VERDE</option><option>AMARILLO</option><option>ROJO</option><option value="SIN">SIN DATOS</option></select>
+  <select id="fdep" aria-label="Departamento"><option value="">Todos los departamentos</option></select>
+  <select id="ftr" aria-label="Transportadora"><option value="">Todas las transportadoras</option></select>
+  <select id="fmes" aria-label="Periodo"><option value="3">Últimos 3 meses</option><option value="6" selected>Últimos 6 meses</option><option value="12">Últimos 12 meses</option></select>
+  <label>Verde ≥ <input type="number" id="pv" value="80.5" step="0.5">%</label>
+  <label>Amarillo ≥ <input type="number" id="pa" value="70" step="0.5">%</label>
+  <label>Mín. cerrados <input type="number" id="pm" value="10" step="1"></label>
+  <button id="bx">Exportar Excel</button>
+  <button id="bb">Lista de bloqueo (CSV)</button>
+</div>
+
+<div class="tblw"><table id="t"><thead><tr></tr></thead><tbody></tbody></table></div>
+<div class="sub" style="margin-top:8px">Clic en una ciudad para ver cada transportadora. CM2 = ganancia Dropi del entregado − flete del devuelto, antes de pauta y nómina. Tendencia = tasa de los últimos 70 días − tasa anterior.</div>
+</div>
+
+<script>
+const COLS=[['ciudad','Ciudad'],['depto','Depto'],['sem','Semáforo'],['pedidos','Pedidos'],['entregados','Entreg.'],['devueltos','Devuel.'],['abiertos','Abiertos'],['tasa','% entrega'],['tdev','% devol.'],['pab','% abiertos'],['tend','Tendencia (pts)'],['ult30','Últ. 30d'],['ticket','Ticket'],['flete','Flete'],['ganancia','Ganancia/entreg.'],['cm2','CM2 total'],['cm2p','CM2/pedido'],['trp','Transp. principal'],['best','Mejor transp.'],['tbest','% mejor'],['ultimo','Último pedido'],['accion','Acción sugerida']];
+let RAW=[],CITIES=[],sortK='pedidos',sortD=-1,open=new Set();
+const $=id=>document.getElementById(id);
+const fmt=n=>n==null||isNaN(n)?'—':Math.round(n).toLocaleString('es-CO');
+const pct=n=>n==null||isNaN(n)?'—':(n*100).toFixed(1)+'%';
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function par(){return{v:+$('pv').value/100,a:+$('pa').value/100,m:+$('pm').value}}
+function sem(e,d,p){const c=e+d;if(c<p.m)return'SIN';const t=e/c;return t>=p.v?'VERDE':t>=p.a?'AMARILLO':'ROJO'}
+function build(){
+  const p=par(),m=new Map();
+  for(const r of RAW){
+    const k=r.ciudad+'|'+r.depto;let c=m.get(k);
+    if(!c){c={ciudad:r.ciudad,depto:r.depto,pedidos:0,entregados:0,devueltos:0,abiertos:0,tk:0,fl:0,ga:0,gan_n:0,cm2:0,ea:0,ca:0,er:0,cr:0,ult30:0,ultimo:'',trs:[]};m.set(k,c)}
+    const n=+r.pedidos,e=+r.entregados;
+    c.pedidos+=n;c.entregados+=e;c.devueltos+=+r.devueltos;c.abiertos+=+r.abiertos;
+    if(r.ticket!=null)c.tk+=(+r.ticket)*e; if(r.flete!=null)c.fl+=(+r.flete)*n;
+    if(r.ganancia!=null){c.ga+=(+r.ganancia)*e;c.gan_n+=e}
+    c.cm2+=+(r.cm2||0);c.ea+=+r.ent_ant;c.ca+=+r.cer_ant;c.er+=+r.ent_rec;c.cr+=+r.cer_rec;c.ult30+=+r.ult30;
+    if((r.ultimo_pedido||'')>c.ultimo)c.ultimo=r.ultimo_pedido;
+    c.trs.push(r);
+  }
+  CITIES=[...m.values()].map(c=>{
+    const cer=c.entregados+c.devueltos;
+    c.tasa=cer?c.entregados/cer:null;c.tdev=cer?c.devueltos/cer:null;c.pab=c.pedidos?c.abiertos/c.pedidos:null;
+    c.ticket=c.entregados?c.tk/c.entregados:null;c.flete=c.pedidos?c.fl/c.pedidos:null;c.ganancia=c.gan_n?c.ga/c.gan_n:null;
+    c.cm2p=c.pedidos?c.cm2/c.pedidos:null;
+    const ta=c.ca>=p.m?c.ea/c.ca:null,tr=c.cr>=p.m?c.er/c.cr:null;c.tend=(ta!=null&&tr!=null)?(tr-ta)*100:null;
+    c.sem=sem(c.entregados,c.devueltos,p);
+    c.trs.sort((a,b)=>b.pedidos-a.pedidos);c.trp=c.trs[0]?.transportadora||'';
+    const el=c.trs.filter(t=>(+t.entregados+ +t.devueltos)>=Math.max(5,p.m)).map(t=>({t:t.transportadora,r:+t.entregados/(+t.entregados+ +t.devueltos)})).sort((a,b)=>b.r-a.r);
+    c.best=el[0]?.t||'';c.tbest=el[0]?.r??null;
+    const sw=(c.best&&c.best!==c.trp&&c.tbest!=null&&c.tasa!=null&&c.tbest-c.tasa>=0.05)?' · mover a '+c.best:'';
+    c.accion=c.sem==='ROJO'?'Bloquear o pedir anticipo; confirmar por llamada'+sw:c.sem==='AMARILLO'?'Confirmar por llamada/WhatsApp antes de despachar'+sw:c.sem==='VERDE'?'Escalar pauta'+sw:'Recolectar datos';
+    return c});
+}
+function filtered(){
+  const q=$('q').value.trim().toUpperCase(),fs=$('fsem').value,fd=$('fdep').value,ft=$('ftr').value;
+  return CITIES.filter(c=>(!q||c.ciudad.includes(q))&&(!fs||c.sem===fs)&&(!fd||c.depto===fd)&&(!ft||c.trs.some(t=>t.transportadora===ft)))
+    .sort((a,b)=>{const x=a[sortK],y=b[sortK];if(x==null)return 1;if(y==null)return-1;return(typeof x==='string'?x.localeCompare(y):x-y)*sortD});
+}
+function kpis(){
+  const T=CITIES.reduce((s,c)=>{s.p+=c.pedidos;s.e+=c.entregados;s.d+=c.devueltos;s.cm2+=c.cm2;s[c.sem]=(s[c.sem]||0)+1;s['p'+c.sem]=(s['p'+c.sem]||0)+c.pedidos;return s},{p:0,e:0,d:0,cm2:0});
+  const k=[[fmt(T.p),'Pedidos del periodo'],[pct(T.e/(T.e+T.d)),'Tasa de entrega (cerrados)'],['$'+fmt(T.cm2),'CM2 total (antes de pauta)'],['$'+fmt(T.cm2/T.p),'CM2 por pedido'],
+   [(T.VERDE||0)+' · '+pct((T.pVERDE||0)/T.p),'Ciudades verdes · % pedidos'],[(T.AMARILLO||0)+' · '+pct((T.pAMARILLO||0)/T.p),'Amarillas · % pedidos'],[(T.ROJO||0)+' · '+pct((T.pROJO||0)/T.p),'Rojas · % pedidos'],[(T.SIN||0),'Sin datos suficientes']];
+  $('kpis').innerHTML=k.map(x=>`<div class="kpi"><div class="v">${x[0]}</div><div class="l">${x[1]}</div></div>`).join('');
+}
+function cell(c,k){
+  const v=c[k];
+  if(k==='sem')return`<span class="pill ${v}">${v==='SIN'?'SIN DATOS':v}</span>`;
+  if(['tasa','tdev','pab','tbest'].includes(k))return pct(v);
+  if(k==='tend')return v==null?'—':`<span class="${v<0?'neg':'pos'}">${v>0?'+':''}${v.toFixed(1)}</span>`;
+  if(['cm2','cm2p'].includes(k))return`<span class="${v<0?'neg':''}">${fmt(v)}</span>`;
+  if(typeof v==='number')return fmt(v);
+  return esc(v);
+}
+function render(){
+  kpis();
+  $('t').querySelector('thead tr').innerHTML=COLS.map(([k,l])=>`<th data-k="${k}">${l}${sortK===k?(sortD<0?' ▼':' ▲'):''}</th>`).join('');
+  const rows=filtered(),out=[];
+  for(const c of rows.slice(0,1500)){
+    const id=c.ciudad+'|'+c.depto;
+    out.push(`<tr class="city" data-id="${esc(id)}">`+COLS.map(([k])=>`<td class="${k==='accion'?'act':''}">${cell(c,k)}</td>`).join('')+'</tr>');
+    if(open.has(id))for(const t of c.trs){
+      const e=+t.entregados,d=+t.devueltos,ce=e+d,s=sem(e,d,par());
+      out.push(`<tr class="sub"><td>↳ ${esc(t.transportadora||'(sin dato)')}</td><td></td><td><span class="pill ${s}">${s==='SIN'?'SIN DATOS':s}</span></td><td>${fmt(+t.pedidos)}</td><td>${fmt(e)}</td><td>${fmt(d)}</td><td>${fmt(+t.abiertos)}</td><td>${ce?pct(e/ce):'—'}</td><td>${ce?pct(d/ce):'—'}</td><td></td><td></td><td>${fmt(+t.ult30)}</td><td>${fmt(t.ticket)}</td><td>${fmt(t.flete)}</td><td>${fmt(t.ganancia)}</td><td>${fmt(t.cm2)}</td><td>${fmt(t.pedidos?t.cm2/t.pedidos:null)}</td><td colspan="5"></td></tr>`);
+    }
+  }
+  $('t').querySelector('tbody').innerHTML=out.join('')||'<tr><td colspan="22">Sin resultados</td></tr>';
+}
+function exportXlsx(){
+  const rows=filtered().map(c=>Object.fromEntries(COLS.map(([k,l])=>[l,k==='sem'&&c[k]==='SIN'?'SIN DATOS':c[k]])));
+  const tr=[];for(const c of CITIES)for(const t of c.trs)tr.push({Ciudad:t.ciudad,Depto:t.depto,Transportadora:t.transportadora,Pedidos:+t.pedidos,Entregados:+t.entregados,Devueltos:+t.devueltos,Abiertos:+t.abiertos,'% entrega':(+t.entregados+ +t.devueltos)?+t.entregados/(+t.entregados+ +t.devueltos):null,Flete:t.flete,'CM2 total':t.cm2});
+  const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(rows),'Ciudades');
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(tr),'Ciudad x transportadora');
+  XLSX.writeFile(wb,'semaforo-ciudades-'+new Date().toISOString().slice(0,10)+'.xlsx');
+}
+function exportBlock(){
+  const r=CITIES.filter(c=>c.sem==='ROJO').map(c=>[c.ciudad,c.depto,c.pedidos,(c.tasa*100).toFixed(1)]);
+  const csv='ciudad,departamento,pedidos,tasa_entrega\n'+r.map(x=>x.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\n');
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='lista-bloqueo-ciudades.csv';a.click();
+}
+async function load(){
+  $('fresh').textContent='Cargando datos…';
+  const {data,error}=await supabase.rpc('semaforo_ciudades_co',{p_meses:+$('fmes').value});
+  if(error){$('t').outerHTML=`<div class="err">No se pudieron cargar los datos: ${esc(error.message)}</div>`;return}
+  if(!data||!data.length){$('fresh').textContent='Tu organización no tiene acceso a estos datos o no hay pedidos en el periodo.';RAW=[];CITIES=[];render();return}
+  RAW=data;
+  const max=data.reduce((m,r)=>r.ultimo_pedido>m?r.ultimo_pedido:m,'');
+  $('fresh').textContent=`Fuente: pedidos Dropi en Supabase · último pedido registrado ${max} · actualizado al abrir la página`;
+  const deps=[...new Set(data.map(r=>r.depto))].filter(Boolean).sort(),trs=[...new Set(data.map(r=>r.transportadora))].filter(Boolean).sort();
+  const fd=$('fdep').value,ft=$('ftr').value;
+  $('fdep').innerHTML='<option value="">Todos los departamentos</option>'+deps.map(d=>`<option ${d===fd?'selected':''}>${esc(d)}</option>`).join('');
+  $('ftr').innerHTML='<option value="">Todas las transportadoras</option>'+trs.map(d=>`<option ${d===ft?'selected':''}>${esc(d)}</option>`).join('');
+  build();render();
+}
+document.addEventListener('DOMContentLoaded',async()=>{
+  if(!await requireAuth())return;
+  ['q','fsem','fdep','ftr'].forEach(i=>$(i).addEventListener('input',render));
+  ['pv','pa','pm'].forEach(i=>$(i).addEventListener('input',()=>{build();render()}));
+  $('fmes').addEventListener('change',load);
+  $('bx').addEventListener('click',exportXlsx);$('bb').addEventListener('click',exportBlock);
+  $('t').addEventListener('click',e=>{
+    const th=e.target.closest('th');if(th){const k=th.dataset.k;sortD=sortK===k?-sortD:-1;sortK=k;render();return}
+    const tr=e.target.closest('tr.city');if(tr){const id=tr.dataset.id;open.has(id)?open.delete(id):open.add(id);render()}
+  });
+  load();
+});
+</script>
+</body>
+</html>
